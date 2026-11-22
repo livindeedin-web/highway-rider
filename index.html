@@ -35,6 +35,19 @@
             background: #020617;
         }
 
+        /* ================= FORCED HORIZONTAL (LANDSCAPE) LOCK ================= */
+        /* Ensures Mobile, Tablet, and Desktop ALWAYS display in Horizontal Landscape */
+        #game-root.force-landscape {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vh;
+            width: 100dvh;
+            height: 100vw;
+            transform: translate(-50%, -50%) rotate(90deg);
+            transform-origin: center center;
+        }
+
         #canvas-container {
             position: absolute;
             inset: 0;
@@ -119,6 +132,78 @@
             border-radius: 99px;
             border: 1px solid rgba(148, 163, 184, 0.35);
             white-space: nowrap;
+        }
+
+        /* Active Mission Tracker Pill (Left HUD) */
+        #mission-hud {
+            background: rgba(15, 23, 42, 0.84);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.36);
+            border-radius: 14px;
+            padding: 6px 10px;
+            min-width: 132px;
+            max-width: 168px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.14s ease;
+        }
+
+        #mission-hud:active {
+            transform: scale(0.96);
+        }
+
+        .mission-hud-kicker {
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 0.7px;
+            color: #38bdf8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #mission-hud-title {
+            font-size: 10px;
+            font-weight: 800;
+            color: #f8fafc;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mission-hud-bar {
+            width: 100%;
+            height: 5px;
+            border-radius: 99px;
+            background: #1e293b;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        #mission-hud-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38bdf8, #a855f7);
+            border-radius: 99px;
+            transition: width 0.25s ease;
+        }
+
+        #game-root.theme-android #mission-hud {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: #14141a;
+            border-color: rgba(52, 211, 153, 0.52);
+        }
+
+        #game-root.theme-android .mission-hud-kicker {
+            color: #34d399;
+        }
+
+        #game-root.theme-android #mission-hud-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
         }
 
         /* Center: 6-Lane Express Zone Pill (Dead Center) */
@@ -214,6 +299,14 @@
             color: #facc15;
             font-variant-numeric: tabular-nums;
             line-height: 1.15;
+        }
+
+        .coins-row {
+            font-size: 10px;
+            font-weight: 800;
+            color: #fde047;
+            margin-top: 2px;
+            font-variant-numeric: tabular-nums;
         }
 
         #btn-settings {
@@ -570,6 +663,23 @@
             font-weight: 700;
             color: #cbd5e1;
             font-variant-numeric: tabular-nums;
+        }
+
+        .nitro-bar-track {
+            width: 100%;
+            height: 5px;
+            border-radius: 99px;
+            background: #0f172a;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            overflow: hidden;
+            margin-top: 1px;
+        }
+
+        #nitro-bar-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #c084fc);
+            transition: width 0.1s linear;
         }
 
         /* Right Throttle Joystick + Action Buttons */
@@ -1009,12 +1119,189 @@
             gap: 8px;
         }
 
+        /* Garage Car Selector & Upgrades */
+        .car-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .car-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1.5px solid rgba(148, 163, 184, 0.28);
+            border-radius: 13px;
+            padding: 9px 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #f8fafc;
+        }
+
+        .car-card.active {
+            border-color: #38bdf8;
+            background: rgba(30, 58, 138, 0.45);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+        }
+
+        #game-root.theme-android .car-card.active {
+            border-color: #34d399;
+            background: rgba(6, 78, 59, 0.45);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .car-card-name {
+            font-size: 12px;
+            font-weight: 900;
+            color: #f8fafc;
+        }
+
+        .car-card-sub {
+            font-size: 9px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .car-card-price {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 2px 7px;
+            border-radius: 99px;
+            background: rgba(250, 204, 21, 0.18);
+            color: #fde047;
+        }
+
+        .car-card.owned .car-card-price {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .upg-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .upg-row:last-child {
+            border-bottom: none;
+        }
+
+        .upg-info {
+            font-size: 11px;
+            font-weight: 800;
+            color: #e2e8f0;
+        }
+
+        .upg-lvl {
+            font-size: 9px;
+            color: #38bdf8;
+            font-weight: 800;
+        }
+
+        .upg-btn {
+            padding: 6px 10px;
+            border-radius: 9px;
+            border: 1px solid rgba(250, 204, 21, 0.45);
+            background: rgba(250, 204, 21, 0.16);
+            color: #fde047;
+            font-size: 10px;
+            font-weight: 900;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .upg-btn:disabled {
+            opacity: 0.45;
+            cursor: default;
+        }
+
+        /* Missions Modal List */
+        .mission-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mission-item {
+            background: rgba(30, 41, 59, 0.65);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            border-radius: 14px;
+            padding: 10px 12px;
+        }
+
+        .mission-item.done {
+            border-color: rgba(52, 211, 153, 0.55);
+            background: rgba(6, 78, 59, 0.28);
+        }
+
+        .mission-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mission-name {
+            font-size: 12px;
+            font-weight: 900;
+            color: #f8fafc;
+        }
+
+        .mission-reward {
+            font-size: 10px;
+            font-weight: 900;
+            color: #fde047;
+            background: rgba(250, 204, 21, 0.15);
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        .mission-item.done .mission-reward {
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .mission-desc {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .mission-prog-bar {
+            width: 100%;
+            height: 6px;
+            border-radius: 99px;
+            background: #0f172a;
+            margin-top: 7px;
+            overflow: hidden;
+        }
+
+        .mission-prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #a855f7);
+            border-radius: 99px;
+        }
+
+        .mission-item.done .mission-prog-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
         /* ================= RESPONSIVE MOBILE CHROME ADJUSTMENTS ================= */
         @media (max-width: 768px), (max-height: 480px) {
             #minimap-box {
                 width: 72px;
                 height: 72px;
                 border-radius: 14px;
+            }
+            #mission-hud {
+                min-width: 108px;
+                max-width: 132px;
+                padding: 5px 8px;
             }
             #dual-cluster {
                 bottom: 2px;
@@ -1045,13 +1332,24 @@
                 height: 122px;
             }
             .start-card {
-                padding: 14px 16px;
-                max-height: 94vh;
+                padding: 12px 16px;
+                max-height: 92%;
                 overflow-y: auto;
             }
             .start-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 8px;
+            }
+            .start-title {
+                font-size: 20px;
+            }
+            .start-sub {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+            .start-play-btn {
+                padding: 10px 16px;
+                font-size: 14px;
             }
         }
     </style>
@@ -1073,6 +1371,14 @@
                         <canvas id="minimap-canvas" width="128" height="128"></canvas>
                         <div class="minimap-tag">🗺️ MAP</div>
                     </div>
+                    <div id="mission-hud" title="Open Missions">
+                        <div class="mission-hud-kicker">
+                            <span>🎯 MISSION</span>
+                            <span id="mission-hud-pct">0%</span>
+                        </div>
+                        <div id="mission-hud-title">Highway Cruiser</div>
+                        <div class="mission-hud-bar"><div id="mission-hud-fill"></div></div>
+                    </div>
                 </div>
 
                 <!-- Top-Center: 6-Lane Express Highway Zone Banner -->
@@ -1084,14 +1390,15 @@
                             <div id="zone-sub">BMW M-Sport • Open World</div>
                         </div>
                     </div>
-                    <div id="web-keys-hint">⌨️ WASD / ARROWS • SPACE TURBO • H HORN • C CAM • M MAP</div>
+                    <div id="web-keys-hint">⌨️ WASD / ARROWS • SPACE TURBO • L LIGHTS • H HORN • C CAM • M MAP</div>
                 </div>
 
-                <!-- Top-Right: Score + Settings -->
+                <!-- Top-Right: Score + Coins + Settings -->
                 <div class="hud-right">
                     <div class="cluster-box">
                         <div class="score-lbl">SCORE</div>
                         <div id="score-val">0</div>
+                        <div class="coins-row">🪙 <span id="coins-val">500</span></div>
                     </div>
                     <button id="btn-settings" aria-label="Settings">⚙️</button>
                 </div>
@@ -1148,11 +1455,14 @@
                         </div>
                     </div>
 
-                    <!-- Center Digital Bridge (Mode / Gear / Odometer) -->
+                    <!-- Center Digital Bridge (Mode / Gear / Odometer / Nitro) -->
                     <div class="cluster-bridge">
                         <span id="drive-mode-lbl">CRUISE</span>
                         <span id="gear-badge">N</span>
                         <span id="odo-val">0.0 km</span>
+                        <div class="nitro-bar-track" title="Turbo Nitro">
+                            <div id="nitro-bar-fill"></div>
+                        </div>
                     </div>
 
                     <!-- Right Digital Tachometer (RPM x1000) -->
@@ -1180,6 +1490,7 @@
                 <!-- Right Drive Throttle Joystick + Quick Actions -->
                 <div class="right-ctrl-zone">
                     <div class="action-col">
+                        <button class="mini-act-btn" id="btn-lights" title="Headlights (L)">💡</button>
                         <button class="mini-act-btn" id="btn-cam" title="Switch Camera (C)">📷</button>
                         <button class="mini-act-btn" id="btn-horn" title="Horn (H)">📢</button>
                     </div>
@@ -1220,8 +1531,10 @@
                 <button class="start-play-btn" id="btn-start-drive">START DRIVE 🚘</button>
 
                 <div class="start-footer-row">
-                    <button class="opt-btn" id="btn-start-garage">🎨 BMW Garage</button>
-                    <button class="opt-btn" id="btn-start-map">🗺️ Open World Map</button>
+                    <button class="opt-btn" id="btn-start-garage">🎨 Garage</button>
+                    <button class="opt-btn" id="btn-start-missions">🎯 Missions</button>
+                    <button class="opt-btn" id="btn-start-map">🗺️ Map</button>
+                    <button class="opt-btn" id="btn-fullscreen-land">⛶ Full</button>
                 </div>
             </div>
         </div>
@@ -1235,12 +1548,9 @@
                 </div>
 
                 <div class="setting-group">
-                    <div class="setting-lbl">
-                        <span>UI Theme</span>
-                        <span id="theme-badge" style="color:#38bdf8;">🖥️ WEB GLASS UI</span>
-                    </div>
+                    <div class="setting-lbl"><span>Platform UI Theme</span></div>
                     <div class="btn-row">
-                        <button class="opt-btn" id="theme-auto">🔄 Auto</button>
+                        <button class="opt-btn active" id="theme-auto">✨ Auto</button>
                         <button class="opt-btn" id="theme-web">🖥️ Web Glass</button>
                         <button class="opt-btn" id="theme-android">🤖 Android M3</button>
                     </div>
@@ -1249,37 +1559,66 @@
                 <div class="setting-group">
                     <div class="setting-lbl"><span>Steering Controls</span></div>
                     <div class="btn-row">
-                        <button class="opt-btn" id="mode-steer">🎡 Wheel</button>
+                        <button class="opt-btn active" id="mode-steer">🎡 Wheel</button>
                         <button class="opt-btn" id="mode-joy">🕹️ Joystick</button>
                         <button class="opt-btn" id="mode-tilt">📱 Tilt</button>
                     </div>
                 </div>
 
                 <div class="setting-group">
-                    <div class="setting-lbl"><span>Environment &amp; Audio</span></div>
+                    <div class="setting-lbl"><span>Time of Day</span></div>
                     <div class="btn-row">
-                        <button class="opt-btn active" id="btn-daynight">☀️ Sunset / Night</button>
+                        <button class="opt-btn" id="time-day">☀️ Day</button>
+                        <button class="opt-btn active" id="time-sunset">🌅 Sunset</button>
+                        <button class="opt-btn" id="time-night">🌙 Night</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <div class="setting-lbl"><span>Dynamic Weather</span></div>
+                    <div class="btn-row">
+                        <button class="opt-btn active" id="weather-clear">🌤️ Clear</button>
+                        <button class="opt-btn" id="weather-rain">🌧️ Rain</button>
+                        <button class="opt-btn" id="weather-fog">🌫️ Fog</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <div class="setting-lbl"><span>Audio &amp; Lights</span></div>
+                    <div class="btn-row">
                         <button class="opt-btn active" id="btn-sound">🔊 Sound ON</button>
+                        <button class="opt-btn" id="btn-settings-lights">💡 Headlights AUTO</button>
                     </div>
                 </div>
 
                 <div class="setting-group">
                     <div class="setting-lbl"><span>Quick Shortcuts</span></div>
                     <div class="btn-row">
-                        <button class="opt-btn" id="btn-open-garage">🎨 BMW Garage</button>
-                        <button class="opt-btn" id="btn-open-map">🗺️ World Map</button>
-                        <button class="opt-btn" id="btn-open-menu">🏠 Title Screen</button>
+                        <button class="opt-btn" id="btn-open-garage">🎨 Garage</button>
+                        <button class="opt-btn" id="btn-open-missions">🎯 Missions</button>
+                        <button class="opt-btn" id="btn-open-map">🗺️ Map</button>
+                        <button class="opt-btn" id="btn-open-menu">🏠 Title</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- BMW GARAGE MODAL -->
+        <!-- BMW GARAGE & TUNING MODAL -->
         <div id="garage-modal" class="modal-backdrop hidden">
             <div class="modal-card">
                 <div class="modal-head">
-                    <div class="modal-title">🎨 BMW M-Sport Garage</div>
+                    <div class="modal-title">🎨 BMW Garage &amp; Tuning • 🪙 <span id="garage-coins">500</span></div>
                     <button class="modal-close" data-close="garage-modal">✕</button>
+                </div>
+
+                <div class="setting-group">
+                    <div class="setting-lbl"><span>Select BMW Model</span></div>
+                    <div class="car-grid" id="car-selector-grid"></div>
+                </div>
+
+                <div class="setting-group">
+                    <div class="setting-lbl"><span>Performance Upgrades</span></div>
+                    <div id="upgrades-list"></div>
                 </div>
 
                 <div class="setting-group">
@@ -1292,7 +1631,26 @@
                     <div class="swatch-row" id="neon-swatches"></div>
                 </div>
 
+                <div class="setting-group">
+                    <div class="setting-lbl"><span>Rims &amp; Aero</span></div>
+                    <div class="btn-row" style="margin-bottom:8px;">
+                        <button class="opt-btn active" id="btn-spoiler-toggle">🪽 M-Spoiler: ON</button>
+                    </div>
+                    <div class="swatch-row" id="rim-swatches"></div>
+                </div>
+
                 <button class="start-play-btn" style="margin-top:6px;" data-close="garage-modal">APPLY &amp; DRIVE</button>
+            </div>
+        </div>
+
+        <!-- MISSIONS MODAL -->
+        <div id="missions-modal" class="modal-backdrop hidden">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <div class="modal-title">🎯 Highway Missions • 🪙 <span id="missions-coins">500</span></div>
+                    <button class="modal-close" data-close="missions-modal">✕</button>
+                </div>
+                <div class="mission-list" id="missions-list"></div>
             </div>
         </div>
 
@@ -1425,10 +1783,28 @@
         const ZONES = [
             { start: 0,    end: 900,  name: '6-Lane Express Highway',  sub: 'High-Speed Tollway • 180+ KM/H', color: '#38bdf8', halfW: 13.5 },
             { start: 900,  end: 1650, name: 'Mountain Express Tunnel', sub: 'LED Tunnel • Headlights Auto',   color: '#818cf8', halfW: 13.0 },
-            { start: 1650, end: 2700, name: 'Small Town Boulevard',    sub: 'Shops, Trees & Local Traffic',   color: '#34d399', halfW: 12.0 },
-            { start: 2700, end: 3700, name: 'Grand River Flyover',     sub: 'Elevated Bridge • Scenic River', color: '#fbbf24', halfW: 13.5 },
-            { start: 3700, end: 5000, name: '10-Lane Super Highway',   sub: 'Top Speed Turbo Corridor',       color: '#c084fc', halfW: 18.5 }
+            { start: 1650, end: 2700, name: 'Small Town Boulevard',    sub: 'Fuel Station, Shops & Trees',    color: '#34d399', halfW: 12.0 },
+            { start: 2700, end: 3700, name: 'Grand River Flyover',     sub: 'Suspension Bridge • Scenic River', color: '#fbbf24', halfW: 13.5 },
+            { start: 3700, end: 5000, name: '10-Lane Super Highway',   sub: 'Boost Pads • Top Speed Corridor', color: '#c084fc', halfW: 18.5 }
         ];
+
+        /* ================= SELECTABLE BMW MODELS ================= */
+        const CARS = [
+            { id: 'm4', name: 'BMW M4 Comp',   tag: 'Balanced Coupe',  cost: 0,    maxKmh: 240, accel: 1.00, handling: 1.00, w: 2.15, h: 0.68, l: 4.7, cabH: 0.62, cabL: 2.35 },
+            { id: 'm8', name: 'BMW M8 Gran',   tag: 'GT Highway King', cost: 600,  maxKmh: 262, accel: 1.12, handling: 1.04, w: 2.24, h: 0.64, l: 5.0, cabH: 0.56, cabL: 2.45 },
+            { id: 'x5', name: 'BMW X5 M SUV',  tag: 'Heavy Cruiser',   cost: 900,  maxKmh: 235, accel: 1.05, handling: 0.94, w: 2.35, h: 0.92, l: 4.9, cabH: 0.80, cabL: 2.95 },
+            { id: 'i8', name: 'BMW i8 Cyber',  tag: 'Hyper Hybrid',    cost: 1400, maxKmh: 285, accel: 1.24, handling: 1.15, w: 2.28, h: 0.54, l: 4.75, cabH: 0.48, cabL: 2.15 }
+        ];
+
+        /* ================= HIGHWAY MISSIONS ================= */
+        const createMissions = () => ([
+            { id: 'dist',   title: 'Highway Cruiser',       desc: 'Drive 2.5 km across the open world',          target: 2500, prog: 0, reward: 300, done: false, unit: 'm' },
+            { id: 'speed',  title: 'Express Speed Demon',   desc: 'Reach 200 KM/H on the highway',               target: 200,  prog: 0, reward: 400, done: false, unit: 'km/h' },
+            { id: 'near',   title: 'Close Call Master',     desc: 'Score 5 traffic Near Misses',                 target: 5,    prog: 0, reward: 500, done: false, unit: '' },
+            { id: 'tunnel', title: 'Tunnel Sprinter',       desc: 'Drive through the Mountain Express Tunnel',   target: 1,    prog: 0, reward: 350, done: false, unit: '' },
+            { id: 'cam',    title: 'Speed Trap Flash',      desc: 'Trigger 2 highway Speed Cameras (>110 km/h)', target: 2,    prog: 0, reward: 450, done: false, unit: '' },
+            { id: 'super',  title: '10-Lane Super Legend',  desc: 'Hit 230+ KM/H on the 10-Lane Super Highway',  target: 230,  prog: 0, reward: 800, done: false, unit: 'km/h' }
+        ]);
 
         /* ================= MAIN 3D HIGHWAY GAME CLASS ================= */
         class HighwayGame {
@@ -1437,9 +1813,12 @@
                 this.state = 'menu';
                 this.hasStarted = false;
                 this.score = 0;
+                this.coins = parseInt(localStorage.getItem('htst_coins') || '500', 10);
+                this.totalDistance = 0;
                 this.combo = 0;
                 this.comboTimer = 0;
                 this.menuOrbitAngle = 0;
+                this.nitro = 100;
 
                 // Player physics along spline distance s
                 this.s = 35;
@@ -1461,29 +1840,47 @@
                 this.controlMode = localStorage.getItem('htst_ctrl') || 'steer';
                 this.uiThemePref = localStorage.getItem('htst_theme') || 'auto';
                 this.camMode = 0; // 0: Chase, 1: Hood, 2: Wide Cinematic
-                this.isNight = false;
+                this.timeOfDay = 'sunset'; // 'day' | 'sunset' | 'night'
+                this.weather = 'clear';    // 'clear' | 'rain' | 'fog'
+                this.headlightsPref = 'auto'; // 'auto' | 'on' | 'off'
                 this.camOrbitOffset = 0;
                 this.isDraggingCam = false;
                 this.lastCamX = 0;
+                this.isPortraitForced = false;
 
-                // Car customization
+                // Car customization, garage & upgrades
+                this.ownedCars = JSON.parse(localStorage.getItem('htst_owned_cars') || '["m4"]');
+                this.selectedCarId = localStorage.getItem('htst_car') || 'm4';
+                this.upgrades = JSON.parse(localStorage.getItem('htst_upgrades') || '{"engine":1,"turbo":1,"handling":1}');
                 this.paintColor = 0x0ea5e9;
                 this.neonColor = 0x38bdf8;
+                this.rimColor = 0xe2e8f0;
+                this.spoilerEnabled = true;
+
+                // Landmarks & Missions
                 this.speedCameras = [620, 2250, 3250, 4400];
+                this.boostPads = [3950, 4350, 4700];
                 this.triggeredCams = new Set();
+                this.triggeredPads = new Set();
+                this.missions = createMissions();
 
                 // Init Three.js Scene & World
                 this.initThree();
                 this.buildRoadPath();
                 this.buildEnvironment();
+                this.buildWeatherSystem();
                 this.buildPlayerBMW();
                 this.buildTraffic();
                 this.initGarageUI();
+                this.renderMissionsUI();
                 this.bindInputs();
 
                 this.handleResize();
                 this.applyUITheme(this.uiThemePref, false);
                 this.applyControlMode(this.controlMode, false);
+                this.setTimeOfDay('sunset', false);
+                this.setWeather('clear', false);
+                this.updateCoinsUI();
                 this.updatePlayerTransform(0.016);
 
                 this.lastTime = performance.now();
@@ -1758,59 +2155,268 @@
                     gantry.add(bar, flashBox);
                     this.scene.add(gantry);
                 });
+
+                // 1) 6-Lane Express Toll Plaza (s = 320)
+                {
+                    const f = this.getRoadFrame(320);
+                    const toll = new THREE.Group();
+                    toll.position.set(f.pos.x, f.pos.y, f.pos.z);
+                    toll.rotation.y = f.heading;
+
+                    const canopyMat = new THREE.MeshLambertMaterial({ color: 0x1d4ed8 });
+                    const canopy = new THREE.Mesh(new THREE.BoxGeometry(31, 1.6, 8), canopyMat);
+                    canopy.position.y = 6.8;
+                    toll.add(canopy);
+
+                    const glowStrip = new THREE.Mesh(new THREE.BoxGeometry(29, 0.35, 8.2), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
+                    glowStrip.position.y = 5.9;
+                    toll.add(glowStrip);
+
+                    [-14, -7, 0, 7, 14].forEach(bx => {
+                        const booth = new THREE.Mesh(new THREE.BoxGeometry(1.1, 5.8, 4.2), poleMat);
+                        booth.position.set(bx, 2.9, 0);
+                        toll.add(booth);
+                    });
+                    this.scene.add(toll);
+                }
+
+                // 2) Mountain Peaks flanking the Mountain Express Tunnel (s = 880..1680)
+                const rockMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
+                const snowMat = new THREE.MeshLambertMaterial({ color: 0xe2e8f0 });
+                for (let s = 880; s <= 1680; s += 110) {
+                    const f = this.getRoadFrame(s);
+                    [-1, 1].forEach(side => {
+                        const peakH = 42 + ((s * 17) % 34);
+                        const peakR = 26 + ((s * 9) % 14);
+                        const mx = f.pos.x + f.right.x * (36 + peakR * 0.4) * side;
+                        const mz = f.pos.z + f.right.z * (36 + peakR * 0.4) * side;
+                        const mountain = new THREE.Mesh(new THREE.ConeGeometry(peakR, peakH, 6), rockMat);
+                        mountain.position.set(mx, peakH / 2 - 1, mz);
+                        const cap = new THREE.Mesh(new THREE.ConeGeometry(peakR * 0.32, peakH * 0.3, 6), snowMat);
+                        cap.position.set(mx, peakH * 0.85 - 1, mz);
+                        this.scene.add(mountain, cap);
+                    });
+                }
+
+                // 3) Small Town Fuel Station Landmark (s = 2120)
+                {
+                    const f = this.getRoadFrame(2120);
+                    const station = new THREE.Group();
+                    station.position.set(f.pos.x + f.right.x * 20, f.pos.y, f.pos.z + f.right.z * 20);
+                    station.rotation.y = f.heading;
+
+                    const roof = new THREE.Mesh(new THREE.BoxGeometry(12, 1.1, 18), new THREE.MeshLambertMaterial({ color: 0xef4444 }));
+                    roof.position.y = 5.4;
+                    const trim = new THREE.Mesh(new THREE.BoxGeometry(12.2, 0.3, 18.2), new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+                    trim.position.y = 4.8;
+                    station.add(roof, trim);
+
+                    [-4.5, 4.5].forEach(px => {
+                        [-6, 6].forEach(pz => {
+                            const col = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5.2, 0.6), whiteMat);
+                            col.position.set(px, 2.6, pz);
+                            station.add(col);
+                        });
+                    });
+                    [-4, 0, 4].forEach(pz => {
+                        const pump = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 1.0), new THREE.MeshLambertMaterial({ color: 0x10b981 }));
+                        pump.position.set(0, 0.9, pz);
+                        station.add(pump);
+                    });
+                    this.scene.add(station);
+                }
+
+                // 4) Grand River Flyover Suspension Bridge Towers (s = 2950, 3450)
+                const towerMat = new THREE.MeshLambertMaterial({ color: 0xf59e0b });
+                [2950, 3450].forEach(ts => {
+                    const f = this.getRoadFrame(ts);
+                    const tower = new THREE.Group();
+                    tower.position.set(f.pos.x, f.pos.y, f.pos.z);
+                    tower.rotation.y = f.heading;
+
+                    [-14.5, 14.5].forEach(tx => {
+                        const pylon = new THREE.Mesh(new THREE.BoxGeometry(1.6, 26, 1.8), towerMat);
+                        pylon.position.set(tx, 12, 0);
+                        tower.add(pylon);
+                    });
+                    const crossBar = new THREE.Mesh(new THREE.BoxGeometry(31, 1.6, 1.6), towerMat);
+                    crossBar.position.y = 22.5;
+                    const beacon = new THREE.Mesh(new THREE.BoxGeometry(31, 0.35, 1.9), new THREE.MeshBasicMaterial({ color: 0xfde047 }));
+                    beacon.position.y = 23.6;
+                    tower.add(crossBar, beacon);
+                    this.scene.add(tower);
+                });
+
+                // 5) 10-Lane Super Highway Neon Turbo Boost Pads
+                const padMat = new THREE.MeshBasicMaterial({ color: 0xc084fc });
+                this.boostPads.forEach(bs => {
+                    const f = this.getRoadFrame(bs);
+                    const pad = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.08, 14), padMat);
+                    pad.position.set(f.pos.x + f.right.x * 5.5, f.pos.y + 0.05, f.pos.z + f.right.z * 5.5);
+                    pad.rotation.y = f.heading;
+                    this.scene.add(pad);
+                });
+            }
+
+            /* ================= 3D WEATHER PARTICLE SYSTEM (RAIN) ================= */
+            buildWeatherSystem() {
+                const count = 900;
+                const positions = new Float32Array(count * 3);
+                for (let i = 0; i < count; i++) {
+                    positions[i * 3] = (Math.random() - 0.5) * 90;
+                    positions[i * 3 + 1] = Math.random() * 45;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 90;
+                }
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const mat = new THREE.PointsMaterial({ color: 0xbae6fd, size: 0.32, transparent: true, opacity: 0.72 });
+                this.rainPoints = new THREE.Points(geo, mat);
+                this.rainPoints.visible = false;
+                this.scene.add(this.rainPoints);
+            }
+
+            setTimeOfDay(mode, announce = true) {
+                this.timeOfDay = mode;
+                ['time-day', 'time-sunset', 'time-night'].forEach(id => {
+                    document.getElementById(id).classList.toggle('active', id === `time-${mode}`);
+                });
+                this.applyAtmosphere();
+                if (announce) {
+                    const labels = { day: '☀️ Sunny Daylight Mode', sunset: '🌅 Twilight Sunset Mode', night: '🌙 Midnight Highway Mode' };
+                    this.showBanner(labels[mode]);
+                }
+            }
+
+            setWeather(mode, announce = true) {
+                this.weather = mode;
+                ['weather-clear', 'weather-rain', 'weather-fog'].forEach(id => {
+                    document.getElementById(id).classList.toggle('active', id === `weather-${mode}`);
+                });
+                if (this.rainPoints) this.rainPoints.visible = mode === 'rain';
+                this.applyAtmosphere();
+                if (announce) {
+                    const labels = { clear: '🌤️ Clear Highway Weather', rain: '🌧️ Rainstorm Active • Headlights Auto', fog: '🌫️ Dense Mountain Fog Active' };
+                    this.showBanner(labels[mode]);
+                }
+            }
+
+            applyAtmosphere() {
+                let bg = 0x0c1930;
+                let fogDensity = 0.0022;
+                let sunInt = 1.15;
+                let hemiInt = 0.95;
+
+                if (this.timeOfDay === 'day') {
+                    bg = 0x38bdf8;
+                    sunInt = 1.45;
+                    hemiInt = 1.15;
+                } else if (this.timeOfDay === 'night') {
+                    bg = 0x020617;
+                    sunInt = 0.32;
+                    hemiInt = 0.42;
+                }
+
+                if (this.weather === 'rain') {
+                    bg = this.timeOfDay === 'day' ? 0x334155 : 0x0b1324;
+                    fogDensity = 0.0046;
+                    sunInt *= 0.65;
+                } else if (this.weather === 'fog') {
+                    bg = this.timeOfDay === 'night' ? 0x1e293b : 0x64748b;
+                    fogDensity = 0.0085;
+                }
+
+                this.scene.background.setHex(bg);
+                this.scene.fog.color.setHex(bg);
+                this.scene.fog.density = fogDensity;
+                this.sunLight.intensity = sunInt;
+                this.hemiLight.intensity = hemiInt;
+            }
+
+            getCurrentCarSpec() {
+                return CARS.find(c => c.id === this.selectedCarId) || CARS[0];
             }
 
             /* ================= BUILD 3D BMW M-SPORT CAR ================= */
             buildPlayerBMW() {
+                if (this.carGroup) {
+                    this.scene.remove(this.carGroup);
+                }
+                const spec = this.getCurrentCarSpec();
                 this.carGroup = new THREE.Group();
 
                 this.carBodyMat = new THREE.MeshPhongMaterial({ color: this.paintColor, shininess: 95, specular: 0x93c5fd });
                 const glassMat = new THREE.MeshPhongMaterial({ color: 0x0f172a, shininess: 120 });
                 const darkMat = new THREE.MeshLambertMaterial({ color: 0x111827 });
                 const wheelMat = new THREE.MeshLambertMaterial({ color: 0x1f2937 });
-                const rimMat = new THREE.MeshPhongMaterial({ color: 0xe2e8f0, shininess: 100 });
+                this.rimMat = new THREE.MeshPhongMaterial({ color: this.rimColor, shininess: 100 });
 
                 // Lower chassis
-                const chassis = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.68, 4.7), this.carBodyMat);
-                chassis.position.y = 0.68;
+                const chassis = new THREE.Mesh(new THREE.BoxGeometry(spec.w, spec.h, spec.l), this.carBodyMat);
+                chassis.position.y = 0.34 + spec.h / 2;
                 this.carGroup.add(chassis);
 
                 // Cabin
-                const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.62, 2.35), glassMat);
-                cabin.position.set(0, 1.24, -0.15);
+                const cabin = new THREE.Mesh(new THREE.BoxGeometry(spec.w * 0.83, spec.cabH, spec.cabL), glassMat);
+                cabin.position.set(0, 0.34 + spec.h + spec.cabH * 0.42, -0.15);
                 this.carGroup.add(cabin);
 
                 // Roof paint strip
-                const roof = new THREE.Mesh(new THREE.BoxGeometry(1.66, 0.08, 1.65), this.carBodyMat);
-                roof.position.set(0, 1.56, -0.15);
+                const roof = new THREE.Mesh(new THREE.BoxGeometry(spec.w * 0.77, 0.08, spec.cabL * 0.72), this.carBodyMat);
+                roof.position.set(0, 0.34 + spec.h + spec.cabH * 0.88, -0.15);
                 this.carGroup.add(roof);
 
                 // Rear M-Sport Spoiler
-                const spoiler = new THREE.Mesh(new THREE.BoxGeometry(1.98, 0.1, 0.34), darkMat);
-                spoiler.position.set(0, 1.18, -2.18);
-                this.carGroup.add(spoiler);
+                this.spoilerMesh = new THREE.Mesh(new THREE.BoxGeometry(spec.w * 0.92, 0.1, 0.34), darkMat);
+                this.spoilerMesh.position.set(0, 0.34 + spec.h + 0.18, -spec.l / 2 + 0.18);
+                this.spoilerMesh.visible = this.spoilerEnabled;
+                this.carGroup.add(this.spoilerMesh);
 
                 // BMW Kidney Grille (Front +Z)
+                const frontZ = spec.l / 2;
                 const grilleL = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.24, 0.08), darkMat);
-                grilleL.position.set(-0.28, 0.66, 2.36);
+                grilleL.position.set(-0.28, 0.34 + spec.h * 0.45, frontZ + 0.02);
                 const grilleR = grilleL.clone();
                 grilleR.position.x = 0.28;
                 this.carGroup.add(grilleL, grilleR);
 
-                // Headlights & Taillights
+                // Headlights, Taillights & Dynamic Headlight Beams
                 const hlMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe });
                 const tlMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
-                [-0.78, 0.78].forEach(x => {
+                const beamMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.2, depthWrite: false });
+                const beamGeo = new THREE.ConeGeometry(2.6, 18, 12, 1, true);
+                beamGeo.rotateX(-Math.PI / 2);
+
+                this.headlightCones = [];
+                [-spec.w * 0.36, spec.w * 0.36].forEach(x => {
                     const hl = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.18, 0.1), hlMat);
-                    hl.position.set(x, 0.72, 2.35);
+                    hl.position.set(x, 0.34 + spec.h * 0.52, frontZ + 0.01);
                     const tl = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.18, 0.1), tlMat);
-                    tl.position.set(x, 0.76, -2.36);
-                    this.carGroup.add(hl, tl);
+                    tl.position.set(x, 0.34 + spec.h * 0.56, -frontZ - 0.01);
+
+                    const cone = new THREE.Mesh(beamGeo, beamMat);
+                    cone.position.set(x, 0.65, frontZ + 9.2);
+                    cone.visible = false;
+                    this.headlightCones.push(cone);
+
+                    this.carGroup.add(hl, tl, cone);
+                });
+
+                // Twin Turbo Exhaust Flames
+                const flameMat = new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.85 });
+                const flameGeo = new THREE.ConeGeometry(0.16, 1.35, 8);
+                flameGeo.rotateX(-Math.PI / 2);
+                this.turboFlames = [];
+                [-0.45, 0.45].forEach(x => {
+                    const fl = new THREE.Mesh(flameGeo, flameMat);
+                    fl.position.set(x, 0.42, -frontZ - 0.7);
+                    fl.visible = false;
+                    this.turboFlames.push(fl);
+                    this.carGroup.add(fl);
                 });
 
                 // Underglow Neon
                 this.neonMat = new THREE.MeshBasicMaterial({ color: this.neonColor, transparent: true, opacity: 0.45 });
-                const neonPlane = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 4.9), this.neonMat);
+                const neonPlane = new THREE.Mesh(new THREE.PlaneGeometry(spec.w + 0.35, spec.l + 0.2), this.neonMat);
                 neonPlane.rotation.x = -Math.PI / 2;
                 neonPlane.position.y = 0.08;
                 this.carGroup.add(neonPlane);
@@ -1821,11 +2427,13 @@
                 wheelGeo.rotateZ(Math.PI / 2);
                 const rimGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.3, 10);
                 rimGeo.rotateZ(Math.PI / 2);
+                const wx = spec.w / 2 - 0.02;
+                const wz = spec.l * 0.31;
 
-                [[-1.06, 0.38, 1.45], [1.06, 0.38, 1.45], [-1.06, 0.38, -1.45], [1.06, 0.38, -1.45]].forEach(pos => {
+                [[-wx, 0.38, wz], [wx, 0.38, wz], [-wx, 0.38, -wz], [wx, 0.38, -wz]].forEach(pos => {
                     const wGroup = new THREE.Group();
                     wGroup.position.set(pos[0], pos[1], pos[2]);
-                    wGroup.add(new THREE.Mesh(wheelGeo, wheelMat), new THREE.Mesh(rimGeo, rimMat));
+                    wGroup.add(new THREE.Mesh(wheelGeo, wheelMat), new THREE.Mesh(rimGeo, this.rimMat));
                     this.carGroup.add(wGroup);
                     this.wheels.push(wGroup);
                 });
@@ -1833,100 +2441,253 @@
                 this.scene.add(this.carGroup);
             }
 
-            /* ================= AI TRAFFIC VEHICLES ================= */
+            /* ================= BUILD AI HIGHWAY TRAFFIC ================= */
             buildTraffic() {
                 this.traffic = [];
-                const tColors = [0xef4444, 0xf59e0b, 0x10b981, 0x6366f1, 0xe2e8f0, 0xec4899];
-                for (let i = 0; i < 24; i++) {
-                    const g = new THREE.Group();
-                    const col = tColors[i % tColors.length];
+                const colors = [0xef4444, 0xf59e0b, 0x10b981, 0x8b5cf6, 0xec4899, 0xf8fafc, 0x3b82f6];
+                const lanes = [-9.5, -4.5, 4.5, 9.5];
+                const darkMat = new THREE.MeshLambertMaterial({ color: 0x111827 });
+                const hlMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+                const tlMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+
+                for (let i = 0; i < 34; i++) {
+                    const group = new THREE.Group();
                     const isTruck = i % 5 === 0;
-                    const body = new THREE.Mesh(
-                        new THREE.BoxGeometry(isTruck ? 2.4 : 1.95, isTruck ? 2.2 : 0.9, isTruck ? 7.2 : 4.2),
-                        new THREE.MeshLambertMaterial({ color: col })
-                    );
-                    body.position.y = isTruck ? 1.3 : 0.72;
-                    g.add(body);
+                    const c = colors[i % colors.length];
+                    const bodyMat = new THREE.MeshLambertMaterial({ color: c });
+
+                    const w = isTruck ? 2.45 : 2.05;
+                    const h = isTruck ? 2.2 : 0.78;
+                    const l = isTruck ? 7.2 : 4.4;
+
+                    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), bodyMat);
+                    body.position.y = 0.4 + h / 2;
+                    group.add(body);
 
                     if (!isTruck) {
-                        const cab = new THREE.Mesh(
-                            new THREE.BoxGeometry(1.65, 0.6, 2.0),
-                            new THREE.MeshLambertMaterial({ color: 0x0f172a })
-                        );
-                        cab.position.y = 1.35;
-                        g.add(cab);
+                        const cab = new THREE.Mesh(new THREE.BoxGeometry(w * 0.82, 0.56, l * 0.5), darkMat);
+                        cab.position.set(0, 0.4 + h + 0.26, -0.1);
+                        group.add(cab);
                     }
 
-                    const dir = i % 2 === 0 ? 1 : -1;
-                    const lane = dir > 0 ? (2.8 + (i % 3) * 3.4) : -(2.8 + (i % 3) * 3.4);
-                    this.scene.add(g);
-                    this.traffic.push({
-                        mesh: g,
-                        s: (i * 205 + 140) % TRACK_LENGTH,
-                        lateral: lane,
-                        speed: (isTruck ? 16 : 24 + (i % 4) * 5) * dir,
-                        dir,
-                        passed: false
-                    });
+                    const hl = new THREE.Mesh(new THREE.BoxGeometry(w * 0.72, 0.16, 0.08), hlMat);
+                    hl.position.set(0, 0.72, l / 2 + 0.02);
+                    const tl = new THREE.Mesh(new THREE.BoxGeometry(w * 0.72, 0.16, 0.08), tlMat);
+                    tl.position.set(0, 0.72, -l / 2 - 0.02);
+                    group.add(hl, tl);
+
+                    const lane = lanes[i % lanes.length];
+                    const dir = lane > 0 ? 1 : -1;
+                    const sPos = (180 + i * 145) % TRACK_LENGTH;
+                    const spd = (15 + (i % 5) * 3.5) * dir;
+
+                    this.scene.add(group);
+                    this.traffic.push({ mesh: group, s: sPos, lateral: lane, speed: spd, dir, passed: false });
                 }
             }
 
-            /* ================= PLATFORM UI THEMES (WEB GLASS + ANDROID M3) ================= */
-            detectDefaultPlatform() {
-                const ua = navigator.userAgent || '';
-                const isAndroidOrTouch = /Android|Mobile|iPhone|iPad/i.test(ua) || (window.innerWidth <= 900 && 'ontouchstart' in window);
-                return isAndroidOrTouch ? 'android' : 'web';
-            }
-
+            /* ================= PLATFORM UI THEME & CONTROL MODE ================= */
             applyUITheme(pref, announce = true) {
                 this.uiThemePref = pref;
                 localStorage.setItem('htst_theme', pref);
 
-                const resolved = pref === 'auto' ? this.detectDefaultPlatform() : pref;
+                const isMobileUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (window.innerWidth <= 900 && 'ontouchstart' in window);
+                const resolved = pref === 'auto' ? (isMobileUA ? 'android' : 'web') : pref;
+
                 const root = document.getElementById('game-root');
                 root.classList.toggle('theme-web', resolved === 'web');
                 root.classList.toggle('theme-android', resolved === 'android');
 
-                document.getElementById('theme-auto').classList.toggle('active', pref === 'auto');
-                document.getElementById('theme-web').classList.toggle('active', pref === 'web');
-                document.getElementById('theme-android').classList.toggle('active', pref === 'android');
+                ['theme-auto', 'theme-web', 'theme-android'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.toggle('active', id === `theme-${pref}`);
+                });
+                const startWeb = document.getElementById('start-ui-web');
+                const startAnd = document.getElementById('start-ui-android');
+                if (startWeb) startWeb.classList.toggle('active', resolved === 'web');
+                if (startAnd) startAnd.classList.toggle('active', resolved === 'android');
 
-                document.getElementById('start-ui-web').classList.toggle('active', resolved === 'web');
-                document.getElementById('start-ui-android').classList.toggle('active', resolved === 'android');
-
-                document.getElementById('start-platform-badge').textContent = resolved === 'android'
-                    ? '📱 MOBILE CHROME • TOUCH & TILT READY'
-                    : '🖥️ DESKTOP CHROME • KEYBOARD & MOUSE READY';
-
-                const badge = document.getElementById('theme-badge');
-                badge.textContent = resolved === 'android' ? '🤖 ANDROID M3 UI' : '🖥️ WEB GLASS UI';
-                badge.style.color = resolved === 'android' ? '#34d399' : '#38bdf8';
+                const badge = document.getElementById('start-platform-badge');
+                if (badge) {
+                    badge.textContent = resolved === 'android'
+                        ? '🤖 MOBILE CHROME • ANDROID M3 HUD'
+                        : '🖥️ DESKTOP CHROME • WEB GLASS HUD';
+                }
 
                 if (announce) {
                     this.showBanner(resolved === 'android' ? '🤖 Android Material 3 UI Active' : '🖥️ Web Glass Cockpit UI Active');
                 }
             }
 
-            /* ================= CONTROL MODES & TILT ================= */
-            applyControlMode(mode, fromUserGesture = false) {
+            applyControlMode(mode, announce = true) {
                 this.controlMode = mode;
                 localStorage.setItem('htst_ctrl', mode);
-
-                ['mode-steer', 'start-ctrl-steer'].forEach(id => document.getElementById(id).classList.toggle('active', mode === 'steer'));
-                ['mode-joy', 'start-ctrl-joy'].forEach(id => document.getElementById(id).classList.toggle('active', mode === 'joy'));
-                ['mode-tilt', 'start-ctrl-tilt'].forEach(id => document.getElementById(id).classList.toggle('active', mode === 'tilt'));
 
                 document.getElementById('wheel-wrap').style.display = mode === 'steer' ? 'flex' : 'none';
                 document.getElementById('steer-joy-wrap').style.display = mode === 'joy' ? 'flex' : 'none';
                 document.getElementById('tilt-wrap').style.display = mode === 'tilt' ? 'flex' : 'none';
 
-                if (mode === 'tilt' && fromUserGesture && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                ['mode-steer', 'mode-joy', 'mode-tilt'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.toggle('active', id === `mode-${mode}`);
+                });
+                ['start-ctrl-steer', 'start-ctrl-joy', 'start-ctrl-tilt'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.toggle('active', id === `start-ctrl-${mode}`);
+                });
+
+                if (mode === 'tilt' && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                     DeviceOrientationEvent.requestPermission().catch(() => {});
+                }
+
+                if (announce) {
+                    const names = { steer: '🎡 Steering Wheel Active', joy: '🕹️ Steering Joystick Active', tilt: '📱 Tilt Steering Active' };
+                    this.showBanner(names[mode]);
                 }
             }
 
-            /* ================= GARAGE UI ================= */
+            /* ================= GARAGE, UPGRADES & MISSIONS UI ================= */
+            addCoins(amount) {
+                this.coins += amount;
+                localStorage.setItem('htst_coins', String(this.coins));
+                this.updateCoinsUI();
+            }
+
+            updateCoinsUI() {
+                const txt = this.coins.toLocaleString();
+                const el1 = document.getElementById('coins-val');
+                const el2 = document.getElementById('garage-coins');
+                const el3 = document.getElementById('missions-coins');
+                if (el1) el1.textContent = txt;
+                if (el2) el2.textContent = txt;
+                if (el3) el3.textContent = txt;
+            }
+
+            renderCarSelector() {
+                const grid = document.getElementById('car-selector-grid');
+                grid.innerHTML = '';
+                CARS.forEach(car => {
+                    const owned = this.ownedCars.includes(car.id);
+                    const active = this.selectedCarId === car.id;
+                    const card = document.createElement('button');
+                    card.className = `car-card${owned ? ' owned' : ''}${active ? ' active' : ''}`;
+                    card.innerHTML = `
+                        <div class="car-card-name">${car.name}</div>
+                        <div class="car-card-sub">${car.tag} • ${car.maxKmh} KM/H</div>
+                        <span class="car-card-price">${active ? '✓ EQUIPPED' : (owned ? 'SELECT' : '🪙 ' + car.cost)}</span>
+                    `;
+                    card.addEventListener('click', () => {
+                        if (owned) {
+                            this.selectedCarId = car.id;
+                            localStorage.setItem('htst_car', car.id);
+                            this.buildPlayerBMW();
+                            this.updatePlayerTransform(0.016);
+                            this.renderCarSelector();
+                            this.showBanner(`🚘 Equipped ${car.name}`);
+                        } else if (this.coins >= car.cost) {
+                            this.addCoins(-car.cost);
+                            this.ownedCars.push(car.id);
+                            this.selectedCarId = car.id;
+                            localStorage.setItem('htst_owned_cars', JSON.stringify(this.ownedCars));
+                            localStorage.setItem('htst_car', car.id);
+                            this.buildPlayerBMW();
+                            this.updatePlayerTransform(0.016);
+                            this.renderCarSelector();
+                            this.renderUpgradesUI();
+                            this.showBanner(`🎉 Purchased ${car.name}!`);
+                        } else {
+                            this.showBanner(`🪙 Need ${car.cost - this.coins} more coins! Complete Missions.`);
+                        }
+                    });
+                    grid.appendChild(card);
+                });
+            }
+
+            renderUpgradesUI() {
+                const list = document.getElementById('upgrades-list');
+                list.innerHTML = '';
+                const specs = [
+                    { key: 'engine',   label: '🔥 Twin-Turbo Engine', desc: '+Top Speed & Accel' },
+                    { key: 'turbo',    label: '⚡ Nitro System',     desc: '+Faster Nitro Recharge' },
+                    { key: 'handling', label: '🛞 Sport Suspension',  desc: '+Sharper Lane Grip' }
+                ];
+                specs.forEach(u => {
+                    const lvl = this.upgrades[u.key] || 1;
+                    const maxLvl = 5;
+                    const cost = lvl * 250;
+                    const row = document.createElement('div');
+                    row.className = 'upg-row';
+                    row.innerHTML = `
+                        <div>
+                            <div class="upg-info">${u.label} <span class="upg-lvl">Lv.${lvl}/${maxLvl}</span></div>
+                            <div style="font-size:9px;color:#94a3b8;">${u.desc}</div>
+                        </div>
+                        <button class="upg-btn" ${lvl >= maxLvl ? 'disabled' : ''}>${lvl >= maxLvl ? 'MAXED' : 'UPGRADE 🪙 ' + cost}</button>
+                    `;
+                    const btn = row.querySelector('.upg-btn');
+                    if (lvl < maxLvl) {
+                        btn.addEventListener('click', () => {
+                            if (this.coins < cost) {
+                                this.showBanner(`🪙 Need ${cost - this.coins} more coins!`);
+                                return;
+                            }
+                            this.addCoins(-cost);
+                            this.upgrades[u.key] = lvl + 1;
+                            localStorage.setItem('htst_upgrades', JSON.stringify(this.upgrades));
+                            this.renderUpgradesUI();
+                            this.showBanner(`⬆️ ${u.label} upgraded to Lv.${lvl + 1}!`);
+                        });
+                    }
+                    list.appendChild(row);
+                });
+            }
+
+            renderMissionsUI() {
+                const list = document.getElementById('missions-list');
+                if (list) {
+                    list.innerHTML = '';
+                    this.missions.forEach(m => {
+                        const pct = Math.min(100, Math.round((m.prog / m.target) * 100));
+                        const item = document.createElement('div');
+                        item.className = `mission-item${m.done ? ' done' : ''}`;
+                        item.innerHTML = `
+                            <div class="mission-top">
+                                <span class="mission-name">${m.done ? '✅ ' : '🎯 '}${m.title}</span>
+                                <span class="mission-reward">${m.done ? 'CLAIMED' : '+🪙 ' + m.reward}</span>
+                            </div>
+                            <div class="mission-desc">${m.desc} (${Math.min(Math.floor(m.prog), m.target)}/${m.target}${m.unit ? ' ' + m.unit : ''})</div>
+                            <div class="mission-prog-bar"><div class="mission-prog-fill" style="width:${pct}%"></div></div>
+                        `;
+                        list.appendChild(item);
+                    });
+                }
+
+                // Update compact HUD Mission Pill with first incomplete mission
+                const active = this.missions.find(m => !m.done) || this.missions[this.missions.length - 1];
+                const activePct = Math.min(100, Math.round((active.prog / active.target) * 100));
+                document.getElementById('mission-hud-title').textContent = active.done ? 'All Missions Done!' : active.title;
+                document.getElementById('mission-hud-pct').textContent = `${activePct}%`;
+                document.getElementById('mission-hud-fill').style.width = `${activePct}%`;
+            }
+
+            progressMission(id, val, isAbsolute = false) {
+                const m = this.missions.find(item => item.id === id);
+                if (!m || m.done) return;
+                m.prog = isAbsolute ? Math.max(m.prog, val) : (m.prog + val);
+                if (m.prog >= m.target) {
+                    m.prog = m.target;
+                    m.done = true;
+                    this.addCoins(m.reward);
+                    this.score += m.reward * 2;
+                    this.showBanner(`🏆 MISSION COMPLETE: ${m.title} (+🪙 ${m.reward})`);
+                }
+                this.renderMissionsUI();
+            }
+
             initGarageUI() {
+                this.renderCarSelector();
+                this.renderUpgradesUI();
+
                 const paints = [
                     { hex: '#0ea5e9', val: 0x0ea5e9 },
                     { hex: '#ef4444', val: 0xef4444 },
@@ -1942,6 +2703,13 @@
                     { hex: '#34d399', val: 0x34d399 },
                     { hex: '#f43f5e', val: 0xf43f5e },
                     { hex: '#facc15', val: 0xfacc15 }
+                ];
+                const rims = [
+                    { hex: '#e2e8f0', val: 0xe2e8f0 },
+                    { hex: '#111827', val: 0x111827 },
+                    { hex: '#facc15', val: 0xfacc15 },
+                    { hex: '#38bdf8', val: 0x38bdf8 },
+                    { hex: '#ef4444', val: 0xef4444 }
                 ];
 
                 const pRow = document.getElementById('paint-swatches');
@@ -1971,17 +2739,82 @@
                     });
                     nRow.appendChild(b);
                 });
+
+                const rRow = document.getElementById('rim-swatches');
+                rims.forEach((r, idx) => {
+                    const b = document.createElement('button');
+                    b.className = 'swatch' + (idx === 0 ? ' active' : '');
+                    b.style.background = r.hex;
+                    b.addEventListener('click', () => {
+                        rRow.querySelectorAll('.swatch').forEach(el => el.classList.remove('active'));
+                        b.classList.add('active');
+                        this.rimColor = r.val;
+                        this.rimMat.color.setHex(r.val);
+                    });
+                    rRow.appendChild(b);
+                });
+
+                document.getElementById('btn-spoiler-toggle').addEventListener('click', (e) => {
+                    this.spoilerEnabled = !this.spoilerEnabled;
+                    if (this.spoilerMesh) this.spoilerMesh.visible = this.spoilerEnabled;
+                    e.target.textContent = this.spoilerEnabled ? '🪽 M-Spoiler: ON' : '🪽 M-Spoiler: OFF';
+                    e.target.classList.toggle('active', this.spoilerEnabled);
+                });
             }
 
             /* ================= INPUTS & UI EVENTS ================= */
+            getLocalPoint(e) {
+                if (!this.isPortraitForced) {
+                    return { x: e.clientX, y: e.clientY };
+                }
+                // Remap physical viewport coordinates to 90deg-rotated landscape coordinates
+                return { x: e.clientY, y: window.innerWidth - e.clientX };
+            }
+
+            getLocalRect(el) {
+                const r = el.getBoundingClientRect();
+                if (!this.isPortraitForced) {
+                    return {
+                        cx: r.left + r.width / 2,
+                        cy: r.top + r.height / 2,
+                        width: r.width,
+                        height: r.height
+                    };
+                }
+                const physCx = r.left + r.width / 2;
+                const physCy = r.top + r.height / 2;
+                return {
+                    cx: physCy,
+                    cy: window.innerWidth - physCx,
+                    width: r.height,
+                    height: r.width
+                };
+            }
+
+            async lockLandscapeFullscreen() {
+                try {
+                    const el = document.documentElement;
+                    if (!document.fullscreenElement && el.requestFullscreen) {
+                        await el.requestFullscreen();
+                    }
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape');
+                    }
+                } catch (err) {
+                    // Fallback: CSS .force-landscape keeps the screen horizontal automatically
+                }
+            }
+
             bindInputs() {
                 window.addEventListener('resize', () => this.handleResize());
+                window.addEventListener('orientationchange', () => setTimeout(() => this.handleResize(), 120));
 
                 // Keyboard
                 window.addEventListener('keydown', (e) => {
                     this.keys[e.code] = true;
                     if (e.code === 'KeyH') SoundFX.playHorn();
                     if (e.code === 'KeyC') this.cycleCamera();
+                    if (e.code === 'KeyL') this.cycleHeadlights();
                     if (e.code === 'KeyM') this.toggleModal('map-modal');
                     if (e.code === 'Escape') this.closeAllModals();
                 });
@@ -1993,12 +2826,13 @@
                 const dom = this.renderer.domElement;
                 dom.addEventListener('pointerdown', (e) => {
                     this.isDraggingCam = true;
-                    this.lastCamX = e.clientX;
+                    this.lastCamX = this.getLocalPoint(e).x;
                 });
                 window.addEventListener('pointermove', (e) => {
                     if (!this.isDraggingCam) return;
-                    const dx = e.clientX - this.lastCamX;
-                    this.lastCamX = e.clientX;
+                    const pt = this.getLocalPoint(e);
+                    const dx = pt.x - this.lastCamX;
+                    this.lastCamX = pt.x;
                     this.camOrbitOffset = clamp(this.camOrbitOffset - dx * 0.006, -1.2, 1.2);
                 });
                 window.addEventListener('pointerup', () => { this.isDraggingCam = false; });
@@ -2006,7 +2840,8 @@
                 // Device Tilt
                 window.addEventListener('deviceorientation', (e) => {
                     if (this.controlMode !== 'tilt' || e.gamma === null) return;
-                    const raw = (window.innerWidth > window.innerHeight ? (e.beta || 0) : (e.gamma || 0)) - this.tiltZero;
+                    const useLandscapeAxis = (window.innerWidth > window.innerHeight) || this.isPortraitForced;
+                    const raw = (useLandscapeAxis ? (e.beta || 0) : (e.gamma || 0)) - this.tiltZero;
                     this.tiltSteer = clamp(raw / 28, -1, 1);
                     const dot = document.getElementById('tilt-bar-dot');
                     dot.style.left = `${50 + this.tiltSteer * 42}%`;
@@ -2026,12 +2861,12 @@
                 wheelWrap.addEventListener('pointerdown', (e) => {
                     SoundFX.unlock();
                     wheelPtr = e.pointerId;
-                    wheelStartX = e.clientX;
+                    wheelStartX = this.getLocalPoint(e).x;
                     wheelWrap.setPointerCapture(e.pointerId);
                 });
                 wheelWrap.addEventListener('pointermove', (e) => {
                     if (e.pointerId !== wheelPtr) return;
-                    this.touchSteer = clamp((e.clientX - wheelStartX) / 56, -1, 1);
+                    this.touchSteer = clamp((this.getLocalPoint(e).x - wheelStartX) / 56, -1, 1);
                     wheelEl.style.transform = `rotate(${this.touchSteer * 110}deg)`;
                 });
                 const resetWheel = (e) => {
@@ -2054,8 +2889,9 @@
                 });
                 joyWrap.addEventListener('pointermove', (e) => {
                     if (e.pointerId !== joyPtr) return;
-                    const rect = joyWrap.getBoundingClientRect();
-                    const dx = clamp((e.clientX - (rect.left + rect.width / 2)) / 42, -1, 1);
+                    const rect = this.getLocalRect(joyWrap);
+                    const pt = this.getLocalPoint(e);
+                    const dx = clamp((pt.x - rect.cx) / 42, -1, 1);
                     this.touchSteer = dx;
                     joyKnob.style.transform = `translateX(${dx * 34}px)`;
                 });
@@ -2072,9 +2908,10 @@
                 const thrTrack = document.getElementById('throttle-track');
                 const thrKnob = document.getElementById('throttle-knob');
                 let thrPtr = null;
-                const updateThrottle = (clientY) => {
-                    const rect = thrTrack.getBoundingClientRect();
-                    const ny = clamp(((rect.top + rect.height / 2) - clientY) / (rect.height * 0.42), -1, 1);
+                const updateThrottle = (e) => {
+                    const rect = this.getLocalRect(thrTrack);
+                    const pt = this.getLocalPoint(e);
+                    const ny = clamp((rect.cy - pt.y) / (rect.height * 0.42), -1, 1);
                     this.touchThrottle = ny;
                     this.touchTurbo = ny > 0.78;
                     thrKnob.style.top = `${50 - ny * 34}%`;
@@ -2084,11 +2921,11 @@
                     SoundFX.unlock();
                     thrPtr = e.pointerId;
                     thrTrack.setPointerCapture(e.pointerId);
-                    updateThrottle(e.clientY);
+                    updateThrottle(e);
                 });
                 thrTrack.addEventListener('pointermove', (e) => {
                     if (e.pointerId !== thrPtr) return;
-                    updateThrottle(e.clientY);
+                    updateThrottle(e);
                 });
                 const resetThr = (e) => {
                     if (e.pointerId !== thrPtr) return;
@@ -2104,8 +2941,10 @@
                 // HUD & Modal Buttons
                 document.getElementById('btn-horn').addEventListener('click', () => SoundFX.playHorn());
                 document.getElementById('btn-cam').addEventListener('click', () => this.cycleCamera());
+                document.getElementById('btn-lights').addEventListener('click', () => this.cycleHeadlights());
                 document.getElementById('btn-settings').addEventListener('click', () => this.toggleModal('settings-modal'));
                 document.getElementById('minimap-box').addEventListener('click', () => this.toggleModal('map-modal'));
+                document.getElementById('mission-hud').addEventListener('click', () => this.toggleModal('missions-modal'));
 
                 // Start Screen Controls
                 document.getElementById('start-ui-web').addEventListener('click', () => this.applyUITheme('web', false));
@@ -2114,9 +2953,14 @@
                 document.getElementById('start-ctrl-joy').addEventListener('click', () => this.applyControlMode('joy', true));
                 document.getElementById('start-ctrl-tilt').addEventListener('click', () => this.applyControlMode('tilt', true));
                 document.getElementById('btn-start-garage').addEventListener('click', () => this.toggleModal('garage-modal'));
+                document.getElementById('btn-start-missions').addEventListener('click', () => this.toggleModal('missions-modal'));
                 document.getElementById('btn-start-map').addEventListener('click', () => this.toggleModal('map-modal'));
+                document.getElementById('btn-fullscreen-land').addEventListener('click', () => this.lockLandscapeFullscreen());
                 document.getElementById('btn-start-drive').addEventListener('click', () => {
                     SoundFX.unlock();
+                    if (window.innerHeight > window.innerWidth) {
+                        this.lockLandscapeFullscreen();
+                    }
                     this.hasStarted = true;
                     this.state = 'playing';
                     document.getElementById('start-screen').classList.add('hidden');
@@ -2131,15 +2975,15 @@
                 document.getElementById('mode-joy').addEventListener('click', () => this.applyControlMode('joy', true));
                 document.getElementById('mode-tilt').addEventListener('click', () => this.applyControlMode('tilt', true));
 
-                document.getElementById('btn-daynight').addEventListener('click', () => {
-                    this.isNight = !this.isNight;
-                    const bg = this.isNight ? 0x020617 : 0x0c1930;
-                    this.scene.background.setHex(bg);
-                    this.scene.fog.color.setHex(bg);
-                    this.sunLight.intensity = this.isNight ? 0.35 : 1.15;
-                    this.hemiLight.intensity = this.isNight ? 0.45 : 0.95;
-                    this.showBanner(this.isNight ? '🌙 Midnight Highway Mode' : '☀️ Twilight Express Mode');
-                });
+                document.getElementById('time-day').addEventListener('click', () => this.setTimeOfDay('day', true));
+                document.getElementById('time-sunset').addEventListener('click', () => this.setTimeOfDay('sunset', true));
+                document.getElementById('time-night').addEventListener('click', () => this.setTimeOfDay('night', true));
+
+                document.getElementById('weather-clear').addEventListener('click', () => this.setWeather('clear', true));
+                document.getElementById('weather-rain').addEventListener('click', () => this.setWeather('rain', true));
+                document.getElementById('weather-fog').addEventListener('click', () => this.setWeather('fog', true));
+
+                document.getElementById('btn-settings-lights').addEventListener('click', () => this.cycleHeadlights());
 
                 document.getElementById('btn-sound').addEventListener('click', (e) => {
                     SoundFX.enabled = !SoundFX.enabled;
@@ -2148,6 +2992,7 @@
                 });
 
                 document.getElementById('btn-open-garage').addEventListener('click', () => this.toggleModal('garage-modal'));
+                document.getElementById('btn-open-missions').addEventListener('click', () => this.toggleModal('missions-modal'));
                 document.getElementById('btn-open-map').addEventListener('click', () => this.toggleModal('map-modal'));
                 document.getElementById('btn-open-menu').addEventListener('click', () => {
                     this.closeAllModals();
@@ -2183,6 +3028,15 @@
                 this.showBanner(names[this.camMode]);
             }
 
+            cycleHeadlights() {
+                const order = ['auto', 'on', 'off'];
+                this.headlightsPref = order[(order.indexOf(this.headlightsPref) + 1) % order.length];
+                const lbl = { auto: '💡 Headlights AUTO', on: '💡 Headlights ON', off: '💡 Headlights OFF' }[this.headlightsPref];
+                const btn = document.getElementById('btn-settings-lights');
+                if (btn) btn.textContent = lbl;
+                this.showBanner(lbl);
+            }
+
             toggleModal(id) {
                 const target = document.getElementById(id);
                 const wasHidden = target.classList.contains('hidden');
@@ -2191,11 +3045,16 @@
                     target.classList.remove('hidden');
                     if (this.state === 'playing') this.state = 'paused';
                     if (id === 'map-modal') this.drawWorldMap();
+                    if (id === 'missions-modal') this.renderMissionsUI();
+                    if (id === 'garage-modal') {
+                        this.renderCarSelector();
+                        this.renderUpgradesUI();
+                    }
                 }
             }
 
             closeAllModals() {
-                ['settings-modal', 'map-modal', 'garage-modal'].forEach(m => {
+                ['settings-modal', 'map-modal', 'garage-modal', 'missions-modal'].forEach(m => {
                     document.getElementById(m).classList.add('hidden');
                 });
                 if (!this.hasStarted) {
@@ -2214,8 +3073,16 @@
             }
 
             handleResize() {
-                const w = this.container.clientWidth || window.innerWidth;
-                const h = this.container.clientHeight || window.innerHeight;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const root = document.getElementById('game-root');
+
+                // Force horizontal landscape stage whenever viewport is taller than wide
+                this.isPortraitForced = vh > vw;
+                root.classList.toggle('force-landscape', this.isPortraitForced);
+
+                const w = this.isPortraitForced ? vh : vw;
+                const h = this.isPortraitForced ? vw : vh;
                 this.camera.aspect = w / h;
                 this.camera.updateProjectionMatrix();
                 this.renderer.setSize(w, h);
@@ -2243,16 +3110,30 @@
                 if (this.keys['KeyW'] || this.keys['ArrowUp']) throttle = 1;
                 if (this.keys['KeyS'] || this.keys['ArrowDown']) throttle = -1;
 
-                const turbo = this.touchTurbo || !!this.keys['Space'] || !!this.keys['ShiftLeft'];
+                const wantsTurbo = this.touchTurbo || !!this.keys['Space'] || !!this.keys['ShiftLeft'];
+                const turbo = wantsTurbo && this.nitro > 2 && throttle >= 0;
+
+                if (turbo) {
+                    this.nitro = Math.max(0, this.nitro - 22 * dt);
+                } else {
+                    const recharge = 7 + (this.upgrades.turbo - 1) * 3.5;
+                    this.nitro = Math.min(100, this.nitro + recharge * dt);
+                }
 
                 let steer = this.controlMode === 'tilt' ? this.tiltSteer : this.touchSteer;
                 if (this.keys['KeyA'] || this.keys['ArrowLeft']) steer = -1;
                 if (this.keys['KeyD'] || this.keys['ArrowRight']) steer = 1;
 
-                // Acceleration & Braking Physics
-                const maxSpeed = turbo ? 66.7 : 52.8; // 240 km/h turbo, 190 km/h normal
+                // Car & Upgrade-Adjusted Physics
+                const carSpec = this.getCurrentCarSpec();
+                const engBonus = 1 + (this.upgrades.engine - 1) * 0.06;
+                const handBonus = 1 + (this.upgrades.handling - 1) * 0.08;
+                const maxNormal = (carSpec.maxKmh * 0.80 * engBonus) / 3.6;
+                const maxTurbo = (carSpec.maxKmh * engBonus) / 3.6;
+                const maxSpeed = turbo ? maxTurbo : maxNormal;
+
                 if (throttle > 0.05) {
-                    const accel = (turbo ? 26 : 17) * throttle;
+                    const accel = (turbo ? 27 : 17.5) * carSpec.accel * engBonus * throttle;
                     this.speed = Math.min(maxSpeed, this.speed + accel * dt);
                 } else if (throttle < -0.05) {
                     const brake = this.speed > 0 ? 36 : 14;
@@ -2263,10 +3144,11 @@
                     if (Math.abs(this.speed) < 0.15) this.speed = 0;
                 }
 
-                // Steering & Lateral Movement
-                this.steerAngle += (steer - this.steerAngle) * Math.min(1, dt * 10);
+                // Steering & Lateral Movement (slightly slicker in Rain)
+                const rainGrip = this.weather === 'rain' ? 0.88 : 1.0;
+                this.steerAngle += (steer - this.steerAngle) * Math.min(1, dt * 10 * rainGrip);
                 const steerPower = Math.min(1, Math.abs(this.speed) / 8) * (this.speed >= 0 ? 1 : -1);
-                this.lateral += this.steerAngle * 14.5 * steerPower * dt;
+                this.lateral += this.steerAngle * 14.5 * carSpec.handling * handBonus * steerPower * dt;
 
                 const zone = this.getZoneAt(this.s);
                 const maxLat = zone.halfW - 1.5;
@@ -2276,7 +3158,31 @@
                 }
 
                 // Advance along road spline
-                this.s = (this.s + this.speed * dt + TRACK_LENGTH) % TRACK_LENGTH;
+                const stepDist = this.speed * dt;
+                this.s = (this.s + stepDist + TRACK_LENGTH) % TRACK_LENGTH;
+                if (stepDist > 0) {
+                    this.totalDistance += stepDist;
+                    this.progressMission('dist', this.totalDistance, true);
+                }
+
+                // Mission speed & zone checks
+                const kmhNow = Math.abs(this.speed) * 3.6;
+                if (kmhNow >= 200) this.progressMission('speed', kmhNow, true);
+                if (zone.start === 900) this.progressMission('tunnel', 1, true);
+                if (zone.start === 3700 && kmhNow >= 230) this.progressMission('super', kmhNow, true);
+
+                // Super Highway Boost Pads
+                this.boostPads.forEach(bs => {
+                    if (Math.abs(this.s - bs) < 10 && Math.abs(this.lateral - 5.5) < 3.6 && !this.triggeredPads.has(bs)) {
+                        this.triggeredPads.add(bs);
+                        this.nitro = 100;
+                        this.speed = Math.min(maxTurbo * 1.08, this.speed + 18);
+                        this.addCoins(25);
+                        this.showBanner('⚡ BOOST PAD SURGE! Nitro 100% +25 🪙');
+                    } else if (Math.abs(this.s - bs) > 60) {
+                        this.triggeredPads.delete(bs);
+                    }
+                });
 
                 // Score accumulation
                 if (this.speed > 10) {
@@ -2300,15 +3206,40 @@
                         if (kmh > 110) {
                             const bonus = kmh * 4;
                             this.score += bonus;
+                            this.addCoins(40);
+                            this.progressMission('cam', 1, false);
                             const flash = document.getElementById('cam-flash');
                             flash.style.opacity = '0.65';
                             setTimeout(() => { flash.style.opacity = '0'; }, 120);
-                            this.showBanner(`📸 SPEED CAM: ${kmh} KM/H • +${bonus} PTS!`);
+                            this.showBanner(`📸 SPEED CAM: ${kmh} KM/H • +${bonus} PTS • +40 🪙`);
                         }
                     } else if (Math.abs(this.s - cs) > 120) {
                         this.triggeredCams.delete(cs);
                     }
                 });
+
+                // Dynamic Headlights & Turbo Exhaust Flames
+                const lightsOn = this.headlightsPref === 'on' || (this.headlightsPref === 'auto' && (this.timeOfDay === 'night' || this.weather === 'rain' || zone.start === 900));
+                if (this.headlightCones) {
+                    this.headlightCones.forEach(c => { c.visible = lightsOn; });
+                }
+                if (this.turboFlames) {
+                    this.turboFlames.forEach(fl => {
+                        fl.visible = turbo && kmhNow > 40;
+                        if (fl.visible) fl.scale.set(1, 1, 0.8 + Math.random() * 0.6);
+                    });
+                }
+
+                // Update Rain particles around player
+                if (this.rainPoints && this.rainPoints.visible) {
+                    const pos = this.rainPoints.geometry.attributes.position.array;
+                    for (let i = 0; i < pos.length; i += 3) {
+                        pos[i + 1] -= 38 * dt;
+                        if (pos[i + 1] < 0) pos[i + 1] = 42;
+                    }
+                    this.rainPoints.geometry.attributes.position.needsUpdate = true;
+                    this.rainPoints.position.set(this.playerX, this.playerY, this.playerZ);
+                }
 
                 this.updatePlayerTransform(dt);
                 this.updateTraffic(dt);
@@ -2361,6 +3292,9 @@
                         this.comboTimer = 4.0;
                         const bonus = 150 * this.combo;
                         this.score += bonus;
+                        this.nitro = Math.min(100, this.nitro + 12);
+                        this.addCoins(15 * this.combo);
+                        this.progressMission('near', 1, false);
                         const cb = document.getElementById('combo-badge');
                         cb.textContent = `🔥 NEAR MISS x${this.combo} (+${bonus})`;
                         cb.classList.add('show');
@@ -2456,7 +3390,8 @@
                     modeEl.textContent = 'CRUISE';
                     modeEl.style.color = '';
                 }
-                document.getElementById('odo-val').textContent = `${(this.s / 1000).toFixed(1)} km`;
+                document.getElementById('odo-val').textContent = `${(this.totalDistance / 1000).toFixed(1)} km`;
+                document.getElementById('nitro-bar-fill').style.width = `${Math.round(this.nitro)}%`;
 
                 // Centered Zone Pill Update
                 const z = this.getZoneAt(this.s);
