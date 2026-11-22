@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Highway Rider 3D — 5 Chapters, Flyover Diversions & Toll Express</title>
+    <title>Highway Rider 3D — 10-Lane Big Flyover, Toll Plaza & Indian Jam</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
@@ -37,7 +37,6 @@
             color: var(--text);
             touch-action: none;
         }
-        /* Always Horizontal (Landscape) Stage across Mobile, Tablet, Desktop */
         #game-root {
             position: fixed;
             top: 0;
@@ -67,7 +66,7 @@
             height: 100% !important;
         }
 
-        /* Red Impact / Toll Screen Flash Overlay */
+        /* Screen Flash Overlay */
         #screen-flash {
             position: absolute;
             inset: 0;
@@ -173,7 +172,7 @@
         }
 
         #minimap-box {
-            margin-top: 24px;
+            margin-top: 18px;
             position: relative;
             width: 112px;
             height: 112px;
@@ -233,7 +232,7 @@
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0284c7, #22d3ee);
+            background: linear-gradient(135deg, #f97316, #22c55e);
             border: 1.5px solid #e0f2fe;
             display: flex;
             align-items: center;
@@ -258,7 +257,6 @@
             text-transform: uppercase;
         }
 
-        /* Flyover Diversion Live Indicator */
         #diversion-prompt {
             display: none;
             align-items: center;
@@ -275,14 +273,13 @@
         }
         #diversion-prompt.show { display: flex; }
         .div-left { color: #4ade80; }
-        .div-mid { color: #38bdf8; }
+        .div-mid { color: #fbbf24; }
         .div-right { color: #f0abfc; }
         @keyframes pulseDiv {
             from { transform: scale(1); }
             to { transform: scale(1.03); }
         }
 
-        /* Event Toast Banner */
         #event-banner {
             background: rgba(10, 16, 28, 0.94);
             border: 1.5px solid var(--accent);
@@ -298,27 +295,12 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
             white-space: nowrap;
         }
-        #event-banner.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        #event-banner.danger {
-            border-color: var(--danger);
-            background: rgba(88, 12, 28, 0.95);
-            color: #fecdd3;
-        }
-        #event-banner.warn {
-            border-color: var(--warn);
-            background: rgba(66, 40, 8, 0.95);
-            color: #fef08a;
-        }
-        #event-banner.success {
-            border-color: var(--accent-2);
-            background: rgba(6, 56, 42, 0.95);
-            color: #a7f3d0;
-        }
+        #event-banner.show { opacity: 1; transform: translateY(0); }
+        #event-banner.danger { border-color: var(--danger); background: rgba(88, 12, 28, 0.95); color: #fecdd3; }
+        #event-banner.warn { border-color: var(--warn); background: rgba(66, 40, 8, 0.95); color: #fef08a; }
+        #event-banner.success { border-color: var(--accent-2); background: rgba(6, 56, 42, 0.95); color: #a7f3d0; }
 
-        /* Top-Right: Stats & Quick Buttons */
+        /* Top-Right: Merged Star-Gold Points & Quick Buttons */
         .hud-right-row {
             display: flex;
             align-items: center;
@@ -361,10 +343,7 @@
             transition: transform 0.12s ease, border-color 0.15s ease;
         }
         .hud-icon-btn:active { transform: scale(0.92); }
-        .hud-icon-btn.night-active {
-            border-color: #818cf8;
-            background: rgba(30, 27, 75, 0.9);
-        }
+        .hud-icon-btn.night-active { border-color: #818cf8; background: rgba(30, 27, 75, 0.9); }
 
         /* ================= BOTTOM CONTROLS ================= */
         .bottom-controls {
@@ -554,25 +533,9 @@
         }
         #speed-arc { stroke: #22d3ee; filter: drop-shadow(0 0 4px #22d3ee); }
         #rpm-arc { stroke: #34d399; filter: drop-shadow(0 0 4px #34d399); }
-        .dial-readout {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            line-height: 1;
-        }
-        .dial-val {
-            font-size: 21px;
-            font-weight: 900;
-            font-variant-numeric: tabular-nums;
-            color: #ffffff;
-        }
-        .dial-unit {
-            font-size: 8px;
-            font-weight: 800;
-            letter-spacing: 0.7px;
-            color: var(--muted);
-            margin-top: 3px;
-        }
+        .dial-readout { position: relative; z-index: 2; text-align: center; line-height: 1; }
+        .dial-val { font-size: 21px; font-weight: 900; font-variant-numeric: tabular-nums; color: #ffffff; }
+        .dial-unit { font-size: 8px; font-weight: 800; letter-spacing: 0.7px; color: var(--muted); margin-top: 3px; }
         .cluster-bridge {
             display: flex;
             flex-direction: column;
@@ -594,31 +557,10 @@
             font-weight: 900;
             color: var(--accent);
         }
-        #drive-mode-lbl {
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 0.8px;
-            color: var(--accent-2);
-        }
-        #odo-lbl {
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--muted);
-            font-variant-numeric: tabular-nums;
-        }
-        .nitro-track {
-            width: 68px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-        #nitro-fill {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, #38bdf8, #a855f7, #f43f5e);
-            border-radius: 99px;
-        }
+        #drive-mode-lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.8px; color: var(--accent-2); }
+        #odo-lbl { font-size: 9px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .nitro-track { width: 68px; height: 5px; background: rgba(255, 255, 255, 0.12); border-radius: 99px; overflow: hidden; }
+        #nitro-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #38bdf8, #a855f7, #f43f5e); border-radius: 99px; }
 
         /* ================= RIGHT CONTROLS ================= */
         .action-grid {
@@ -641,16 +583,12 @@
             transition: transform 0.1s ease, border-color 0.15s ease;
         }
         .act-btn:active { transform: scale(0.92); }
-        .act-btn.lit {
-            border-color: var(--warn);
-            box-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
-        }
+        .act-btn.lit { border-color: var(--warn); box-shadow: 0 0 12px rgba(251, 191, 36, 0.45); }
         .act-btn.turbo-btn {
             border-color: rgba(244, 63, 94, 0.55);
             background: linear-gradient(145deg, rgba(190, 18, 60, 0.85), rgba(126, 34, 206, 0.85));
         }
 
-        /* Vertical Throttle / Brake Slider */
         #throttle-wrap {
             width: 54px;
             height: 124px;
@@ -665,12 +603,7 @@
             padding: 8px 0;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
         }
-        .th-lbl {
-            font-size: 9px;
-            font-weight: 900;
-            letter-spacing: 0.6px;
-            pointer-events: none;
-        }
+        .th-lbl { font-size: 9px; font-weight: 900; letter-spacing: 0.6px; pointer-events: none; }
         .th-lbl.gas { color: var(--accent-2); }
         .th-lbl.brk { color: var(--danger); }
         #throttle-knob {
@@ -719,13 +652,7 @@
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .modal-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 800;
-        }
+        .modal-title-wrap { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; }
         .modal-close {
             width: 32px;
             height: 32px;
@@ -762,23 +689,10 @@
             cursor: pointer;
             transition: all 0.15s ease;
         }
-        .opt-btn.active {
-            background: rgba(34, 211, 238, 0.2);
-            border-color: var(--accent);
-            color: #fff;
-        }
-        .opt-btn.village-btn {
-            border-color: rgba(74, 222, 128, 0.55);
-            background: rgba(22, 101, 52, 0.35);
-            color: #bbf7d0;
-        }
-        .opt-btn.cyber-btn {
-            border-color: rgba(232, 121, 249, 0.55);
-            background: rgba(112, 26, 117, 0.38);
-            color: #f5d0fe;
-        }
+        .opt-btn.active { background: rgba(34, 211, 238, 0.2); border-color: var(--accent); color: #fff; }
+        .opt-btn.village-btn { border-color: rgba(74, 222, 128, 0.55); background: rgba(22, 101, 52, 0.35); color: #bbf7d0; }
+        .opt-btn.cyber-btn { border-color: rgba(232, 121, 249, 0.55); background: rgba(112, 26, 117, 0.38); color: #f5d0fe; }
 
-        /* Day/Night Toggle Switch */
         .dn-toggle-row {
             display: flex;
             align-items: center;
@@ -790,13 +704,7 @@
         }
         .switch { position: relative; width: 56px; height: 30px; cursor: pointer; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            inset: 0;
-            background: #f59e0b;
-            border-radius: 99px;
-            transition: background 0.25s ease;
-        }
+        .slider { position: absolute; inset: 0; background: #f59e0b; border-radius: 99px; transition: background 0.25s ease; }
         .slider::before {
             content: '☀️';
             position: absolute;
@@ -815,46 +723,14 @@
         .switch input:checked + .slider { background: #4338ca; }
         .switch input:checked + .slider::before { content: '🌙'; transform: translateX(26px); }
 
-        /* Swatches & Chapter Cards */
         .swatch-row { display: flex; flex-wrap: wrap; gap: 8px; }
-        .swatch {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.35);
-            cursor: pointer;
-        }
+        .swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.35); cursor: pointer; }
         .swatch.active { border-color: #fff; transform: scale(1.14); box-shadow: 0 0 10px #fff; }
-        .chapter-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1.5px solid var(--border);
-            border-radius: 14px;
-            padding: 10px 13px;
-            margin-bottom: 9px;
-        }
-        .chapter-card.current {
-            border-color: var(--accent);
-            background: rgba(34, 211, 238, 0.11);
-        }
-        .chapter-card.done {
-            border-color: var(--accent-2);
-            background: rgba(52, 211, 153, 0.1);
-        }
-        .rules-box {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-        .rule-chip {
-            flex: 1;
-            min-width: 140px;
-            padding: 7px 10px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 800;
-            text-align: center;
-        }
+        .chapter-card { background: rgba(255, 255, 255, 0.04); border: 1.5px solid var(--border); border-radius: 14px; padding: 10px 13px; margin-bottom: 9px; }
+        .chapter-card.current { border-color: var(--accent); background: rgba(34, 211, 238, 0.11); }
+        .chapter-card.done { border-color: var(--accent-2); background: rgba(52, 211, 153, 0.1); }
+        .rules-box { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .rule-chip { flex: 1; min-width: 140px; padding: 7px 10px; border-radius: 10px; font-size: 11px; font-weight: 800; text-align: center; }
         .rule-chip.crash { background: rgba(244, 63, 94, 0.18); border: 1px solid rgba(244, 63, 94, 0.5); color: #fda4af; }
         .rule-chip.toll { background: rgba(251, 191, 36, 0.16); border: 1px solid rgba(251, 191, 36, 0.5); color: #fde68a; }
 
@@ -868,7 +744,6 @@
             margin-bottom: 10px;
         }
 
-        /* Compact Landscape Scaling for Smaller Phones */
         @media (max-height: 430px), (max-width: 780px) {
             #minimap-box { width: 92px; height: 92px; }
             #chapter-pill { min-width: 154px; padding: 5px 9px; }
@@ -912,16 +787,16 @@
             <!-- Top-Center: Zone Pill + Big Flyover Diversion Prompt + Event Toast -->
             <div class="hud-center-slot">
                 <div id="zone-pill">
-                    <div class="brand-badge">M8</div>
+                    <div class="brand-badge">NH</div>
                     <span class="zone-dot" id="zone-dot"></span>
-                    <span id="zone-name">6-LANE EXPRESS HIGHWAY</span>
+                    <span id="zone-name">10-LANE BIG FLYOVER & TOLL PLAZA</span>
                 </div>
                 <div id="diversion-prompt">
                     <span class="div-left">⬅️ LEFT: SMALL VILLAGE</span>
-                    <span class="div-mid">| ⬆️ EXPRESS |</span>
+                    <span class="div-mid">| ⬆️ 10-LANE FLYOVER TOLL |</span>
                     <span class="div-right">RIGHT: FUTURISTIC CITY ➡️</span>
                 </div>
-                <div id="event-banner">🛣️ CHAPTER 1: EXPRESS AWAKENING</div>
+                <div id="event-banner">🚧 10-LANE FLYOVER TOLL PLAZA & INDIAN JAM AHEAD</div>
             </div>
 
             <!-- Top-Right: Merged Star-Gold Points & Quick Modals -->
@@ -935,7 +810,6 @@
 
         <!-- BOTTOM CONTROLS -->
         <div class="bottom-controls">
-            <!-- Left: Steering Wheel / Joystick / Android Tilt -->
             <div class="ctrl-left">
                 <div id="wheel-wrap">
                     <div id="wheel-inner">
@@ -961,7 +835,6 @@
                 </div>
             </div>
 
-            <!-- Center: Dual Digital Speedometer & Tachometer Cluster -->
             <div id="dual-cluster">
                 <div class="dial-box">
                     <svg class="dial-svg" viewBox="0 0 100 100">
@@ -993,12 +866,11 @@
                 </div>
             </div>
 
-            <!-- Right: 2x2 Quick Actions + Throttle Slider -->
             <div class="ctrl-right">
                 <div class="action-grid">
                     <button class="act-btn lit" id="btn-lights" title="Headlights (L)">💡</button>
                     <button class="act-btn" id="btn-cam" title="Camera View (C)">🎥</button>
-                    <button class="act-btn" id="btn-horn" title="Horn (H)">📣</button>
+                    <button class="act-btn" id="btn-horn" title="Indian Horn (H)">📣</button>
                     <button class="act-btn turbo-btn" id="btn-turbo" title="Nitro Boost (Space)">⚡</button>
                 </div>
                 <div id="throttle-wrap">
@@ -1048,7 +920,7 @@
                 <div class="set-label"><span>Climate</span></div>
                 <div class="opt-row" id="climate-opts">
                     <button class="opt-btn active" data-weather="clear">🌤️ Clear</button>
-                    <button class="opt-btn" data-weather="rain">🌧️ Rain</button>
+                    <button class="opt-btn" data-weather="rain">🌧️ Monsoon Rain</button>
                     <button class="opt-btn" data-weather="winter">❄️ Winter</button>
                     <button class="opt-btn" data-weather="fog">🌫️ Fog</button>
                 </div>
@@ -1096,11 +968,11 @@
     <div class="modal-backdrop" id="modal-map">
         <div class="modal-card">
             <div class="modal-header">
-                <div class="modal-title-wrap">🗺️ World Map, Flyover Diversions & Fast Travel</div>
+                <div class="modal-title-wrap">🗺️ World Map, 10-Lane Flyover Toll & Fast Travel</div>
                 <button class="modal-close" data-close>✕</button>
             </div>
             <canvas id="worldmap-canvas" width="520" height="220"></canvas>
-            <div class="set-label"><span>Flyover Diversions & Key Spots</span></div>
+            <div class="set-label"><span>10-Lane Flyover, Toll Plaza, Diversions & Key Spots</span></div>
             <div class="opt-row" id="fast-travel-btns"></div>
         </div>
     </div>
@@ -1112,18 +984,17 @@
 
     /* =========================================================================
        5-CHAPTER PROGRESSION SYSTEM
-       Chapter 1: 1,000 -> 100,000 pts, scaling progressively up to Chapter 5
        ========================================================================= */
     const CHAPTERS = [
         {
             num: 1,
-            name: 'Express Awakening',
+            name: '10-Lane Flyover & Toll Jam',
             minPts: 1000,
             maxPts: 100000,
             mult: 1.0,
             trafficBoost: 1.0,
             rewardPts: 5000,
-            desc: 'Master the Big Flyover, explore Left Small Village & Right Futuristic City, and pay Toll Gates (-500).'
+            desc: 'Weave through the 10-Lane Big Flyover Toll Plaza & dense Indian traffic jam, or take Village / Futuristic City exits.'
         },
         {
             num: 2,
@@ -1133,7 +1004,7 @@
             mult: 1.4,
             trafficBoost: 1.12,
             rewardPts: 10000,
-            desc: 'Faster highway traffic! Chain near-misses across the Village Diversion and Express Flyover.'
+            desc: 'Faster highway traffic! Chain near-misses across the Village Diversion and 10-Lane Flyover.'
         },
         {
             num: 3,
@@ -1171,22 +1042,23 @@
     const TOLL_FEE = 500;
 
     /* =========================================================================
-       TRACK GEOMETRY, BIG FLYOVER & DRIVABLE BRANCHES (VILLAGE + FUTURISTIC CITY)
+       TRACK GEOMETRY, MASSIVE 10-LANE BIG FLYOVER (s = 180..760) & TOLL PLAZA
        ========================================================================= */
     const TRACK_LENGTH = 5600;
-    const FLYOVER_START = 220;
-    const FLYOVER_SPLIT_START = 380;
-    const FLYOVER_SPLIT_END = 510;
-    const FLYOVER_END = 600;
-    const BRANCH_EXIT_S = 470;
-    const BRANCH_REJOIN_S = 700;
+    const FLYOVER_START = 180;
+    const FLYOVER_TOLL_S = 350;      // 10-Lane Toll Gate right on top of the Big Flyover!
+    const FLYOVER_SPLIT_START = 430;
+    const FLYOVER_SPLIT_END = 560;
+    const FLYOVER_END = 760;
+    const BRANCH_EXIT_S = 520;
+    const BRANCH_REJOIN_S = 840;
 
     const ZONES = [
-        { name: '6-LANE EXPRESS HIGHWAY', start: 0, end: 1300, halfW: 13.5, color: '#22d3ee' },
-        { name: 'MOUNTAIN EXPRESS TUNNEL', start: 1300, end: 2150, halfW: 11.5, color: '#a855f7' },
-        { name: 'SMALL TOWN BOULEVARD', start: 2150, end: 3180, halfW: 12.2, color: '#34d399' },
-        { name: 'GRAND RIVER SUSPENSION BRIDGE', start: 3180, end: 4160, halfW: 12.6, color: '#38bdf8' },
-        { name: '10-LANE SUPER HIGHWAY', start: 4160, end: 5600, halfW: 17.5, color: '#f59e0b' }
+        { name: '10-LANE BIG FLYOVER & TOLL PLAZA', start: 0, end: 1300, halfW: 19.5, color: '#f59e0b' },
+        { name: 'MOUNTAIN EXPRESS TUNNEL', start: 1300, end: 2150, halfW: 13.5, color: '#a855f7' },
+        { name: 'SMALL TOWN BOULEVARD', start: 2150, end: 3180, halfW: 14.0, color: '#34d399' },
+        { name: 'GRAND RIVER SUSPENSION BRIDGE', start: 3180, end: 4160, halfW: 15.0, color: '#38bdf8' },
+        { name: '10-LANE SUPER HIGHWAY', start: 4160, end: 5600, halfW: 19.5, color: '#22d3ee' }
     ];
 
     function wrapS(s) {
@@ -1203,12 +1075,11 @@
         return ZONES[0];
     }
 
+    // Full 10-Lane Big Flyover deck (~39m total width -> halfW = 19.5m, ~3.9m per lane)
     function getSmoothHalfWidth(s) {
         const ws = wrapS(s);
-        // Widen deck smoothly on the Big Flyover Interchange Split so Left/Center/Right are unmistakable
-        if (ws >= 310 && ws <= 545) {
-            const peak = Math.sin(((ws - 310) / 235) * Math.PI);
-            return 13.5 + peak * 8.0;
+        if (ws >= FLYOVER_START - 50 && ws <= FLYOVER_END + 60) {
+            return 19.5;
         }
         const blend = 55;
         for (let i = 0; i < ZONES.length; i++) {
@@ -1227,21 +1098,21 @@
                 return z.halfW;
             }
         }
-        return 13.5;
+        return 19.5;
     }
 
     function getTrackHeight(ws) {
-        // Big Grand Interchange Flyover (s = 220..600) rising to 12.5m
+        // Grand 10-Lane Big Flyover (s = 180..760) rising to 14.5m
         if (ws >= FLYOVER_START && ws <= FLYOVER_END) {
             const tt = (ws - FLYOVER_START) / (FLYOVER_END - FLYOVER_START);
-            return Math.sin(tt * Math.PI) * 12.5;
+            return Math.sin(tt * Math.PI) * 14.5;
         }
         // Grand River Suspension Bridge arch (s = 3200..4150)
         if (ws >= 3200 && ws <= 4150) {
             const tt = (ws - 3200) / 950;
             return Math.sin(tt * Math.PI) * 11.5;
         }
-        // 2nd Drivable Elevated Super Highway Flyover (s = 4450..4760) rising to 9.5m
+        // 2nd Drivable Elevated Super Highway Flyover (s = 4450..4760)
         if (ws >= 4450 && ws <= 4760) {
             const tt = (ws - 4450) / 310;
             return Math.sin(tt * Math.PI) * 9.5;
@@ -1277,11 +1148,10 @@
        CUBIC BEZIER BRANCH CURVES FOR LEFT (VILLAGE) & RIGHT (FUTURISTIC CITY)
        ========================================================================= */
     function buildBranchCurve(side) {
-        // side = -1 (LEFT -> Small Village), side = +1 (RIGHT -> Futuristic City)
         const f0 = getTrackFrame(BRANCH_EXIT_S);
         const f3 = getTrackFrame(BRANCH_REJOIN_S);
-        const startOffset = side * 12.5;
-        const endOffset = side * 12.5;
+        const startOffset = side * 15.5;
+        const endOffset = side * 14.5;
         const bulge = side === -1 ? 370 : 390;
 
         const p0 = { x: f0.x + f0.rx * startOffset, z: f0.z + f0.rz * startOffset };
@@ -1297,10 +1167,9 @@
             const mu = 1 - u;
             const x = mu*mu*mu*p0.x + 3*mu*mu*u*p1.x + 3*mu*u*u*p2.x + u*u*u*p3.x;
             const z = mu*mu*mu*p0.z + 3*mu*mu*u*p1.z + 3*mu*u*u*p2.z + u*u*u*p3.z;
-            // Smooth ramp descent from Big Flyover (f0.y -> 0) over first 18% of branch
             let y = 0;
-            if (u < 0.18) {
-                const k = u / 0.18;
+            if (u < 0.22) {
+                const k = u / 0.22;
                 y = f0.y * 0.5 * (1 + Math.cos(k * Math.PI));
             }
             if (i > 0) {
@@ -1308,7 +1177,7 @@
             }
             pts.push({ x, y, z, s: totalLen });
         }
-        return { pts, length: totalLen, halfW: side === -1 ? 7.8 : 11.2 };
+        return { pts, length: totalLen, halfW: side === -1 ? 8.4 : 11.6 };
     }
 
     const BRANCHES = {
@@ -1320,7 +1189,6 @@
         const b = BRANCHES[branchKey];
         const cs = Math.max(0, Math.min(b.length - 0.01, s));
         const pts = b.pts;
-        // Binary search for segment
         let lo = 0, hi = pts.length - 2;
         while (lo <= hi) {
             const mid = (lo + hi) >> 1;
@@ -1345,7 +1213,6 @@
         return { x, y, z, tx, tz, rx, rz, heading, pitch };
     }
 
-    // Pre-sampled clearance points (Main Highway + Both Branches)
     const TRACK_SAMPLES = [];
     for (let s = 0; s < TRACK_LENGTH; s += 28) {
         const f = getTrackFrame(s);
@@ -1368,7 +1235,7 @@
     }
 
     /* =========================================================================
-       PROCEDURAL WEB AUDIO ENGINE (ENGINE + HORN + CRASH + TOLL + CHAPTER)
+       PROCEDURAL WEB AUDIO ENGINE (ENGINE + INDIAN DUAL HORN + CRASH + TOLL)
        ========================================================================= */
     class SoundFX {
         constructor() {
@@ -1425,15 +1292,16 @@
             this.unlock();
             if (!this.ctx) return;
             const now = this.ctx.currentTime;
-            [392, 493.88].forEach(freq => {
+            // Crisp Indian dual-tone highway horn
+            [440, 554.37].forEach(freq => {
                 const o = this.ctx.createOscillator();
                 const g = this.ctx.createGain();
                 o.type = 'sawtooth';
                 o.frequency.value = freq;
-                g.gain.setValueAtTime(0.09, now);
-                g.gain.exponentialRampToValueAtTime(0.001, now + 0.36);
+                g.gain.setValueAtTime(0.095, now);
+                g.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
                 o.connect(g); g.connect(this.ctx.destination);
-                o.start(now); o.stop(now + 0.37);
+                o.start(now); o.stop(now + 0.29);
             });
         }
         playCrash() {
@@ -1452,15 +1320,15 @@
         playToll() {
             if (!this.enabled || !this.ctx) return;
             const now = this.ctx.currentTime;
-            [660, 523.25].forEach((freq, i) => {
+            [660, 880].forEach((freq, i) => {
                 const o = this.ctx.createOscillator();
                 const g = this.ctx.createGain();
                 o.type = 'sine';
                 o.frequency.value = freq;
-                g.gain.setValueAtTime(0.11, now + i * 0.11);
-                g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.11 + 0.22);
+                g.gain.setValueAtTime(0.11, now + i * 0.09);
+                g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.20);
                 o.connect(g); g.connect(this.ctx.destination);
-                o.start(now + i * 0.11); o.stop(now + i * 0.11 + 0.24);
+                o.start(now + i * 0.09); o.stop(now + i * 0.09 + 0.22);
             });
         }
         playChapterUp() {
@@ -1486,20 +1354,18 @@
         constructor() {
             this.sfx = new SoundFX();
 
-            // Route & Driving State ('main' | 'village' | 'cyber')
+            // Start right on the ramp approaching the 10-Lane Big Flyover & Toll Plaza!
             this.route = 'main';
-            this.s = 95;           // Spawn right before the Big Flyover!
+            this.s = 135;
             this.branchS = 0;
-            this.lateral = 0;
-            this.speed = 0;        // m/s
-            this.steerAngle = 0;   // -1..1
-            this.throttle = 0;     // -1..1
+            this.lateral = -2.0;
+            this.speed = 0;
+            this.steerAngle = 0;
+            this.throttle = 0;
             this.nitro = 100;
             this.turboHeld = false;
             this.distanceKm = 0;
 
-            // 5-Chapter & Scoring State (Chapter 1 starts at 1,000 pts -> 100,000 pts)
-            // 5-Chapter & Unified Star-Gold Scoring State (Chapter 1 starts at 1,000 pts -> 100,000 pts)
             this.chapterIdx = 0;
             this.score = 1000;
             this.combo = 0;
@@ -1508,17 +1374,16 @@
             this.cameraShake = 0;
             this.visitedVillage = false;
             this.visitedCyber = false;
+            this.jamAlertShown = false;
 
-            // Environment State
             this.isNight = false;
             this.weather = 'clear';
             this.headlightMode = 0;
             this.camMode = 0;
             this.camYawOffset = 0;
             this.camPitchOffset = 0;
-            this.lastZoneName = '6-LANE EXPRESS HIGHWAY';
+            this.lastZoneName = '10-LANE BIG FLYOVER & TOLL PLAZA';
 
-            // Controls State
             this.ctrlMode = 'wheel';
             this.keys = {};
             this.wheelSteer = 0;
@@ -1531,13 +1396,11 @@
             this.touchThrottle = 0;
             this.isLandscapeRotated = false;
 
-            // BMW M8 Default Specs & Visuals
             this.topSpeed = 98;
             this.accelPower = 40;
             this.paintHex = 0x0284c7;
             this.glowHex = 0x22d3ee;
 
-            // Dynamic World Collections
             this.traffic = [];
             this.branchTraffic = [];
             this.flyoverCars = [];
@@ -1569,17 +1432,14 @@
             this.bindInputs();
             this.applyEnvironment();
             this.handleResize();
-            this.showBanner('🏆 CH 1: REACH 100,000 PTS! BIG FLYOVER AHEAD');
+            this.showBanner('🚧 10-LANE BIG FLYOVER TOLL PLAZA & INDIAN JAM AHEAD!');
             this.animate();
         }
 
-        /* =====================================================================
-           THREE.JS CORE SETUP
-           ===================================================================== */
         initThree() {
             this.wrap = document.getElementById('canvas-wrap');
             this.scene = new THREE.Scene();
-            this.scene.fog = new THREE.FogExp2(0x8ec5fc, 0.0010);
+            this.scene.fog = new THREE.FogExp2(0x8ec5fc, 0.00095);
 
             this.camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.4, 2400);
             this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -1626,33 +1486,55 @@
             ctx.textBaseline = 'middle';
             lines.forEach((line, idx) => {
                 ctx.fillStyle = textColors[idx] || '#ffffff';
-                ctx.font = idx === 0 ? '900 42px sans-serif' : '800 32px sans-serif';
+                ctx.font = idx === 0 ? '900 40px sans-serif' : '800 30px sans-serif';
                 const y = lines.length === 1 ? 80 : (idx === 0 ? 54 : 112);
                 ctx.fillText(line, 256, y);
             });
             return new THREE.CanvasTexture(c);
         }
 
+        // Indian IND-style License Plate Texture (IND + white plate + black lettering)
+        makeIndianPlateTexture(regText) {
+            const c = document.createElement('canvas');
+            c.width = 256; c.height = 64;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 256, 64);
+            ctx.fillStyle = '#1e40af';
+            ctx.fillRect(0, 0, 32, 64);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('IND', 16, 48);
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 31px sans-serif';
+            ctx.fillText(regText, 144, 43);
+            return new THREE.CanvasTexture(c);
+        }
+
         buildProceduralTextures() {
-            // 1) Express Highway Asphalt
+            // 10-Lane Highway Asphalt with 9 lane dividers & yellow median
             const ac = document.createElement('canvas');
-            ac.width = 512; ac.height = 512;
+            ac.width = 1024; ac.height = 512;
             const actx = ac.getContext('2d');
-            actx.fillStyle = '#252b36';
-            actx.fillRect(0, 0, 512, 512);
-            for (let i = 0; i < 8000; i++) {
+            actx.fillStyle = '#242a34';
+            actx.fillRect(0, 0, 1024, 512);
+            for (let i = 0; i < 10000; i++) {
                 const v = 28 + Math.random() * 24;
                 actx.fillStyle = `rgb(${v},${v + 3},${v + 8})`;
-                actx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+                actx.fillRect(Math.random() * 1024, Math.random() * 512, 2, 2);
             }
-            actx.fillStyle = '#e2e8f0';
-            actx.fillRect(14, 0, 7, 512);
-            actx.fillRect(491, 0, 7, 512);
-            actx.fillStyle = '#facc15';
-            actx.fillRect(250, 0, 4, 512);
-            actx.fillRect(258, 0, 4, 512);
-            actx.fillStyle = 'rgba(241,245,249,0.82)';
-            [95, 175, 337, 417].forEach(lx => {
+            // Outer white edge lines
+            actx.fillStyle = '#f8fafc';
+            actx.fillRect(18, 0, 10, 512);
+            actx.fillRect(996, 0, 10, 512);
+            // Center saffron/yellow divider for 5 lanes each way
+            actx.fillStyle = '#f59e0b';
+            actx.fillRect(505, 0, 5, 512);
+            actx.fillRect(514, 0, 5, 512);
+            // 8 dashed lane lines across the 10 lanes
+            actx.fillStyle = 'rgba(241,245,249,0.78)';
+            [115, 213, 311, 409, 615, 713, 811, 909].forEach(lx => {
                 for (let y = 0; y < 512; y += 64) actx.fillRect(lx - 2, y, 4, 34);
             });
             this.asphaltTex = new THREE.CanvasTexture(ac);
@@ -1661,7 +1543,7 @@
             this.asphaltTex.repeat.set(1, 210);
             this.asphaltTex.anisotropy = 8;
 
-            // 2) Small Village Rustic Country Road Texture
+            // Small Village Rustic Country Road
             const vc = document.createElement('canvas');
             vc.width = 256; vc.height = 256;
             const vctx = vc.getContext('2d');
@@ -1681,18 +1563,16 @@
             this.villageRoadTex.wrapT = THREE.RepeatWrapping;
             this.villageRoadTex.repeat.set(1, 55);
 
-            // 3) Futuristic City Neon Cyber Road Texture
+            // Futuristic City Neon Cyber Road
             const cc = document.createElement('canvas');
             cc.width = 256; cc.height = 256;
             const cctx = cc.getContext('2d');
             cctx.fillStyle = '#090d1a';
             cctx.fillRect(0, 0, 256, 256);
-            // Neon cyan & magenta glowing rails
             cctx.fillStyle = '#22d3ee';
             cctx.fillRect(8, 0, 10, 256);
             cctx.fillStyle = '#e879f9';
             cctx.fillRect(238, 0, 10, 256);
-            // Cyber grid & dashed neon centerline
             cctx.strokeStyle = 'rgba(56, 189, 248, 0.28)';
             cctx.lineWidth = 2;
             for (let y = 0; y < 256; y += 32) {
@@ -1705,7 +1585,7 @@
             this.cyberRoadTex.wrapT = THREE.RepeatWrapping;
             this.cyberRoadTex.repeat.set(1, 65);
 
-            // 4) Grass / Terrain Texture
+            // Grass Terrain
             const gc = document.createElement('canvas');
             gc.width = 256; gc.height = 256;
             const gctx = gc.getContext('2d');
@@ -1721,7 +1601,7 @@
             this.grassTex.wrapT = THREE.RepeatWrapping;
             this.grassTex.repeat.set(90, 90);
 
-            // 5) City Window Texture
+            // City Windows
             const wc = document.createElement('canvas');
             wc.width = 256; wc.height = 256;
             const wctx = wc.getContext('2d');
@@ -1738,7 +1618,7 @@
             this.windowTex.wrapS = THREE.RepeatWrapping;
             this.windowTex.wrapT = THREE.RepeatWrapping;
 
-            // 6) Neon Cyber Skyscraper Texture
+            // Neon Cyber Skyscraper
             const nc = document.createElement('canvas');
             nc.width = 256; nc.height = 256;
             const nctx = nc.getContext('2d');
@@ -1755,7 +1635,6 @@
             this.cyberWinTex.wrapS = THREE.RepeatWrapping;
             this.cyberWinTex.wrapT = THREE.RepeatWrapping;
 
-            // 7) Headlight Pool & License Plate
             const lc = document.createElement('canvas');
             lc.width = 256; lc.height = 256;
             const lctx = lc.getContext('2d');
@@ -1767,18 +1646,7 @@
             lctx.fillRect(0, 0, 256, 256);
             this.lightPoolTex = new THREE.CanvasTexture(lc);
 
-            const pc = document.createElement('canvas');
-            pc.width = 256; pc.height = 64;
-            const pctx = pc.getContext('2d');
-            pctx.fillStyle = '#f8fafc';
-            pctx.fillRect(0, 0, 256, 64);
-            pctx.fillStyle = '#1d4ed8';
-            pctx.fillRect(0, 0, 28, 64);
-            pctx.fillStyle = '#0f172a';
-            pctx.font = 'bold 34px sans-serif';
-            pctx.textAlign = 'center';
-            pctx.fillText('M·DI 2864', 142, 44);
-            this.plateTex = new THREE.CanvasTexture(pc);
+            this.plateTex = this.makeIndianPlateTexture('KA 01 MH 2864');
         }
 
         buildSkyAndWeather() {
@@ -1822,7 +1690,7 @@
         }
 
         /* =====================================================================
-           MAIN HIGHWAY, BIG FLYOVER, TUNNELS, BRIDGE, TOWN & LANDSCAPE
+           MAIN 10-LANE HIGHWAY, BIG FLYOVER, INDIAN ROADSIDE SHOPS & LANDSCAPE
            ===================================================================== */
         buildMainHighway() {
             this.groundMat = new THREE.MeshStandardMaterial({ map: this.grassTex, roughness: 0.94, metalness: 0.02 });
@@ -1841,7 +1709,7 @@
             river.position.set(rf.x, -0.05, rf.z);
             this.scene.add(river);
 
-            // Continuous Main Highway Ribbon
+            // Continuous Highway Ribbon
             const segs = 700;
             const positions = [], uvs = [], indices = [];
             for (let i = 0; i <= segs; i++) {
@@ -1871,18 +1739,17 @@
             for (let s = 0; s < TRACK_LENGTH; s += 16) {
                 const f = getTrackFrame(s);
                 const hw = getSmoothHalfWidth(s);
-                // Keep Big Flyover diversion exits, rejoin zones, and service-road slip openings clear!
                 const isDiversionOpening =
-                    (s >= 430 && s <= 525) ||
-                    (s >= 665 && s <= 735) ||
+                    (s >= 500 && s <= 595) ||
+                    (s >= 810 && s <= 880) ||
                     (s >= 820 && s <= 940) ||
                     (s >= 1160 && s <= 1220) ||
                     (s >= 4210 && s <= 4340) ||
                     (s >= 4740 && s <= 4820);
                 if (!isDiversionOpening && !(s >= 2160 && s <= 3160)) {
                     [-1, 1].forEach(side => {
-                        const rail = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.86, 16.2), railMat);
-                        rail.position.set(f.x + f.rx * (hw + 0.65) * side, f.y + 0.44, f.z + f.rz * (hw + 0.65) * side);
+                        const rail = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.92, 16.2), railMat);
+                        rail.position.set(f.x + f.rx * (hw + 0.65) * side, f.y + 0.46, f.z + f.rz * (hw + 0.65) * side);
                         rail.rotation.y = f.heading;
                         this.scene.add(rail);
                     });
@@ -1891,33 +1758,33 @@
                 // Street Lamps every 48m
                 if (s % 48 === 0 && !(s >= 1320 && s <= 2130) && !(s >= 1040 && s <= 1150)) {
                     [-1, 1].forEach(side => {
-                        const px = f.x + f.rx * (hw + 1.4) * side;
-                        const pz = f.z + f.rz * (hw + 1.4) * side;
-                        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.2, 8.2, 6), poleMat);
-                        pole.position.set(px, f.y + 4.1, pz);
+                        const px = f.x + f.rx * (hw + 1.5) * side;
+                        const pz = f.z + f.rz * (hw + 1.5) * side;
+                        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 8.6, 6), poleMat);
+                        pole.position.set(px, f.y + 4.3, pz);
                         this.scene.add(pole);
-                        const bulb = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.22, 0.45), bulbMat);
-                        bulb.position.set(px - f.rx * side * 1.1, f.y + 8.1, pz - f.rz * side * 1.1);
+                        const bulb = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.24, 0.45), bulbMat);
+                        bulb.position.set(px - f.rx * side * 1.2, f.y + 8.5, pz - f.rz * side * 1.2);
                         bulb.rotation.y = f.heading;
                         this.scene.add(bulb);
                     });
                 }
 
-                // Big Flyover, Suspension Bridge & Super Highway Flyover Underside Decks + Concrete Piers
+                // Massive 10-Lane Big Flyover Underside Deck & Twin Heavy Concrete Piers
                 if (((s >= FLYOVER_START + 10 && s <= FLYOVER_END - 10) || (s >= 3220 && s <= 4130) || (s >= 4460 && s <= 4750)) && f.y > 0.7 && s % 28 === 0) {
-                    const deckUnder = new THREE.Mesh(new THREE.BoxGeometry(hw * 2 + 3.6, 1.4, 30), concreteMat);
-                    deckUnder.position.set(f.x, f.y - 0.72, f.z);
+                    const deckUnder = new THREE.Mesh(new THREE.BoxGeometry(hw * 2 + 4.2, 1.6, 30), concreteMat);
+                    deckUnder.position.set(f.x, f.y - 0.82, f.z);
                     deckUnder.rotation.y = f.heading;
                     this.scene.add(deckUnder);
-                    [-hw * 0.72, hw * 0.72].forEach(px => {
-                        const pier = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.4, f.y + 1.2, 8), concreteMat);
+                    [-hw * 0.78, -hw * 0.26, hw * 0.26, hw * 0.78].forEach(px => {
+                        const pier = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.6, f.y + 1.2, 8), concreteMat);
                         pier.position.set(f.x + f.rx * px, f.y / 2 - 0.6, f.z + f.rz * px);
                         this.scene.add(pier);
                     });
                 }
             }
 
-            // Mountain Express Tunnel (1320..2130), Hillside Eco Tunnel (1040..1150) & Super Highway Tunnel (4860..5140)
+            // Tunnels
             const buildTunnel = (sStart, sEnd, radius, ledHex) => {
                 const archMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9, side: THREE.DoubleSide });
                 const ledMat = new THREE.MeshBasicMaterial({ color: ledHex });
@@ -1937,30 +1804,37 @@
                 }
             };
             buildTunnel(1040, 1150, 15.2, 0x34d399);
-            buildTunnel(1320, 2130, 14.5, 0x38bdf8);
-            buildTunnel(4860, 5140, 19.5, 0xf59e0b);
+            buildTunnel(1320, 2130, 16.5, 0x38bdf8);
+            buildTunnel(4860, 5140, 21.5, 0xf59e0b);
 
-            // Small Town Boulevard Buildings
+            // Indian Highway Dhabas, Tea Stalls & Town Buildings along s = 2180..3140
             const sidewalkMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.88 });
-            for (let s = 2180; s <= 3140; s += 28) {
+            const dhabaBoardTex = this.makeSignTexture('#ea580c', '#fde047', ['PUNJABI DHABA & CHAI', 'NH-48 EXPRESS HIGHWAY'], ['#ffffff', '#fef08a']);
+            for (let s = 2180; s <= 3140; s += 32) {
                 const f = getTrackFrame(s);
                 const hw = getSmoothHalfWidth(s);
                 [-1, 1].forEach(side => {
-                    const sw = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.35, 29), sidewalkMat);
+                    const sw = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.35, 33), sidewalkMat);
                     sw.position.set(f.x + f.rx * side * (hw + 2.8), f.y + 0.17, f.z + f.rz * side * (hw + 2.8));
                     sw.rotation.y = f.heading;
                     this.scene.add(sw);
-                    const bx = f.x + f.rx * side * (hw + 13);
-                    const bz = f.z + f.rz * side * (hw + 13);
+                    const bx = f.x + f.rx * side * (hw + 14);
+                    const bz = f.z + f.rz * side * (hw + 14);
                     if (isClearOfAllRoads(bx, bz, 6)) {
-                        const bH = 12 + Math.random() * 18;
+                        const bH = 11 + Math.random() * 16;
                         const bld = new THREE.Mesh(
                             new THREE.BoxGeometry(13, bH, 16),
-                            new THREE.MeshStandardMaterial({ map: this.windowTex, color: 0xdbeafe, roughness: 0.72 })
+                            new THREE.MeshStandardMaterial({ map: this.windowTex, color: 0xfde68a, roughness: 0.72 })
                         );
                         bld.position.set(bx, f.y + bH / 2, bz);
                         bld.rotation.y = f.heading;
                         this.scene.add(bld);
+                        if (s % 64 === 0 && side === 1) {
+                            const board = new THREE.Mesh(new THREE.BoxGeometry(10, 2.2, 0.3), new THREE.MeshBasicMaterial({ map: dhabaBoardTex }));
+                            board.position.set(bx - f.rx * 6.8, f.y + 4.2, bz - f.rz * 6.8);
+                            board.rotation.y = f.heading;
+                            this.scene.add(board);
+                        }
                     }
                 });
             }
@@ -1984,7 +1858,7 @@
 
             // Boost Pads
             const padMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.78 });
-            [320, 4320, 4560, 5260].forEach(ps => {
+            [240, 4320, 4560, 5260].forEach(ps => {
                 const f = getTrackFrame(ps);
                 const pad = new THREE.Mesh(new THREE.PlaneGeometry(5.5, 16), padMat);
                 pad.rotation.x = -Math.PI / 2;
@@ -1994,7 +1868,7 @@
                 this.boostPads.push({ s: ps, lat: 0 });
             });
 
-            // Off-Road Mountains (Strictly cleared of Main Highway + Village + Cyber City)
+            // Off-Road Mountains
             const mtnMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.95 });
             const snowCapMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.85 });
             for (let i = 0; i < 40; i++) {
@@ -2015,57 +1889,54 @@
         }
 
         /* =====================================================================
-           BIG FLYOVER GRAND OVERHEAD GANTRY & DIRECTIONAL SIGNBOARDS
+           10-LANE BIG FLYOVER GANTRIES & DIVERSIONS
            ===================================================================== */
         buildBigFlyoverSigns() {
             const poleMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.7, roughness: 0.3 });
 
-            // Gantry 1: Big Flyover Approach Sign (s = 230)
-            const fApp = getTrackFrame(230);
+            // Gantry 1: 10-Lane Big Flyover Approach Sign (s = 195)
+            const fApp = getTrackFrame(195);
             const appGrp = new THREE.Group();
             appGrp.position.set(fApp.x, fApp.y, fApp.z);
             appGrp.rotation.y = fApp.heading;
-            [-15, 15].forEach(px => {
-                const p = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 9.5, 8), poleMat);
-                p.position.set(px, 4.75, 0);
+            [-19, 19].forEach(px => {
+                const p = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 10.5, 8), poleMat);
+                p.position.set(px, 5.25, 0);
                 appGrp.add(p);
             });
-            const appTex = this.makeSignTexture('#064e3b', '#34d399', ['BIG FLYOVER INTERCHANGE', '⬅️ VILLAGE   |   FUTURISTIC CITY ➡️'], ['#ffffff', '#fde68a']);
-            const appBoard = new THREE.Mesh(new THREE.BoxGeometry(24, 4.6, 0.5), new THREE.MeshBasicMaterial({ map: appTex }));
-            appBoard.position.set(0, 9.2, 0);
+            const appTex = this.makeSignTexture('#7c2d12', '#fbbf24', ['10-LANE BIG FLYOVER & TOLL PLAZA', 'NH-48 EXPRESS • HEAVY TRAFFIC JAM'], ['#fef08a', '#ffffff']);
+            const appBoard = new THREE.Mesh(new THREE.BoxGeometry(28, 4.8, 0.5), new THREE.MeshBasicMaterial({ map: appTex }));
+            appBoard.position.set(0, 9.8, 0);
             appGrp.add(appBoard);
             this.scene.add(appGrp);
 
-            // Gantry 2: Big Flyover Split Gantry right above the Left/Right Diversions (s = 415)
-            const fSp = getTrackFrame(415);
+            // Gantry 2: Flyover Diversion Split Gantry (s = 465)
+            const fSp = getTrackFrame(465);
             const spGrp = new THREE.Group();
             spGrp.position.set(fSp.x, fSp.y, fSp.z);
             spGrp.rotation.y = fSp.heading;
-            [-21, 21].forEach(px => {
+            [-20, 20].forEach(px => {
                 const p = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.5, 10.5, 8), poleMat);
                 p.position.set(px, 5.25, 0);
                 spGrp.add(p);
             });
-            const beam = new THREE.Mesh(new THREE.BoxGeometry(43, 0.7, 0.7), poleMat);
+            const beam = new THREE.Mesh(new THREE.BoxGeometry(41, 0.7, 0.7), poleMat);
             beam.position.set(0, 9.6, 0);
             spGrp.add(beam);
 
-            // Left Panel: Small Village
             const leftTex = this.makeSignTexture('#14532d', '#4ade80', ['⬅️ LEFT EXIT', 'SMALL VILLAGE'], ['#86efac', '#ffffff']);
             const leftSign = new THREE.Mesh(new THREE.BoxGeometry(12.5, 4.2, 0.5), new THREE.MeshBasicMaterial({ map: leftTex }));
-            leftSign.position.set(-13.5, 9.6, 0.4);
+            leftSign.position.set(-13.2, 9.6, 0.4);
             spGrp.add(leftSign);
 
-            // Center Panel: Express Highway + Toll Ahead
-            const midTex = this.makeSignTexture('#0c4a6e', '#38bdf8', ['⬆️ STRAIGHT', 'EXPRESS & TOLL'], ['#7dd3fc', '#fde68a']);
+            const midTex = this.makeSignTexture('#0c4a6e', '#38bdf8', ['⬆️ 10-LANE FLYOVER', 'EXPRESSWAY'], ['#7dd3fc', '#fde68a']);
             const midSign = new THREE.Mesh(new THREE.BoxGeometry(11.5, 4.2, 0.5), new THREE.MeshBasicMaterial({ map: midTex }));
             midSign.position.set(0, 9.6, 0.4);
             spGrp.add(midSign);
 
-            // Right Panel: Futuristic City
             const rightTex = this.makeSignTexture('#3b0764', '#e879f9', ['RIGHT EXIT ➡️', 'FUTURISTIC CITY'], ['#f0abfc', '#22d3ee']);
             const rightSign = new THREE.Mesh(new THREE.BoxGeometry(12.5, 4.2, 0.5), new THREE.MeshBasicMaterial({ map: rightTex }));
-            rightSign.position.set(13.5, 9.6, 0.4);
+            rightSign.position.set(13.2, 9.6, 0.4);
             spGrp.add(rightSign);
             this.scene.add(spGrp);
 
@@ -2073,62 +1944,80 @@
             const arrowGeo = new THREE.PlaneGeometry(3.8, 12);
             const leftArrowMat = new THREE.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.75 });
             const rightArrowMat = new THREE.MeshBasicMaterial({ color: 0xe879f9, transparent: true, opacity: 0.75 });
-            [435, 455, 475].forEach(as => {
+            [475, 495, 515].forEach(as => {
                 const f = getTrackFrame(as);
                 const la = new THREE.Mesh(arrowGeo, leftArrowMat);
                 la.rotation.x = -Math.PI / 2; la.rotation.z = -f.heading + 0.25;
-                la.position.set(f.x - f.rx * 13, f.y + 0.11, f.z - f.rz * 13);
+                la.position.set(f.x - f.rx * 15, f.y + 0.11, f.z - f.rz * 15);
                 this.scene.add(la);
 
                 const ra = new THREE.Mesh(arrowGeo, rightArrowMat);
                 ra.rotation.x = -Math.PI / 2; ra.rotation.z = -f.heading - 0.25;
-                ra.position.set(f.x + f.rx * 13, f.y + 0.11, f.z + f.rz * 13);
+                ra.position.set(f.x + f.rx * 15, f.y + 0.11, f.z + f.rz * 15);
                 this.scene.add(ra);
             });
         }
 
         /* =====================================================================
-           INTERACTIVE TOLL GATES (-500 PTS DEDUCTED WITH LIFTING BARRIERS)
+           10-LANE TOLL PLAZA ON THE BIG FLYOVER + SUPER HIGHWAY TOLL GATE
            ===================================================================== */
         buildTollGates() {
-            const concreteMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.85 });
+            const concreteMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.82 });
             const roofMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.55, roughness: 0.3 });
             const barrierMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e });
-            const tollTex = this.makeSignTexture('#78350f', '#fbbf24', ['🚧 EXPRESS TOLL GATE', 'TOLL FEE: -500 PTS'], ['#fef08a', '#ffffff']);
+            const fastagGreen = new THREE.MeshBasicMaterial({ color: 0x22c55e });
+            const tollTex = this.makeSignTexture('#78350f', '#fbbf24', ['🚧 10-LANE FLYOVER TOLL PLAZA', 'FASTag EXPRESS • FEE: -500 PTS'], ['#fef08a', '#ffffff']);
 
-            // Place 2 Toll Gates on the 5.6km loop: s = 780 (after Flyover) & s = 4380 (Super Highway)
-            [780, 4380].forEach(ts => {
+            // Place Toll Plaza right on the 10-Lane Big Flyover (s = 350) + Super Highway (s = 4380)
+            [FLYOVER_TOLL_S, 4380].forEach(ts => {
                 const f = getTrackFrame(ts);
-                const hw = getSmoothHalfWidth(ts);
+                const hw = getSmoothHalfWidth(ts); // 19.5m -> 39m wide 10-lane plaza!
                 const grp = new THREE.Group();
                 grp.position.set(f.x, f.y, f.z);
                 grp.rotation.y = f.heading;
 
-                const span = hw * 2 + 6;
-                const roof = new THREE.Mesh(new THREE.BoxGeometry(span, 2.0, 9.5), roofMat);
-                roof.position.y = 7.6;
+                const span = hw * 2 + 3.0;
+                const roof = new THREE.Mesh(new THREE.BoxGeometry(span, 2.2, 11.0), roofMat);
+                roof.position.y = 8.0;
                 grp.add(roof);
 
-                const signBoard = new THREE.Mesh(new THREE.BoxGeometry(20, 3.6, 0.5), new THREE.MeshBasicMaterial({ map: tollTex }));
-                signBoard.position.set(0, 9.4, -4.8);
+                // Indian Saffron / Green / Gold Trim Bands on Toll Canopy
+                const saffronBand = new THREE.Mesh(new THREE.BoxGeometry(span + 0.2, 0.35, 11.2), new THREE.MeshBasicMaterial({ color: 0xf97316 }));
+                saffronBand.position.y = 9.25;
+                grp.add(saffronBand);
+
+                const signBoard = new THREE.Mesh(new THREE.BoxGeometry(26, 4.2, 0.5), new THREE.MeshBasicMaterial({ map: tollTex }));
+                signBoard.position.set(0, 10.2, -5.6);
                 grp.add(signBoard);
 
-                const neonStrip = new THREE.Mesh(new THREE.BoxGeometry(span + 0.3, 0.45, 9.7), new THREE.MeshBasicMaterial({ color: 0xfbbf24 }));
-                neonStrip.position.y = 8.7;
-                grp.add(neonStrip);
+                // 11 Toll Booth Islands forming 10 full lanes across the 39m flyover!
+                const laneCount = 10;
+                const booths = [];
+                for (let b = 0; b <= laneCount; b++) {
+                    const bx = -hw + (b / laneCount) * (hw * 2);
+                    booths.push(bx);
+                }
 
-                const booths = [-hw + 1, -hw * 0.35, hw * 0.35, hw - 1];
                 const arms = [];
                 booths.forEach((bx, idx) => {
-                    const booth = new THREE.Mesh(new THREE.BoxGeometry(1.7, 7.2, 4.6), concreteMat);
-                    booth.position.set(bx, 3.6, 0);
+                    const booth = new THREE.Mesh(new THREE.BoxGeometry(1.35, 7.6, 5.2), concreteMat);
+                    booth.position.set(bx, 3.8, 0);
                     grp.add(booth);
 
-                    // Animated Barrier Arm extending across lane
+                    // Green FASTag / Red Manual Lane Indicator Light above each of the 10 lanes
                     if (idx < booths.length - 1) {
+                        const laneMidX = (bx + booths[idx + 1]) * 0.5;
+                        const laneLight = new THREE.Mesh(
+                            new THREE.BoxGeometry(1.4, 0.35, 0.4),
+                            idx % 2 === 0 ? fastagGreen : barrierMat
+                        );
+                        laneLight.position.set(laneMidX, 6.75, -2.5);
+                        grp.add(laneLight);
+
+                        // Animated Toll Boom Barrier across each lane
                         const pivot = new THREE.Group();
-                        pivot.position.set(bx + 0.9, 1.35, -1.8);
-                        const armLen = (booths[idx + 1] - bx) - 1.9;
+                        pivot.position.set(bx + 0.72, 1.35, -2.1);
+                        const armLen = (booths[idx + 1] - bx) - 1.45;
                         const arm = new THREE.Mesh(new THREE.BoxGeometry(armLen, 0.22, 0.22), barrierMat);
                         arm.position.x = armLen / 2;
                         pivot.add(arm);
@@ -2143,7 +2032,7 @@
         }
 
         /* =====================================================================
-           LEFT DIVERSION: SCENIC 3D SMALL VILLAGE
+           LEFT DIVERSION: SMALL VILLAGE & RIGHT DIVERSION: FUTURISTIC CITY
            ===================================================================== */
         buildSmallVillageBranch() {
             const b = BRANCHES.village;
@@ -2166,9 +2055,8 @@
             geo.computeVertexNormals();
             this.scene.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: this.villageRoadTex, roughness: 0.88, side: THREE.DoubleSide })));
 
-            // Ramp underside piers for descending village exit
             const concreteMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.85 });
-            for (let s = 25; s < b.length * 0.18; s += 30) {
+            for (let s = 25; s < b.length * 0.22; s += 30) {
                 const f = getBranchFrame('village', s);
                 if (f.y > 0.8) {
                     const pier = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 1.15, f.y + 0.5, 8), concreteMat);
@@ -2177,7 +2065,6 @@
                 }
             }
 
-            // Village Welcome Arch at s = 175
             const wf = getBranchFrame('village', 175);
             const archGrp = new THREE.Group();
             archGrp.position.set(wf.x, wf.y, wf.z);
@@ -2194,7 +2081,6 @@
             archGrp.add(vSign);
             this.scene.add(archGrp);
 
-            // Village Cottages, Terracotta Roofs, Farm Fields, Trees, Haystacks & Water Tower
             const wallColors = [0xfef3c7, 0xfde68a, 0xffedd5, 0xe7e5e4];
             const roofMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.85 });
             const thatchMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.95 });
@@ -2210,7 +2096,6 @@
                     const hz = f.z + f.rz * side * dist;
 
                     if (s % 52 === 0) {
-                        // Village Cottage / Hut
                         const house = new THREE.Group();
                         house.position.set(hx, 0, hz);
                         house.rotation.y = f.heading;
@@ -2232,13 +2117,11 @@
                         roof.rotation.y = Math.PI / 4;
                         house.add(roof);
 
-                        // Warm Glowing Door / Window
                         const win = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.4, 0.2), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
                         win.position.set(0, 2.2, d / 2 + 0.08);
                         house.add(win);
                         this.scene.add(house);
                     } else {
-                        // Lush Village Tree + Crop Field Patch
                         const tree = new THREE.Group();
                         tree.position.set(hx, 0, hz);
                         const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 4.2, 6), trunkMat);
@@ -2256,7 +2139,6 @@
                 });
             }
 
-            // Iconic Village Water Tank & Temple Spire at midpoint
             const midV = getBranchFrame('village', b.length * 0.52);
             const wt = new THREE.Group();
             wt.position.set(midV.x - midV.rx * 22, 0, midV.z - midV.rz * 22);
@@ -2268,9 +2150,6 @@
             this.scene.add(wt);
         }
 
-        /* =====================================================================
-           RIGHT DIVERSION: 3D FUTURISTIC NEON CYBER CITY
-           ===================================================================== */
         buildFuturisticCityBranch() {
             const b = BRANCHES.cyber;
             const pts = b.pts;
@@ -2292,9 +2171,8 @@
             geo.computeVertexNormals();
             this.scene.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: this.cyberRoadTex, roughness: 0.25, metalness: 0.45, side: THREE.DoubleSide })));
 
-            // Neon Ramp Support Piers
             const cyberPierMat = new THREE.MeshStandardMaterial({ color: 0x1e1b4b, metalness: 0.7, roughness: 0.25 });
-            for (let s = 25; s < b.length * 0.18; s += 30) {
+            for (let s = 25; s < b.length * 0.22; s += 30) {
                 const f = getBranchFrame('cyber', s);
                 if (f.y > 0.8) {
                     const pier = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.2, f.y + 0.5, 8), cyberPierMat);
@@ -2303,7 +2181,6 @@
                 }
             }
 
-            // Futuristic City Neon Welcome Portal at s = 180
             const cf = getBranchFrame('cyber', 180);
             const portal = new THREE.Group();
             portal.position.set(cf.x, cf.y, cf.z);
@@ -2324,7 +2201,6 @@
             portal.add(cSign);
             this.scene.add(portal);
 
-            // Towering Neon Skyscrapers, Glowing Cyber Arches & Hovering Drones
             const cyberBldMat = new THREE.MeshStandardMaterial({
                 map: this.cyberWinTex,
                 emissive: 0x1e1b4b,
@@ -2335,8 +2211,6 @@
 
             for (let s = 200; s < b.length - 120; s += 34) {
                 const f = getBranchFrame('cyber', s);
-
-                // Overhead Glowing Cyber Light Arch every 68m
                 if (s % 68 === 0) {
                     const arch = new THREE.Mesh(
                         new THREE.TorusGeometry(hw + 1.8, 0.42, 8, 22, Math.PI),
@@ -2347,7 +2221,6 @@
                     this.scene.add(arch);
                 }
 
-                // Twin Neon Skyscrapers on both sides
                 [-1, 1].forEach((side, idx) => {
                     const dist = hw + 17 + (idx % 2) * 5;
                     const sx = f.x + f.rx * side * dist;
@@ -2359,7 +2232,6 @@
                     tower.rotation.y = f.heading;
                     this.scene.add(tower);
 
-                    // Glowing Rooftop Neon Crown
                     const crown = new THREE.Mesh(
                         new THREE.BoxGeometry(w + 0.6, 1.1, w + 0.6),
                         idx === 0 ? neonCyan : neonMag
@@ -2370,7 +2242,6 @@
                 });
             }
 
-            // 8 Animated Hovering Cyber Drones cruising above Futuristic City
             for (let i = 0; i < 8; i++) {
                 const drone = new THREE.Group();
                 const core = new THREE.Mesh(new THREE.OctahedronGeometry(1.4, 0), new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0x22d3ee : 0xe879f9 }));
@@ -2387,7 +2258,6 @@
                 });
             }
 
-            // Neon Cyber Tunnel inside the Futuristic City (s = 420..650)
             const cyberTunnelMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.6, roughness: 0.35, side: THREE.DoubleSide });
             for (let s = 420; s <= 650; s += 20) {
                 const f = getBranchFrame('cyber', s);
@@ -2406,24 +2276,147 @@
         }
 
         /* =====================================================================
-           MULTIPLE ROADS, PARALLEL SERVICE HIGHWAYS, OVERHEAD FLYOVERS,
-           4 LANDSCAPED ROUNDABOUTS & 4 CONCRETE BOX UNDERPASSES
+           REALISTIC INDIAN VEHICLE ARCHETYPES:
+           - 'truck': Colorful Indian Goods Lorry / Tata Truck (painted cab + cargo box + rear bumper)
+           - 'bus': State Roadways / Sleeper Bus (KSRTC / MSRTC / Volvo style tall coach)
+           - 'auto': Iconic Yellow & Green Indian Auto-Rickshaw (3-wheeler canopy + front lamp)
+           - 'sedan': Indian Hatchback / Sedan (Maruti / Hyundai / Swift / City style)
+           - 'suv': Big Indian SUV / Fortuner / Scorpio style
            ===================================================================== */
-        createSimpleAmbientCar(colorHex) {
+        createIndianVehicle(kind, colorHex) {
             const g = new THREE.Group();
-            const body = new THREE.Mesh(
-                new THREE.BoxGeometry(2.0, 0.76, 4.4),
-                new THREE.MeshPhysicalMaterial({ color: colorHex, metalness: 0.45, roughness: 0.25, clearcoat: 0.7 })
-            );
-            body.position.y = 0.68;
-            const cab = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.56, 2.2), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2 }));
-            cab.position.set(0, 1.26, -0.15);
-            const hl = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.16, 0.08), new THREE.MeshBasicMaterial({ color: 0xfef9c3 }));
-            hl.position.set(0, 0.7, 2.22);
-            const tl = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.16, 0.08), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
-            tl.position.set(0, 0.7, -2.22);
+            const bodyMat = new THREE.MeshPhysicalMaterial({ color: colorHex, metalness: 0.45, roughness: 0.26, clearcoat: 0.7 });
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.15, metalness: 0.5 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x111318, roughness: 0.88 });
+            const hlMat = new THREE.MeshBasicMaterial({ color: 0xfef9c3 });
+            const tlMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+            const halfW = 1.08, halfL = 2.25;
+
+            if (kind === 'truck') {
+                // Colorful Indian Highway Lorry / Truck
+                const cab = new THREE.Mesh(new THREE.BoxGeometry(2.35, 1.85, 2.1), bodyMat);
+                cab.position.set(0, 1.35, 2.65);
+                const wind = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.75, 0.12), glassMat);
+                wind.position.set(0, 1.75, 3.72);
+                const cargo = new THREE.Mesh(
+                    new THREE.BoxGeometry(2.45, 2.55, 4.9),
+                    new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.82 })
+                );
+                cargo.position.set(0, 1.75, -0.85);
+                // Painted Indian Rear Tailboard Stripe
+                const stripe = new THREE.Mesh(new THREE.BoxGeometry(2.48, 0.45, 0.12), new THREE.MeshBasicMaterial({ color: 0xf97316 }));
+                stripe.position.set(0, 1.05, -3.32);
+                const hl = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.2, 0.1), hlMat);
+                hl.position.set(0, 0.85, 3.72);
+                const tl = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.2, 0.1), tlMat);
+                tl.position.set(0, 0.65, -3.32);
+                g.add(cab, wind, cargo, stripe, hl, tl);
+                [-1.1, 1.1].forEach(wx => {
+                    [2.7, -0.4, -2.3].forEach(wz => {
+                        const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.36, 12), tireMat);
+                        wh.rotation.z = Math.PI / 2;
+                        wh.position.set(wx, 0.52, wz);
+                        g.add(wh);
+                    });
+                });
+                return { mesh: g, halfW: 1.25, halfL: 3.55 };
+            }
+
+            if (kind === 'bus') {
+                // Indian Roadways Bus
+                const coach = new THREE.Mesh(new THREE.BoxGeometry(2.42, 2.45, 7.6), bodyMat);
+                coach.position.set(0, 1.65, 0);
+                const winStrip = new THREE.Mesh(new THREE.BoxGeometry(2.46, 0.72, 6.6), glassMat);
+                winStrip.position.set(0, 2.15, 0);
+                const hl = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.22, 0.1), hlMat);
+                hl.position.set(0, 0.9, 3.82);
+                const tl = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.22, 0.1), tlMat);
+                tl.position.set(0, 0.9, -3.82);
+                g.add(coach, winStrip, hl, tl);
+                [-1.12, 1.12].forEach(wx => {
+                    [2.4, -2.4].forEach(wz => {
+                        const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.34, 12), tireMat);
+                        wh.rotation.z = Math.PI / 2;
+                        wh.position.set(wx, 0.48, wz);
+                        g.add(wh);
+                    });
+                });
+                return { mesh: g, halfW: 1.25, halfL: 3.85 };
+            }
+
+            if (kind === 'auto') {
+                // Iconic Indian Yellow & Green Auto-Rickshaw
+                const autoYellow = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.35, metalness: 0.3 });
+                const autoGreen = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.45 });
+                const base = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.68, 2.45), autoYellow);
+                base.position.set(0, 0.56, 0);
+                const hood = new THREE.Mesh(new THREE.BoxGeometry(1.34, 0.78, 1.55), autoGreen);
+                hood.position.set(0, 1.28, -0.35);
+                const fCab = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.72, 0.85), autoYellow);
+                fCab.position.set(0, 1.22, 0.68);
+                const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), hlMat);
+                lamp.position.set(0, 0.95, 1.25);
+                const tl = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.15, 0.08), tlMat);
+                tl.position.set(0, 0.75, -1.24);
+                g.add(base, hood, fCab, lamp, tl);
+                [-0.68, 0.68].forEach(wx => {
+                    const rw = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.2, 10), tireMat);
+                    rw.rotation.z = Math.PI / 2;
+                    rw.position.set(wx, 0.26, -0.55);
+                    g.add(rw);
+                });
+                const fw = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.2, 10), tireMat);
+                fw.rotation.z = Math.PI / 2;
+                fw.position.set(0, 0.26, 0.92);
+                g.add(fw);
+                return { mesh: g, halfW: 0.78, halfL: 1.32 };
+            }
+
+            if (kind === 'suv') {
+                // Big Indian SUV
+                const body = new THREE.Mesh(new THREE.BoxGeometry(2.08, 0.92, 4.65), bodyMat);
+                body.position.set(0, 0.78, 0);
+                const cab = new THREE.Mesh(new THREE.BoxGeometry(1.86, 0.74, 2.55), glassMat);
+                cab.position.set(0, 1.52, -0.25);
+                const hl = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.18, 0.08), hlMat);
+                hl.position.set(0, 0.82, 2.34);
+                const tl = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.18, 0.08), tlMat);
+                tl.position.set(0, 0.88, -2.34);
+                g.add(body, cab, hl, tl);
+                [-0.98, 0.98].forEach(wx => {
+                    [-1.4, 1.42].forEach(wz => {
+                        const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.28, 12), tireMat);
+                        wh.rotation.z = Math.PI / 2;
+                        wh.position.set(wx, 0.42, wz);
+                        g.add(wh);
+                    });
+                });
+                return { mesh: g, halfW: 1.12, halfL: 2.38 };
+            }
+
+            // Default Indian Hatchback / Sedan
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.94, 0.76, 4.25), bodyMat);
+            body.position.set(0, 0.68, 0);
+            const cab = new THREE.Mesh(new THREE.BoxGeometry(1.68, 0.58, 2.15), glassMat);
+            cab.position.set(0, 1.28, -0.15);
+            const hl = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.16, 0.08), hlMat);
+            hl.position.set(0, 0.72, 2.14);
+            const tl = new THREE.Mesh(new THREE.BoxGeometry(1.62, 0.16, 0.08), tlMat);
+            tl.position.set(0, 0.74, -2.14);
             g.add(body, cab, hl, tl);
-            return g;
+            [-0.92, 0.92].forEach(wx => {
+                [-1.32, 1.32].forEach(wz => {
+                    const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.25, 12), tireMat);
+                    wh.rotation.z = Math.PI / 2;
+                    wh.position.set(wx, 0.36, wz);
+                    g.add(wh);
+                });
+            });
+            return { mesh: g, halfW, halfL };
+        }
+
+        createSimpleAmbientCar(colorHex) {
+            return this.createIndianVehicle('sedan', colorHex).mesh;
         }
 
         buildExtraInfrastructure() {
@@ -2433,7 +2426,6 @@
             const signGreenMat = new THREE.MeshStandardMaterial({ color: 0x047857, roughness: 0.5 });
             const underLedMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
 
-            // 1) Parallel 2-Lane Drivable Service Roads flanking the Highway + Cruising Service Cars
             const serviceSegments = [
                 { start: 810, end: 1250 },
                 { start: 4200, end: 4820 }
@@ -2466,12 +2458,11 @@
                         start: seg.start,
                         end: seg.end,
                         side,
-                        speed: (14 + Math.random() * 9) * side
+                        speed: (12 + Math.random() * 8) * side
                     });
                 }
             });
 
-            // 2) Cross-Highways passing UNDER the Big Flyover (s = 395) & Super Highway Flyover (s = 4605)
             [395, 4605].forEach((us, idx) => {
                 const uf = getTrackFrame(us);
                 const grp = new THREE.Group();
@@ -2497,7 +2488,6 @@
                 }
             });
 
-            // 3) 4 Overhead Multi-Lane Cross-Flyovers with Approach Ramps, Signboards & 2-Way Traffic
             const flyoverLocs = [960, 2480, 2960, 5340];
             flyoverLocs.forEach((fs, idx) => {
                 const f = getTrackFrame(fs);
@@ -2543,7 +2533,6 @@
                 }
             });
 
-            // 4) 4 Landscaped 3D Roundabouts with Connector Roads, Monuments & Circling Traffic
             const roundaboutSpecs = [
                 { s: 890, side: 1, rIn: 9.5, rOut: 19.5, accent: 0x22d3ee },
                 { s: 2360, side: 1, rIn: 8.5, rOut: 17.5, accent: 0x34d399 },
@@ -2564,7 +2553,6 @@
                 ring.position.set(cx, cy + 0.07, cz);
                 this.scene.add(ring);
 
-                // Feeder Connector Road linking Highway to Roundabout
                 const feeder = new THREE.Mesh(new THREE.BoxGeometry(offset, 0.12, 11.5), svcRoadMat);
                 feeder.position.set(f.x + f.rx * rb.side * (offset * 0.5), cy + 0.05, f.z + f.rz * rb.side * (offset * 0.5));
                 feeder.rotation.y = f.heading;
@@ -2597,7 +2585,6 @@
                 }
             });
 
-            // 5) 4 Concrete Box Underpasses (Player drives UNDER cross-highways with ceiling LEDs & top traffic!)
             const underpassLocs = [1230, 2720, 4190, 5240];
             const underSignTex = this.makeSignTexture('#0f172a', '#fbbf24', ['⬇️ HIGHWAY UNDERPASS', 'CLEARANCE 7.0M'], ['#fde68a', '#ffffff']);
             underpassLocs.forEach(us => {
@@ -2608,7 +2595,6 @@
                 grp.position.set(f.x, f.y, f.z);
                 grp.rotation.y = f.heading;
 
-                // Concrete Underpass Roof Slab + Cross-Road Deck on Top
                 const roof = new THREE.Mesh(new THREE.BoxGeometry(span, 2.2, 28), concreteMat);
                 roof.position.y = 7.4;
                 grp.add(roof);
@@ -2617,12 +2603,10 @@
                 topCrossRoad.position.y = 8.65;
                 grp.add(topCrossRoad);
 
-                // Underpass Signboard
                 const uSign = new THREE.Mesh(new THREE.BoxGeometry(12, 2.4, 0.3), new THREE.MeshBasicMaterial({ map: underSignTex }));
                 uSign.position.set(0, 7.6, -14.2);
                 grp.add(uSign);
 
-                // Side Concrete Retaining Walls + Warm Underpass Ceiling Lights
                 [-hw - 2.6, hw + 2.6].forEach(off => {
                     const wall = new THREE.Mesh(new THREE.BoxGeometry(2.6, 7.4, 28), concreteMat);
                     wall.position.set(off, 3.7, 0);
@@ -2635,7 +2619,6 @@
                 });
                 this.scene.add(grp);
 
-                // Animated Car driving across the Top Road of the Underpass
                 const topCar = this.createSimpleAmbientCar(0xfacc15);
                 topCar.rotation.y = Math.PI / 2;
                 topCar.position.set(-40, 8.85, 3.2);
@@ -2645,7 +2628,7 @@
         }
 
         /* =====================================================================
-           PLAYER BMW M8 & MULTI-CLASS TRAFFIC BUILDERS
+           PLAYER CAR + DENSE INDIAN TRAFFIC JAM (10 LANES + TOLL QUEUE + AUTOS/TRUCKS/BUSES)
            ===================================================================== */
         buildPlayerBMW() {
             this.playerGroup = new THREE.Group();
@@ -2845,44 +2828,83 @@
         }
 
         buildTraffic() {
-            const colors = [0xef4444, 0x3b82f6, 0x10b981, 0xfacc15, 0xf97316, 0x8b5cf6, 0xe2e8f0];
-            for (let i = 0; i < 44; i++) {
+            const colors = [0xef4444, 0x3b82f6, 0x10b981, 0xfacc15, 0xf97316, 0x8b5cf6, 0xf8fafc, 0x06b6d4];
+            const kinds = ['sedan', 'truck', 'auto', 'bus', 'suv', 'sedan', 'auto', 'truck'];
+
+            // 10-Lane Lateral Offsets across the 39m Flyover (-17.5m to +17.5m)
+            const tenLanes = [-17.2, -13.6, -10.0, -6.4, -2.8, 2.8, 6.4, 10.0, 13.6, 17.2];
+
+            // Dense Indian Traffic Jam packed along the 10-Lane Big Flyover & Toll Plaza (s = 210..620)
+            let jamCount = 0;
+            for (let row = 0; row < 7; row++) {
+                const rowS = 220 + row * 56;
+                for (let l = 0; l < tenLanes.length; l++) {
+                    // Leave a clear weaving slot in front of player spawn at row 0, lane -2.8
+                    if (row === 0 && l === 4) continue;
+                    const kind = kinds[(row + l) % kinds.length];
+                    const col = colors[(row * 3 + l) % colors.length];
+                    const built = this.createIndianVehicle(kind, col);
+                    this.scene.add(built.mesh);
+
+                    // Slow bumper-to-bumper Indian flyover jam speeds (3..9 m/s)
+                    const slowSpeed = 3.5 + ((row + l) % 4) * 1.4;
+                    this.traffic.push({
+                        mesh: built.mesh,
+                        s: rowS + (l % 3) * 7,
+                        lateral: tenLanes[l],
+                        dir: 1,
+                        baseSpeed: slowSpeed,
+                        halfW: built.halfW,
+                        halfL: built.halfL,
+                        isJam: true,
+                        passed: false
+                    });
+                    jamCount++;
+                }
+            }
+
+            // Additional Indian highway traffic around the rest of the 5.6km track
+            for (let i = 0; i < 38; i++) {
+                const kind = kinds[i % kinds.length];
                 const col = colors[i % colors.length];
-                const mesh = this.createSimpleAmbientCar(col);
-                this.scene.add(mesh);
+                const built = this.createIndianVehicle(kind, col);
+                this.scene.add(built.mesh);
                 const dir = i % 2 === 0 ? 1 : -1;
-                const lane = [2.6, 6.2, 9.6][i % 3] * dir;
+                const lane = tenLanes[(i + 2) % tenLanes.length];
+                const spd = kind === 'auto' ? 11 : (kind === 'truck' || kind === 'bus' ? 13 : 18 + Math.random() * 8);
                 this.traffic.push({
-                    mesh,
-                    s: wrapS(260 + i * (TRACK_LENGTH / 44)),
+                    mesh: built.mesh,
+                    s: wrapS(820 + i * ((TRACK_LENGTH - 850) / 38)),
                     lateral: lane,
                     dir,
-                    baseSpeed: (14 + Math.random() * 14) * dir,
-                    halfW: 1.08,
-                    halfL: 2.25,
+                    baseSpeed: spd * dir,
+                    halfW: built.halfW,
+                    halfL: built.halfL,
+                    isJam: false,
                     passed: false
                 });
             }
 
-            // Traffic inside Small Village & Futuristic City branches
+            // Traffic inside Small Village & Futuristic City branches (including autos in village!)
             ['village', 'cyber'].forEach((branchKey, bIdx) => {
                 const b = BRANCHES[branchKey];
                 for (let c = 0; c < 6; c++) {
+                    const bKind = branchKey === 'village' ? (c % 2 === 0 ? 'auto' : 'sedan') : 'sedan';
                     const col = branchKey === 'cyber'
                         ? (c % 2 === 0 ? 0x22d3ee : 0xe879f9)
                         : [0xfacc15, 0x22c55e, 0xf97316, 0x38bdf8][c % 4];
-                    const mesh = this.createSimpleAmbientCar(col);
-                    this.scene.add(mesh);
+                    const built = this.createIndianVehicle(bKind, col);
+                    this.scene.add(built.mesh);
                     const dir = c % 2 === 0 ? 1 : -1;
                     this.branchTraffic.push({
                         branch: branchKey,
-                        mesh,
+                        mesh: built.mesh,
                         s: 170 + c * ((b.length - 280) / 6),
                         lateral: dir * (b.halfW * 0.42),
                         dir,
-                        baseSpeed: (12 + c * 2.2 + bIdx * 3) * dir,
-                        halfW: 1.05,
-                        halfL: 2.2,
+                        baseSpeed: (11 + c * 2.0 + bIdx * 3) * dir,
+                        halfW: built.halfW,
+                        halfL: built.halfL,
                         passed: false
                     });
                 }
@@ -3027,9 +3049,6 @@
             }
         }
 
-        /* =====================================================================
-           ENVIRONMENT, GARAGE & WORLD MAP UI
-           ===================================================================== */
         applyEnvironment() {
             const night = this.isNight;
             let skyCol = night ? 0x060b18 : 0x67b6f7;
@@ -3087,15 +3106,15 @@
             wrap.innerHTML = '';
 
             const spots = [
-                { name: '🌉 Big Flyover Split', route: 'main', s: 330, lat: 0, cls: 'active' },
+                { name: '🚧 10-Lane Flyover Toll Jam', route: 'main', s: 250, lat: -2.8, cls: 'active' },
+                { name: '🌉 Flyover Village/Cyber Split', route: 'main', s: 440, lat: 0, cls: '' },
                 { name: '🏡 Left: Small Village', route: 'village', s: 120, lat: 0, cls: 'village-btn' },
                 { name: '⚡ Right: Futuristic City', route: 'cyber', s: 120, lat: 0, cls: 'cyber-btn' },
-                { name: '🚧 Express Toll Gate', route: 'main', s: 710, lat: 0, cls: '' },
                 { name: '🔄 Roundabout & Service Rd', route: 'main', s: 850, lat: 18.0, cls: '' },
                 { name: '⬇️ Highway Underpass', route: 'main', s: 1175, lat: 0, cls: '' },
                 { name: '🏔️ Mountain Tunnel', route: 'main', s: 1320, lat: 3.5, cls: '' },
                 { name: '🌉 Suspension Bridge', route: 'main', s: 3220, lat: 3.5, cls: '' },
-                { name: '🛣️ Super Flyover & Roundabout', route: 'main', s: 4410, lat: 0, cls: '' }
+                { name: '🛣️ Super Flyover Toll', route: 'main', s: 4320, lat: 0, cls: '' }
             ];
             spots.forEach(sp => {
                 const btn = document.createElement('button');
@@ -3106,7 +3125,7 @@
                     if (sp.route === 'main') this.s = sp.s;
                     else this.branchS = sp.s;
                     this.lateral = sp.lat;
-                    this.speed = 20;
+                    this.speed = 18;
                     this.closeAllModals();
                     this.showBanner(`📍 FAST TRAVEL: ${sp.name.toUpperCase()}`);
                 };
@@ -3136,7 +3155,6 @@
             });
             window.addEventListener('keyup', e => { this.keys[e.code] = false; });
 
-            // Steering Wheel
             const wheel = document.getElementById('wheel-wrap');
             let wheelPtr = null, wheelStartX = 0;
             wheel.addEventListener('pointerdown', e => {
@@ -3153,7 +3171,6 @@
             wheel.addEventListener('pointerup', endWheel);
             wheel.addEventListener('pointercancel', endWheel);
 
-            // Steering Joystick
             const sJoy = document.getElementById('steer-joy-wrap');
             const sKnob = document.getElementById('steer-joy-knob');
             let joyPtr = null, joyCenterX = 0;
@@ -3173,7 +3190,6 @@
             sJoy.addEventListener('pointerup', endJoy);
             sJoy.addEventListener('pointercancel', endJoy);
 
-            // Throttle / Brake Slider
             const thWrap = document.getElementById('throttle-wrap');
             const thKnob = document.getElementById('throttle-knob');
             let thPtr = null, thStartY = 0;
@@ -3202,7 +3218,6 @@
             thWrap.addEventListener('pointerup', endTh);
             thWrap.addEventListener('pointercancel', endTh);
 
-            // Camera Orbit Drag
             let camPtr = null, camLastX = 0, camLastY = 0;
             this.renderer.domElement.addEventListener('pointerdown', e => {
                 camPtr = e.pointerId;
@@ -3218,7 +3233,6 @@
             });
             window.addEventListener('pointerup', e => { if (e.pointerId === camPtr) camPtr = null; });
 
-            // Action Buttons
             document.getElementById('btn-lights').onclick = () => this.cycleHeadlights();
             document.getElementById('btn-cam').onclick = () => this.cycleCamera();
             document.getElementById('btn-horn').onclick = () => this.sfx.playHorn();
@@ -3227,7 +3241,6 @@
             turboBtn.addEventListener('pointerup', () => { this.turboHeld = false; });
             turboBtn.addEventListener('pointerleave', () => { this.turboHeld = false; });
 
-            // Top HUD Buttons
             document.getElementById('btn-daynight-hud').onclick = () => {
                 this.isNight = !this.isNight;
                 this.applyEnvironment();
@@ -3287,11 +3300,10 @@
             const bindListeners = () => {
                 if (this._tiltBound) return;
                 this._tiltBound = true;
-                let gotMotion = false;
+                this.tiltActive = false;
                 window.addEventListener('devicemotion', ev => {
                     const g = ev.accelerationIncludingGravity;
                     if (!g || (g.x === null && g.y === null)) return;
-                    gotMotion = true;
                     this.tiltActive = true;
                     const angle = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
                     let val = 0;
@@ -3361,14 +3373,13 @@
         }
 
         /* =====================================================================
-           MAIN UPDATE LOOP (PHYSICS, FLYOVER DIVERSIONS, TOLL, TRAFFIC, HUD)
+           MAIN UPDATE LOOP
            ===================================================================== */
         update(dt) {
             const curChapter = CHAPTERS[this.chapterIdx];
             const topSpeed = this.topSpeed;
             const accelPower = this.accelPower;
 
-            // Gather Controls
             const kbGas = (this.keys['KeyW'] || this.keys['ArrowUp']) ? 1 : 0;
             const kbBrk = (this.keys['KeyS'] || this.keys['ArrowDown']) ? 1 : 0;
             const kbSteer = ((this.keys['KeyA'] || this.keys['ArrowLeft']) ? -1 : 0) + ((this.keys['KeyD'] || this.keys['ArrowRight']) ? 1 : 0);
@@ -3395,7 +3406,6 @@
             const ds = this.speed * dt;
             const kmh = Math.abs(this.speed) * 3.6;
 
-            // Earn Points Scaled by Speed, Turbo & Chapter Multiplier (tuned for 1,000 -> 100,000+ chapters)
             if (ds > 0) {
                 this.distanceKm += ds / 1000;
                 const speedBonus = (kmh / 100) * 14;
@@ -3403,9 +3413,8 @@
                 this.addPoints(ds * (12 + speedBonus) * (turboReq ? 1.6 : 1.0) * curChapter.mult * branchMult);
             }
 
-            // Lateral Movement & Route Transition Logic
             const grip = (this.weather === 'winter' ? 0.72 : (this.weather === 'rain' ? 0.85 : 1.0));
-            const latSpeed = this.steerAngle * Math.min(16.5, Math.abs(this.speed) * 0.54 + 3.2) * grip;
+            const latSpeed = this.steerAngle * Math.min(17.5, Math.abs(this.speed) * 0.56 + 3.4) * grip;
             this.lateral += latSpeed * dt;
 
             let pf;
@@ -3417,12 +3426,17 @@
                 const inServiceZone = (this.s >= 810 && this.s <= 1250) || (this.s >= 4200 && this.s <= 4820);
                 const maxLat = inServiceZone ? (hw + 10.6) : (hw - 1.5);
                 this.lateral = Math.max(-maxLat, Math.min(maxLat, this.lateral));
-                const showDiv = this.s >= 260 && this.s <= 495;
+
+                if (!this.jamAlertShown && this.s >= 195 && this.s <= 340) {
+                    this.jamAlertShown = true;
+                    this.showBanner('🚦 10-LANE FLYOVER JAM! WEAVE THROUGH TOLL & AUTOS/TRUCKS', 'warn');
+                }
+
+                const showDiv = this.s >= 410 && this.s <= 545;
                 divPrompt.classList.toggle('show', showDiv);
 
-                // Check Left (Small Village) & Right (Futuristic City) Diversion Entry!
-                if (this.s >= 455 && this.s <= 505 && this.speed > 0) {
-                    if (this.lateral < -7.2) {
+                if (this.s >= 505 && this.s <= 565 && this.speed > 0) {
+                    if (this.lateral < -11.5) {
                         this.route = 'village';
                         this.branchS = 10;
                         this.lateral = 0;
@@ -3434,7 +3448,7 @@
                         } else {
                             this.showBanner('🏡 LEFT DIVERSION: SMALL VILLAGE', 'success');
                         }
-                    } else if (this.lateral > 7.2) {
+                    } else if (this.lateral > 11.5) {
                         this.route = 'cyber';
                         this.branchS = 10;
                         this.lateral = 0;
@@ -3449,7 +3463,6 @@
                     }
                 }
 
-                // Boost Pads
                 this.boostPads.forEach(p => {
                     if (Math.abs(this.s - p.s) < 9 && Math.abs(this.lateral - p.lat) < 3.6) {
                         this.speed = Math.min(topSpeed * 1.32, this.speed + 24 * dt * 8);
@@ -3462,18 +3475,16 @@
                     if (tg.paidCooldown > 0) tg.paidCooldown -= dt;
                     let dist = Math.abs(this.s - tg.s);
                     if (dist > TRACK_LENGTH / 2) dist = TRACK_LENGTH - dist;
-                    // Lift barrier smoothly when player is within 45m
-                    const targetLift = dist < 48 ? 1.25 : 0;
+                    const targetLift = dist < 52 ? 1.25 : 0;
                     tg.liftAngle += (targetLift - tg.liftAngle) * Math.min(1, dt * 8);
                     tg.arms.forEach(arm => { arm.rotation.z = tg.liftAngle; });
-                    if (dist < 4.5 && this.speed > 1) {
+                    if (dist < 5.2 && this.speed > 1) {
                         this.handleTollGate(tg);
                     }
                 });
 
                 pf = getTrackFrame(this.s);
             } else {
-                // Driving inside Left Small Village OR Right Futuristic City!
                 divPrompt.classList.remove('show');
                 this.branchS += ds;
                 const b = BRANCHES[this.route];
@@ -3483,8 +3494,8 @@
                     const side = this.route === 'village' ? -1 : 1;
                     this.route = 'main';
                     this.s = BRANCH_REJOIN_S;
-                    this.lateral = side * 8.5;
-                    this.showBanner('🛣️ REJOINED EXPRESS HIGHWAY — TOLL GATE AHEAD!');
+                    this.lateral = side * 10.5;
+                    this.showBanner('🛣️ REJOINED EXPRESS HIGHWAY!');
                     pf = getTrackFrame(this.s);
                 } else if (this.branchS < 0) {
                     this.branchS = 0;
@@ -3527,8 +3538,8 @@
                 currentZoneLabel = '🌉 SUPER HIGHWAY ELEVATED FLYOVER';
                 zoneDot.style.background = '#f59e0b';
             } else if (this.s >= FLYOVER_START && this.s <= FLYOVER_END) {
-                currentZoneLabel = '🌉 BIG FLYOVER INTERCHANGE';
-                zoneDot.style.background = '#fbbf24';
+                currentZoneLabel = '🚧 10-LANE BIG FLYOVER & TOLL JAM';
+                zoneDot.style.background = '#f97316';
             } else {
                 const z = getZoneAt(this.s);
                 currentZoneLabel = z.name;
@@ -3539,7 +3550,6 @@
                 document.getElementById('zone-name').textContent = currentZoneLabel;
             }
 
-            // Update Player BMW Transform
             this.playerGroup.position.set(pf.x + pf.rx * this.lateral, pf.y, pf.z + pf.rz * this.lateral);
             this.playerGroup.rotation.y = pf.heading - this.steerAngle * 0.14;
             this.playerGroup.rotation.x = -pf.pitch;
@@ -3555,7 +3565,6 @@
                 if (turboReq) fl.scale.set(1, 0.8 + Math.random() * 0.5, 1);
             });
 
-            // Headlights Visibility
             const inTunnel = (this.route === 'main' && ((this.s >= 1040 && this.s <= 1150) || (this.s >= 1300 && this.s <= 2150) || (this.s >= 4850 && this.s <= 5150) || inUnderpass))
                 || (this.route === 'cyber' && this.branchS >= 420 && this.branchS <= 650);
             const hlOn = this.headlightMode === 1 || this.headlightMode === 2 ||
@@ -3569,7 +3578,6 @@
             this.lightPool.visible = hlOn;
             document.getElementById('btn-lights').classList.toggle('lit', hlOn);
 
-            // Drift / Brake Smoke
             if ((Math.abs(this.steerAngle) > 0.65 && kmh > 95) || (this.throttle < -0.6 && kmh > 80)) {
                 if (Math.random() < 0.42) {
                     const puff = new THREE.Mesh(
@@ -3594,7 +3602,6 @@
                 if (sp.life <= 0) { this.scene.remove(sp.mesh); this.smokePuffs.splice(i, 1); }
             }
 
-            // Traffic Update & Collisions (-2,500 PTS on Accident!)
             if (this.crashCooldown > 0) this.crashCooldown -= dt;
             if (this.cameraShake > 0) this.cameraShake = Math.max(0, this.cameraShake - dt * 1.4);
             if (this.comboTimer > 0) { this.comboTimer -= dt; if (this.comboTimer <= 0) this.combo = 0; }
@@ -3602,7 +3609,13 @@
             const tfBoost = curChapter.trafficBoost;
             for (let i = 0; i < this.traffic.length; i++) {
                 const tr = this.traffic[i];
-                tr.s = wrapS(tr.s + tr.baseSpeed * tfBoost * dt);
+                // Keep 10-Lane Flyover traffic jam anchored inside s = 205..640 so the jam stays dense!
+                if (tr.isJam) {
+                    tr.s += tr.baseSpeed * tfBoost * dt;
+                    if (tr.s > 640) tr.s = 210 + ((tr.s - 640) % 45);
+                } else {
+                    tr.s = wrapS(tr.s + tr.baseSpeed * tfBoost * dt);
+                }
                 const tf = getTrackFrame(tr.s);
                 const tw = getSmoothHalfWidth(tr.s);
                 const clampedLat = Math.max(-tw + 2.2, Math.min(tw - 2.2, tr.lateral));
@@ -3613,22 +3626,21 @@
                     let dsDiff = Math.abs(this.s - tr.s);
                     if (dsDiff > TRACK_LENGTH / 2) dsDiff = TRACK_LENGTH - dsDiff;
                     const dLat = Math.abs(this.lateral - clampedLat);
-                    if (dsDiff < tr.halfL + 2.2 && dLat < tr.halfW + 0.92) {
+                    if (dsDiff < tr.halfL + 2.1 && dLat < tr.halfW + 0.88) {
                         this.handleCrash();
-                    } else if (dsDiff < 5.5 && dLat < tr.halfW + 2.7 && kmh > 75 && !tr.passed) {
+                    } else if (dsDiff < 5.5 && dLat < tr.halfW + 2.6 && kmh > 65 && !tr.passed) {
                         tr.passed = true;
                         this.combo++;
                         this.comboTimer = 4.0;
                         const bonus = Math.round(2000 * this.combo * curChapter.mult);
                         this.addPoints(bonus);
-                        this.showBanner(`⚡ NEAR MISS x${this.combo}! +★🪙 ${bonus.toLocaleString()}`, 'success');
-                    } else if (dsDiff > 16) {
+                        this.showBanner(`⚡ JAM WEAVE x${this.combo}! +★🪙 ${bonus.toLocaleString()}`, 'success');
+                    } else if (dsDiff > 15) {
                         tr.passed = false;
                     }
                 }
             }
 
-            // Branch Traffic (Village & Futuristic City)
             for (let i = 0; i < this.branchTraffic.length; i++) {
                 const bt = this.branchTraffic[i];
                 const bLen = BRANCHES[bt.branch].length;
@@ -3642,22 +3654,21 @@
                 if (this.route === bt.branch) {
                     const dsDiff = Math.abs(this.branchS - bt.s);
                     const dLat = Math.abs(this.lateral - bt.lateral);
-                    if (dsDiff < bt.halfL + 2.2 && dLat < bt.halfW + 0.92) {
+                    if (dsDiff < bt.halfL + 2.1 && dLat < bt.halfW + 0.88) {
                         this.handleCrash();
-                    } else if (dsDiff < 5.5 && dLat < bt.halfW + 2.7 && kmh > 65 && !bt.passed) {
+                    } else if (dsDiff < 5.5 && dLat < bt.halfW + 2.6 && kmh > 65 && !bt.passed) {
                         bt.passed = true;
                         this.combo++;
                         this.comboTimer = 4.0;
                         const bonus = Math.round(2500 * this.combo * curChapter.mult);
                         this.addPoints(bonus);
                         this.showBanner(`⚡ DIVERSION NEAR MISS! +★🪙 ${bonus.toLocaleString()}`, 'success');
-                    } else if (dsDiff > 16) {
+                    } else if (dsDiff > 15) {
                         bt.passed = false;
                     }
                 }
             }
 
-            // Animate Hovering Cyber Drones
             const cyberLen = BRANCHES.cyber.length;
             this.cyberDrones.forEach(d => {
                 d.s = (d.s + d.speed * dt) % (cyberLen - 140);
@@ -3667,7 +3678,6 @@
                 d.mesh.rotation.y += dt * 2.5;
             });
 
-            // Animate Parallel Service Road Cars, Overhead Flyover Cars, Under-Road Cars & Roundabout Circling Cars
             this.serviceCars.forEach(sc => {
                 sc.s += sc.speed * dt;
                 if (sc.s > sc.end) sc.s = sc.start;
@@ -3694,7 +3704,6 @@
                 rc.mesh.rotation.y = -rc.angle;
             });
 
-            // Camera Follow + Speed FOV + Accident Shake
             const targetFov = 62 + Math.min(20, (kmh / 260) * 18) + (turboReq ? 6 : 0);
             this.camera.fov += (targetFov - this.camera.fov) * Math.min(1, dt * 6);
             this.camera.updateProjectionMatrix();
@@ -3788,7 +3797,6 @@
             ctx.lineWidth = 4;
             ctx.stroke();
 
-            // Left Village Branch (Green) & Right Cyber Branch (Magenta)
             [['village', '#4ade80'], ['cyber', '#e879f9']].forEach(([k, col]) => {
                 const pts = BRANCHES[k].pts;
                 ctx.beginPath();
@@ -3840,7 +3848,6 @@
                 ctx.stroke();
             });
 
-            // Draw Village (Green) & Futuristic City (Magenta) Branches
             [['village', '#4ade80'], ['cyber', '#e879f9']].forEach(([k, col]) => {
                 const pts = BRANCHES[k].pts;
                 ctx.beginPath();
@@ -3853,7 +3860,6 @@
                 ctx.stroke();
             });
 
-            // Draw 4 Roundabouts on World Map
             ctx.strokeStyle = '#fbbf24';
             ctx.lineWidth = 3;
             this.roundaboutPoints.forEach(rb => {
