@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Highway to Small Town 3D — BMW M-Sport</title>
+    <!-- Favicon & App Icon -->
+    <link rel="icon" type="image/png" href="assets/images/highway-rider.png" />
+    <link rel="shortcut icon" type="image/png" href="assets/images/highway-rider.png" />
+    <link rel="apple-touch-icon" href="assets/images/highway-rider.png" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* ================= BASE RESET & TYPOGRAPHY ================= */
@@ -251,6 +255,43 @@
             flex-shrink: 0;
         }
 
+        /* Brand Logo Styles */
+        .hud-brand-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            object-fit: cover;
+            border: 1.5px solid rgba(56, 189, 248, 0.65);
+            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.35);
+            flex-shrink: 0;
+            background: #0f172a;
+        }
+
+        #game-root.theme-android .hud-brand-logo {
+            border-radius: 50%;
+            border-color: rgba(52, 211, 153, 0.75);
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+        }
+
+        .wheel-hub-logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .modal-brand-logo {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(56, 189, 248, 0.5);
+            vertical-align: middle;
+            margin-right: 6px;
+            background: #0f172a;
+        }
+
         #zone-title {
             font-size: 13px;
             font-weight: 900;
@@ -481,54 +522,6 @@
             font-weight: 900;
             color: #fff;
             letter-spacing: 0.4px;
-        }
-
-        /* Steering Joystick */
-        #steer-joy-wrap {
-            width: 122px;
-            height: 122px;
-            border-radius: 50%;
-            background: rgba(15, 23, 42, 0.72);
-            border: 2px solid rgba(56, 189, 248, 0.45);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            position: relative;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #steer-joy-knob {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #38bdf8, #2563eb);
-            border: 2px solid #e0f2fe;
-            box-shadow: 0 4px 16px rgba(56, 189, 248, 0.55);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 900;
-        }
-
-        /* Tilt Indicator */
-        #tilt-wrap {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1.5px solid rgba(56, 189, 248, 0.45);
-            border-radius: 16px;
-            padding: 10px 14px;
-        }
-
-        #tilt-bar-track {
-            width: 96px;
-            height: 8px;
-            border-radius: 99px;
-            background: #1e293b;
-            position: relative;
             overflow: hidden;
         }
 
@@ -718,6 +711,18 @@
             transform: scale(0.9);
         }
 
+        .mini-act-btn.lights-on {
+            border-color: #bae6fd;
+            background: rgba(14, 165, 233, 0.32);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.65);
+        }
+
+        .mini-act-btn.lights-high {
+            border-color: #ffffff;
+            background: rgba(56, 189, 248, 0.55);
+            box-shadow: 0 0 22px rgba(224, 242, 254, 0.9);
+        }
+
         #throttle-track {
             width: 66px;
             height: 136px;
@@ -763,26 +768,6 @@
         }
 
         /* ================= UNIQUE PLATFORM UI THEMES ================= */
-        #web-keys-hint {
-            background: rgba(15, 23, 42, 0.74);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            color: #bae6fd;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 99px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-            white-space: nowrap;
-            display: none;
-        }
-
-        /* 🖥️ WEB GLASS THEME (Desktop Chrome Frosted Cockpit HUD) */
-        #game-root.theme-web #web-keys-hint {
-            display: block;
-        }
-
         /* 🤖 ANDROID MATERIAL 3 THEME (Mobile Chrome OLED High-Contrast HUD) */
         #game-root.theme-android .zone-pill,
         #game-root.theme-android .cluster-box,
@@ -1313,6 +1298,10 @@
             .zone-pill {
                 padding: 5px 11px;
             }
+            .hud-brand-logo {
+                width: 24px;
+                height: 24px;
+            }
             #zone-title {
                 font-size: 11px;
             }
@@ -1384,13 +1373,18 @@
                 <!-- Top-Center: 6-Lane Express Highway Zone Banner -->
                 <div class="hud-center">
                     <div class="zone-pill" id="zone-pill">
+                        <img
+                            src="assets/images/highway-rider.png"
+                            alt="Highway Rider Logo"
+                            class="hud-brand-logo"
+                            onerror="this.onerror=null;this.src='https://placehold.co/64x64/0f172a/38bdf8?text=HR';"
+                        />
                         <div id="zone-dot"></div>
                         <div>
                             <div id="zone-title">6-Lane Express Highway</div>
                             <div id="zone-sub">BMW M-Sport • Open World</div>
                         </div>
                     </div>
-                    <div id="web-keys-hint">⌨️ WASD / ARROWS • SPACE TURBO • L LIGHTS • H HORN • C CAM • M MAP</div>
                 </div>
 
                 <!-- Top-Right: Score + Coins + Settings -->
@@ -1418,7 +1412,14 @@
                         <div id="steering-wheel">
                             <div class="wheel-spoke-h"></div>
                             <div class="wheel-spoke-v"></div>
-                            <div class="wheel-hub">BMW</div>
+                            <div class="wheel-hub">
+                                <img
+                                    src="assets/images/highway-rider.png"
+                                    alt="Highway Rider Logo"
+                                    class="wheel-hub-logo"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/64x64/0f172a/38bdf8?text=HR';"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -1427,62 +1428,60 @@
                     </div>
 
                     <div id="tilt-wrap" class="ctrl-interactive">
-                        <div style="font-size:10px;font-weight:900;color:#bae6fd;">📱 TILT STEER</div>
+                        <div id="tilt-status" style="font-size:10px;font-weight:900;color:#bae6fd;">📱 TILT STEER</div>
                         <div id="tilt-bar-track"><div id="tilt-bar-dot"></div></div>
-                        <button id="btn-tilt-recenter">Recenter</button>
+                        <div style="display:flex;gap:5px;">
+                            <button id="btn-tilt-recenter">Recenter</button>
+                            <button id="btn-tilt-flip" style="font-size:10px;font-weight:800;background:rgba(56,189,248,0.2);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:8px;padding:4px 8px;cursor:pointer;">⇄ Flip</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bottom-Center Dual Digital BMW Cockpit Cluster (KM/H + RPM) -->
+                <!-- Center: Dual Digital Speedometer & Tachometer Cluster -->
                 <div id="dual-cluster">
-                    <!-- Left Digital Speedometer (KM/H) -->
+                    <!-- Left Dial: Digital KM/H Speedometer -->
                     <div class="digital-dial">
                         <svg class="dial-svg" viewBox="0 0 100 100">
                             <defs>
                                 <linearGradient id="speedGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#38bdf8"/>
-                                    <stop offset="60%" stop-color="#6366f1"/>
-                                    <stop offset="100%" stop-color="#c084fc"/>
+                                    <stop offset="0%" stop-color="#0ea5e9" />
+                                    <stop offset="60%" stop-color="#38bdf8" />
+                                    <stop offset="100%" stop-color="#c084fc" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="50" cy="50" r="41" fill="rgba(2,6,23,0.72)" stroke="#1e293b" stroke-width="2"/>
-                            <path d="M 21.7 78.3 A 40 40 0 1 1 78.3 78.3" fill="none" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
-                            <path id="speed-arc" d="M 21.7 78.3 A 40 40 0 1 1 78.3 78.3" fill="none" stroke="url(#speedGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(51,65,85,0.65)" stroke-width="8" stroke-dasharray="188.5 251.3" stroke-linecap="round" transform="rotate(135 50 50)" />
+                            <circle id="speed-arc" cx="50" cy="50" r="40" fill="none" stroke="url(#speedGrad)" stroke-width="8" stroke-dasharray="188.5 251.3" stroke-dashoffset="188.5" stroke-linecap="round" transform="rotate(135 50 50)" />
                         </svg>
                         <div class="dial-readout">
-                            <span id="speed-val">0</span>
-                            <span class="dial-unit">KM/H</span>
+                            <div id="speed-val">0</div>
+                            <div class="dial-unit">KM/H</div>
                         </div>
                     </div>
 
-                    <!-- Center Digital Bridge (Mode / Gear / Odometer / Nitro) -->
+                    <!-- Center Digital Bridge: Gear, Mode, Odometer & Nitro Bar -->
                     <div class="cluster-bridge">
-                        <span id="drive-mode-lbl">CRUISE</span>
-                        <span id="gear-badge">N</span>
-                        <span id="odo-val">0.0 km</span>
-                        <div class="nitro-bar-track" title="Turbo Nitro">
-                            <div id="nitro-bar-fill"></div>
-                        </div>
+                        <div id="gear-badge">N</div>
+                        <div id="drive-mode-lbl">CRUISE</div>
+                        <div id="odo-val">0.0 km</div>
+                        <div class="nitro-bar-track"><div id="nitro-bar-fill"></div></div>
                     </div>
 
-                    <!-- Right Digital Tachometer (RPM x1000) -->
+                    <!-- Right Dial: Digital RPM Tachometer -->
                     <div class="digital-dial">
                         <svg class="dial-svg" viewBox="0 0 100 100">
                             <defs>
                                 <linearGradient id="rpmGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#10b981"/>
-                                    <stop offset="68%" stop-color="#f59e0b"/>
-                                    <stop offset="100%" stop-color="#ef4444"/>
+                                    <stop offset="0%" stop-color="#10b981" />
+                                    <stop offset="65%" stop-color="#f59e0b" />
+                                    <stop offset="100%" stop-color="#ef4444" />
                                 </linearGradient>
                             </defs>
-                            <circle cx="50" cy="50" r="41" fill="rgba(2,6,23,0.72)" stroke="#1e293b" stroke-width="2"/>
-                            <path d="M 21.7 78.3 A 40 40 0 1 1 78.3 78.3" fill="none" stroke="#1e293b" stroke-width="7" stroke-linecap="round"/>
-                            <path d="M 78.3 21.7 A 40 40 0 0 1 78.3 78.3" fill="none" stroke="rgba(239,68,68,0.3)" stroke-width="7" stroke-linecap="round"/>
-                            <path id="rpm-arc" d="M 21.7 78.3 A 40 40 0 1 1 78.3 78.3" fill="none" stroke="url(#rpmGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(51,65,85,0.65)" stroke-width="8" stroke-dasharray="188.5 251.3" stroke-linecap="round" transform="rotate(135 50 50)" />
+                            <circle id="rpm-arc" cx="50" cy="50" r="40" fill="none" stroke="url(#rpmGrad)" stroke-width="8" stroke-dasharray="188.5 251.3" stroke-dashoffset="188.5" stroke-linecap="round" transform="rotate(135 50 50)" />
                         </svg>
                         <div class="dial-readout">
-                            <span id="rpm-val">0.8</span>
-                            <span class="dial-unit">RPM x1K</span>
+                            <div id="rpm-val">0.8</div>
+                            <div class="dial-unit">RPM x1K</div>
                         </div>
                     </div>
                 </div>
@@ -1507,7 +1506,15 @@
         <div id="settings-modal" class="modal-backdrop hidden">
             <div class="modal-card">
                 <div class="modal-head">
-                    <div class="modal-title">⚙️ Game Settings</div>
+                    <div class="modal-title" style="display:flex;align-items:center;">
+                        <img
+                            src="assets/images/highway-rider.png"
+                            alt="Highway Rider Logo"
+                            class="modal-brand-logo"
+                            onerror="this.onerror=null;this.src='https://placehold.co/64x64/0f172a/38bdf8?text=HR';"
+                        />
+                        <span>Game Settings</span>
+                    </div>
                     <button class="modal-close" data-close="settings-modal">✕</button>
                 </div>
 
@@ -1807,7 +1814,12 @@
                 this.touchThrottle = 0;
                 this.touchTurbo = false;
                 this.tiltZero = 0;
+                this.rawTilt = 0;
                 this.tiltSteer = 0;
+                this.tiltInvert = 1;
+                this.tiltSensorActive = false;
+                this.tiltMotionSeen = false;
+                this.tiltListenersBound = false;
                 this.controlMode = localStorage.getItem('htst_ctrl') || 'steer';
                 this.uiThemePref = localStorage.getItem('htst_theme') || 'auto';
                 this.camMode = 0; // 0: Chase, 1: Hood, 2: Wide Cinematic
@@ -1974,6 +1986,56 @@
                 this.buildingTex.wrapS = THREE.RepeatWrapping;
                 this.buildingTex.wrapT = THREE.RepeatWrapping;
                 this.buildingTex.encoding = THREE.sRGBEncoding;
+
+                // 4) Soft Volumetric Headlight Beam Gradient Texture (bright near lens, smooth fade out)
+                const bmCan = document.createElement('canvas');
+                bmCan.width = 128;
+                bmCan.height = 256;
+                const bmCtx = bmCan.getContext('2d');
+                const bmGrad = bmCtx.createLinearGradient(0, 0, 0, 256);
+                bmGrad.addColorStop(0.0, 'rgba(240, 249, 255, 0.72)');
+                bmGrad.addColorStop(0.22, 'rgba(224, 242, 254, 0.36)');
+                bmGrad.addColorStop(0.65, 'rgba(186, 230, 253, 0.11)');
+                bmGrad.addColorStop(1.0, 'rgba(186, 230, 253, 0.0)');
+                bmCtx.fillStyle = bmGrad;
+                bmCtx.fillRect(0, 0, 128, 256);
+                this.beamTex = new THREE.CanvasTexture(bmCan);
+                this.beamTex.encoding = THREE.sRGBEncoding;
+
+                // 5) Twin-Beam Asphalt Ground Light-Pool Texture
+                const gpCan = document.createElement('canvas');
+                gpCan.width = 256;
+                gpCan.height = 256;
+                const gpCtx = gpCan.getContext('2d');
+                gpCtx.clearRect(0, 0, 256, 256);
+                [92, 164].forEach(cx => {
+                    const g = gpCtx.createRadialGradient(cx, 230, 4, cx, 130, 118);
+                    g.addColorStop(0.0, 'rgba(248, 250, 252, 0.78)');
+                    g.addColorStop(0.32, 'rgba(224, 242, 254, 0.42)');
+                    g.addColorStop(0.7, 'rgba(186, 230, 253, 0.14)');
+                    g.addColorStop(1.0, 'rgba(186, 230, 253, 0.0)');
+                    gpCtx.fillStyle = g;
+                    gpCtx.beginPath();
+                    gpCtx.ellipse(cx, 136, 62, 118, 0, 0, Math.PI * 2);
+                    gpCtx.fill();
+                });
+                this.groundBeamTex = new THREE.CanvasTexture(gpCan);
+                this.groundBeamTex.encoding = THREE.sRGBEncoding;
+
+                // 6) Headlight Lens Flare Halo Texture
+                const flCan = document.createElement('canvas');
+                flCan.width = 128;
+                flCan.height = 128;
+                const flCtx = flCan.getContext('2d');
+                const flGrad = flCtx.createRadialGradient(64, 64, 2, 64, 64, 62);
+                flGrad.addColorStop(0.0, 'rgba(255, 255, 255, 1.0)');
+                flGrad.addColorStop(0.28, 'rgba(224, 242, 254, 0.65)');
+                flGrad.addColorStop(0.65, 'rgba(56, 189, 248, 0.18)');
+                flGrad.addColorStop(1.0, 'rgba(56, 189, 248, 0.0)');
+                flCtx.fillStyle = flGrad;
+                flCtx.fillRect(0, 0, 128, 128);
+                this.flareTex = new THREE.CanvasTexture(flCan);
+                this.flareTex.encoding = THREE.sRGBEncoding;
             }
 
             /* ================= DYNAMIC SKY DOME, SUN/MOON, CLOUDS & STARS ================= */
@@ -3153,36 +3215,91 @@
                 });
 
                 // BMW Angel-Eye DRL Headlights, Dynamic Brake Taillights & Road Headlight Beams
-                const hlMat = new THREE.MeshBasicMaterial({ color: 0xf0f9ff });
+                this.hlLensMat = new THREE.MeshStandardMaterial({
+                    color: 0xe0f2fe,
+                    emissive: 0xbae6fd,
+                    emissiveIntensity: 0.9,
+                    roughness: 0.1,
+                    metalness: 0.2
+                });
                 this.tailLightMat = new THREE.MeshStandardMaterial({
                     color: 0xdc2626,
                     emissive: 0xef4444,
                     emissiveIntensity: 0.75,
                     roughness: 0.2
                 });
-                const beamMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.16, depthWrite: false });
-                const beamGeo = new THREE.ConeGeometry(3.2, 24, 14, 1, true);
+                this.beamMat = new THREE.MeshBasicMaterial({
+                    map: this.beamTex,
+                    color: 0xf0f9ff,
+                    transparent: true,
+                    opacity: 0.42,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false,
+                    side: THREE.DoubleSide
+                });
+                // Truncated volumetric cone: narrow at headlight lens (0.16) expanding smoothly forward (2.9)
+                const beamGeo = new THREE.CylinderGeometry(0.16, 2.9, 26, 16, 1, true);
                 beamGeo.rotateX(-Math.PI / 2);
 
+                this.flareMat = new THREE.SpriteMaterial({
+                    map: this.flareTex,
+                    color: 0xf0f9ff,
+                    transparent: true,
+                    opacity: 0.88,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+
                 this.headlightCones = [];
+                this.headlightFlares = [];
+                this.headlightSpots = [];
                 [-spec.w * 0.36, spec.w * 0.36].forEach(x => {
-                    const hl = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.16, 0.1), hlMat);
+                    // Sculpted LED Headlight housing + inner Angel-Eye bar
+                    const hl = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.17, 0.12), this.hlLensMat);
                     hl.position.set(x, 0.34 + spec.h * 0.52, frontZ + 0.01);
-                    const tl = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.16, 0.1), this.tailLightMat);
+                    const tl = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.16, 0.1), this.tailLightMat);
                     tl.position.set(x, 0.34 + spec.h * 0.56, -frontZ - 0.01);
 
-                    const cone = new THREE.Mesh(beamGeo, beamMat);
-                    cone.position.set(x, 0.62, frontZ + 12.2);
+                    // Soft additive lens flare right at each lamp
+                    const flare = new THREE.Sprite(this.flareMat);
+                    flare.position.set(x, 0.34 + spec.h * 0.52, frontZ + 0.12);
+                    flare.scale.set(1.15, 0.78, 1);
+                    flare.visible = false;
+                    this.headlightFlares.push(flare);
+
+                    // Volumetric forward light beam angled slightly down onto the road
+                    const cone = new THREE.Mesh(beamGeo, this.beamMat);
+                    cone.position.set(x, 0.34 + spec.h * 0.42, frontZ + 13.0);
+                    cone.rotation.x = 0.045;
                     cone.visible = false;
                     this.headlightCones.push(cone);
 
-                    this.carBodyGroup.add(hl, tl, cone);
+                    // Real Three.js SpotLight illuminating asphalt, traffic & tunnel walls
+                    const spot = new THREE.SpotLight(0xf0f9ff, 0, 75, Math.PI / 5.2, 0.65, 1.35);
+                    spot.position.set(x, 0.34 + spec.h * 0.56, frontZ + 0.2);
+                    const target = new THREE.Object3D();
+                    target.position.set(x * 1.15, -0.4, frontZ + 32);
+                    this.carBodyGroup.add(target);
+                    spot.target = target;
+                    this.headlightSpots.push(spot);
+
+                    this.carBodyGroup.add(hl, tl, flare, cone, spot);
                 });
 
-                // Real Dynamic PointLight ahead of car when Headlights are ON
-                this.headlightSpot = new THREE.PointLight(0xe0f2fe, 0, 36, 1.5);
-                this.headlightSpot.position.set(0, 1.2, frontZ + 9);
-                this.carBodyGroup.add(this.headlightSpot);
+                // Ground Road Light-Pool Projection (feathered twin xenon pool on asphalt)
+                this.groundBeamMat = new THREE.MeshBasicMaterial({
+                    map: this.groundBeamTex,
+                    color: 0xe0f2fe,
+                    transparent: true,
+                    opacity: 0.62,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+                this.groundBeamPool = new THREE.Mesh(new THREE.PlaneGeometry(9.6, 34), this.groundBeamMat);
+                this.groundBeamPool.rotation.x = -Math.PI / 2;
+                this.groundBeamPool.position.set(0, 0.09, frontZ + 16.5);
+                this.groundBeamPool.visible = false;
+                this.carGroup.add(this.groundBeamPool);
 
                 // Twin Turbo Exhaust Flames
                 const flameMat = new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.85 });
@@ -3677,18 +3794,107 @@
                     if (el) el.classList.toggle('active', id === `start-ctrl-${mode}`);
                 });
 
+                if (mode === 'tilt') {
+                    this.enableTiltSensors();
+                }
+
                 if (announce) {
-                    const labels = { steer: '🎡 Steering Wheel Active', joy: '🕹️ Steering Joystick Active', tilt: '📱 Tilt Steering Active' };
+                    const labels = { steer: '🎡 Steering Wheel Active', joy: '🕹️ Steering Joystick Active', tilt: '📱 Tilt Steering Active — Hold Phone Horizontally' };
                     this.showBanner(labels[mode]);
                 }
             }
 
+            async enableTiltSensors() {
+                const statusEl = document.getElementById('tilt-status');
+                try {
+                    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                        const res = await DeviceMotionEvent.requestPermission();
+                        if (res !== 'granted') {
+                            if (statusEl) statusEl.textContent = '⚠️ ALLOW MOTION';
+                            return;
+                        }
+                    } else if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                        const res = await DeviceOrientationEvent.requestPermission();
+                        if (res !== 'granted') {
+                            if (statusEl) statusEl.textContent = '⚠️ ALLOW TILT';
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    // Android Chrome does not require requestPermission; continue binding listeners
+                }
+
+                if (this.tiltListenersBound) return;
+                this.tiltListenersBound = true;
+
+                const getLandscapeSign = () => {
+                    const angle = (screen.orientation && typeof screen.orientation.angle === 'number')
+                        ? screen.orientation.angle
+                        : (typeof window.orientation === 'number' ? window.orientation : 0);
+                    // angle 270 or -90 means top of phone is on the RIGHT; flip axis
+                    return (angle === 270 || angle === -90) ? -1 : 1;
+                };
+
+                const applyRawTilt = (normVal) => {
+                    this.tiltSensorActive = true;
+                    this.rawTilt = normVal;
+                    let delta = (this.rawTilt - this.tiltZero) * this.tiltInvert;
+                    // Small deadzone for rock-steady straight driving
+                    if (Math.abs(delta) < 0.05) delta = 0;
+                    else delta = Math.sign(delta) * ((Math.abs(delta) - 0.05) / 0.95);
+
+                    const target = clamp(delta, -1, 1);
+                    this.tiltSteer += (target - this.tiltSteer) * 0.35;
+
+                    const dot = document.getElementById('tilt-bar-dot');
+                    if (dot) dot.style.left = `${50 + this.tiltSteer * 40}%`;
+                    if (statusEl) statusEl.textContent = '📱 TILT LIVE';
+                };
+
+                // Primary for Android: devicemotion gravity (no gimbal lock in landscape!)
+                window.addEventListener('devicemotion', e => {
+                    if (this.controlMode !== 'tilt') return;
+                    const acc = e.accelerationIncludingGravity;
+                    if (!acc || (acc.y === null && acc.x === null)) return;
+                    if (Math.abs(acc.y || 0) < 0.001 && Math.abs(acc.x || 0) < 0.001) return;
+
+                    this.tiltMotionSeen = true;
+                    const sign = getLandscapeSign();
+                    // Holding phone horizontally: steering left/right tilts along device Y axis
+                    const norm = clamp(((acc.y || 0) * sign) / 5.2, -1.5, 1.5);
+                    applyRawTilt(norm);
+                }, true);
+
+                // Fallback: deviceorientation (used if devicemotion gravity is unavailable)
+                const onOrient = e => {
+                    if (this.controlMode !== 'tilt' || this.tiltMotionSeen) return;
+                    if (e.beta === null && e.gamma === null) return;
+                    const sign = getLandscapeSign();
+                    // In horizontal hold (native or forced-landscape), beta tilts left/right like a wheel
+                    let beta = (e.beta || 0);
+                    if (beta > 90) beta = 180 - beta;
+                    if (beta < -90) beta = -180 - beta;
+                    const norm = clamp((beta * sign) / 32, -1.5, 1.5);
+                    applyRawTilt(norm);
+                };
+                window.addEventListener('deviceorientation', onOrient, true);
+                window.addEventListener('deviceorientationabsolute', onOrient, true);
+
+                // Notify user if the browser/iframe blocks motion sensors
+                setTimeout(() => {
+                    if (this.controlMode === 'tilt' && !this.tiltSensorActive && statusEl) {
+                        statusEl.textContent = '⚠️ NO SENSOR';
+                    }
+                }, 1800);
+            }
+
             cycleHeadlights() {
-                const order = ['auto', 'on', 'off'];
+                const order = ['auto', 'on', 'high', 'off'];
                 this.headlightsPref = order[(order.indexOf(this.headlightsPref) + 1) % order.length];
+                const labels = { auto: 'AUTO', on: 'LOW BEAM', high: 'HIGH BEAM', off: 'OFF' };
                 const btn = document.getElementById('btn-settings-lights');
-                if (btn) btn.textContent = `💡 Headlights ${this.headlightsPref.toUpperCase()}`;
-                this.showBanner(`💡 Headlights: ${this.headlightsPref.toUpperCase()}`);
+                if (btn) btn.textContent = `💡 Lights ${labels[this.headlightsPref]}`;
+                this.showBanner(`💡 Headlights: ${labels[this.headlightsPref]}`);
             }
 
             async requestLandscapeFullscreen() {
@@ -3801,7 +4007,6 @@
                     e.currentTarget.textContent = SoundFX.enabled ? '🔊 Sound ON' : '🔇 Sound OFF';
                     e.currentTarget.classList.toggle('active', SoundFX.enabled);
                     if (SoundFX.enabled) SoundFX.unlock();
-                    this.showBanner(SoundFX.enabled ? '🔊 Engine & FX Audio ON' : '🔇 Audio Muted');
                 });
                 document.getElementById('btn-settings-lights').addEventListener('click', () => this.cycleHeadlights());
 
@@ -3887,17 +4092,17 @@
                 joyWrap.addEventListener('pointercancel', resetJoy);
 
                 // Tilt Steering
-                window.addEventListener('deviceorientation', e => {
-                    if (this.controlMode !== 'tilt' || e.gamma === null) return;
-                    const raw = this.isPortraitForced ? e.gamma : (e.beta || 0);
-                    this.tiltSteer = clamp((raw - this.tiltZero) / 28, -1, 1);
-                    const dot = document.getElementById('tilt-bar-dot');
-                    if (dot) dot.style.left = `${50 + this.tiltSteer * 40}%`;
-                });
+                // Tilt Steering Controls (Recenter & Flip)
                 document.getElementById('btn-tilt-recenter').addEventListener('click', () => {
-                    this.tiltZero = 0;
+                    this.tiltZero = this.rawTilt;
                     this.tiltSteer = 0;
+                    const dot = document.getElementById('tilt-bar-dot');
+                    if (dot) dot.style.left = '50%';
                     this.showBanner('📱 Tilt Steering Recentered');
+                });
+                document.getElementById('btn-tilt-flip').addEventListener('click', () => {
+                    this.tiltInvert *= -1;
+                    this.showBanner(this.tiltInvert > 0 ? '⇄ Tilt Axis: Normal' : '⇄ Tilt Axis: Flipped');
                 });
 
                 // Interactive Vertical Throttle / Turbo / Brake Joystick
@@ -4104,15 +4309,54 @@
 
                 // Dynamic Headlights, Brake Light Glow & Turbo Exhaust Flames
                 const inAnyTunnel = zone.start === 900 || (this.s >= 4520 && this.s <= 4740);
-                const lightsOn = this.headlightsPref === 'on' || (this.headlightsPref === 'auto' && (this.timeOfDay === 'night' || this.weather !== 'clear' || inAnyTunnel));
-                if (this.headlightCones) {
-                    this.headlightCones.forEach(c => { c.visible = lightsOn; });
+                const isHighBeam = this.headlightsPref === 'high';
+                const lightsOn = isHighBeam || this.headlightsPref === 'on' || (this.headlightsPref === 'auto' && (this.timeOfDay === 'night' || this.timeOfDay === 'sunset' || this.weather !== 'clear' || inAnyTunnel));
+                const isDarkScene = this.timeOfDay === 'night' || inAnyTunnel || this.weather === 'fog';
+
+                if (this.hlLensMat) {
+                    this.hlLensMat.emissiveIntensity = lightsOn ? (isHighBeam ? 3.4 : 2.2) : 0.45;
                 }
-                if (this.headlightSpot) {
-                    this.headlightSpot.intensity = lightsOn ? 2.4 : 0;
+                if (this.headlightFlares) {
+                    const flareScale = isHighBeam ? 1.55 : 1.15;
+                    this.headlightFlares.forEach(f => {
+                        f.visible = lightsOn;
+                        f.scale.set(flareScale, flareScale * 0.68, 1);
+                    });
+                }
+                if (this.headlightCones) {
+                    const zScale = isHighBeam ? 1.42 : 1.0;
+                    const xyScale = isHighBeam ? 1.18 : 1.0;
+                    this.headlightCones.forEach(c => {
+                        c.visible = lightsOn;
+                        c.scale.set(xyScale, xyScale, zScale);
+                        c.position.z = (this.getCurrentCarSpec().l / 2) + 13.0 * zScale;
+                    });
+                }
+                if (this.beamMat) {
+                    this.beamMat.opacity = isHighBeam ? (isDarkScene ? 0.56 : 0.36) : (isDarkScene ? 0.38 : 0.22);
+                }
+                if (this.groundBeamPool && this.groundBeamMat) {
+                    this.groundBeamPool.visible = lightsOn;
+                    const poolZ = isHighBeam ? 1.38 : 1.0;
+                    this.groundBeamPool.scale.set(isHighBeam ? 1.2 : 1.0, poolZ, 1);
+                    this.groundBeamPool.position.z = (this.getCurrentCarSpec().l / 2) + 16.5 * poolZ;
+                    this.groundBeamMat.opacity = isHighBeam ? (isDarkScene ? 0.78 : 0.45) : (isDarkScene ? 0.55 : 0.30);
+                }
+                if (this.headlightSpots) {
+                    const spotInt = lightsOn ? (isHighBeam ? 4.6 : 2.8) : 0;
+                    const spotDist = isHighBeam ? 110 : 72;
+                    this.headlightSpots.forEach(s => {
+                        s.intensity = spotInt;
+                        s.distance = spotDist;
+                    });
+                }
+                const lightHudBtn = document.getElementById('btn-lights');
+                if (lightHudBtn) {
+                    lightHudBtn.classList.toggle('lights-on', lightsOn && !isHighBeam);
+                    lightHudBtn.classList.toggle('lights-high', lightsOn && isHighBeam);
                 }
                 if (this.tailLightMat) {
-                    this.tailLightMat.emissiveIntensity = this.isBraking ? 3.2 : (lightsOn ? 1.15 : 0.45);
+                    this.tailLightMat.emissiveIntensity = this.isBraking ? 3.2 : (lightsOn ? 1.25 : 0.45);
                 }
                 if (this.turboFlames) {
                     this.turboFlames.forEach(fl => {
