@@ -525,6 +525,60 @@
             overflow: hidden;
         }
 
+        /* Steering Joystick & Tilt Widget */
+        #steer-joy-wrap {
+            width: 118px;
+            height: 118px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.84);
+            border: 2px solid rgba(56, 189, 248, 0.48);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+            position: relative;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+        }
+
+        #steer-joy-knob {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, #2563eb);
+            border: 2.5px solid #f8fafc;
+            box-shadow: 0 4px 16px rgba(56, 189, 248, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        #tilt-wrap {
+            background: rgba(15, 23, 42, 0.86);
+            border: 1.5px solid rgba(56, 189, 248, 0.45);
+            border-radius: 16px;
+            padding: 8px 10px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 132px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+        }
+
+        #tilt-bar-track {
+            position: relative;
+            width: 108px;
+            height: 8px;
+            border-radius: 99px;
+            background: #1e293b;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            overflow: hidden;
+        }
+
         #tilt-bar-dot {
             position: absolute;
             top: 0;
@@ -1521,9 +1575,7 @@
                 <div class="setting-group">
                     <div class="setting-lbl"><span>Platform UI Theme</span></div>
                     <div class="btn-row">
-                        <button class="opt-btn active" id="theme-auto">✨ Auto</button>
-                        <button class="opt-btn" id="theme-web">🖥️ Web Glass</button>
-                        <button class="opt-btn" id="theme-android">🤖 Android M3</button>
+                        <button class="opt-btn active" id="theme-android">🤖 Android M3</button>
                     </div>
                 </div>
 
@@ -1533,15 +1585,6 @@
                         <button class="opt-btn active" id="mode-steer">🎡 Wheel</button>
                         <button class="opt-btn" id="mode-joy">🕹️ Joystick</button>
                         <button class="opt-btn" id="mode-tilt">📱 Tilt</button>
-                    </div>
-                </div>
-
-                <div class="setting-group">
-                    <div class="setting-lbl"><span>Time of Day</span></div>
-                    <div class="btn-row">
-                        <button class="opt-btn" id="time-day">☀️ Day</button>
-                        <button class="opt-btn active" id="time-sunset">🌅 Sunset</button>
-                        <button class="opt-btn" id="time-night">🌙 Night</button>
                     </div>
                 </div>
 
@@ -3982,37 +4025,40 @@
                 });
 
                 // Settings Modal Controls
-                document.getElementById('theme-auto').addEventListener('click', () => this.applyUITheme('auto'));
-                document.getElementById('theme-web').addEventListener('click', () => this.applyUITheme('web'));
                 document.getElementById('theme-android').addEventListener('click', () => this.applyUITheme('android'));
                 document.getElementById('mode-steer').addEventListener('click', () => this.applyControlMode('steer'));
                 document.getElementById('mode-joy').addEventListener('click', () => this.applyControlMode('joy'));
                 document.getElementById('mode-tilt').addEventListener('click', () => this.applyControlMode('tilt'));
-                document.getElementById('time-day').addEventListener('click', () => this.setTimeOfDay('day'));
-                document.getElementById('time-sunset').addEventListener('click', () => this.setTimeOfDay('sunset'));
-                document.getElementById('time-night').addEventListener('click', () => this.setTimeOfDay('night'));
                 document.getElementById('weather-clear').addEventListener('click', () => this.setWeather('clear'));
                 document.getElementById('weather-rain').addEventListener('click', () => this.setWeather('rain'));
                 document.getElementById('weather-winter').addEventListener('click', () => this.setWeather('winter'));
                 document.getElementById('weather-fog').addEventListener('click', () => this.setWeather('fog'));
 
-                document.getElementById('btn-auto-cycle').addEventListener('click', e => {
-                    this.autoCycle = !this.autoCycle;
-                    e.currentTarget.textContent = `🔄 Auto Cycle: ${this.autoCycle ? 'ON' : 'OFF'}`;
-                    e.currentTarget.classList.toggle('active', this.autoCycle);
-                    this.showBanner(this.autoCycle ? '🔄 Auto Day/Night & Weather Cycle ON' : '⏸️ Auto Cycle Paused (Manual Mode)');
-                });
-                document.getElementById('btn-sound').addEventListener('click', e => {
-                    SoundFX.enabled = !SoundFX.enabled;
-                    e.currentTarget.textContent = SoundFX.enabled ? '🔊 Sound ON' : '🔇 Sound OFF';
-                    e.currentTarget.classList.toggle('active', SoundFX.enabled);
-                    if (SoundFX.enabled) SoundFX.unlock();
-                });
-                document.getElementById('btn-settings-lights').addEventListener('click', () => this.cycleHeadlights());
+                const autoCycleBtn = document.getElementById('btn-auto-cycle');
+                if (autoCycleBtn) {
+                    autoCycleBtn.addEventListener('click', () => {
+                        this.autoCycle = !this.autoCycle;
+                        autoCycleBtn.textContent = `🔄 Auto Cycle: ${this.autoCycle ? 'ON' : 'OFF'}`;
+                        autoCycleBtn.classList.toggle('active', this.autoCycle);
+                        this.showBanner(this.autoCycle ? '🔄 Dynamic Day/Weather Auto Cycle ON' : '⏸️ Auto Cycle Paused');
+                    });
+                }
+
+                const soundBtn = document.getElementById('btn-sound');
+                if (soundBtn) {
+                    soundBtn.addEventListener('click', () => {
+                        SoundFX.enabled = !SoundFX.enabled;
+                        soundBtn.textContent = SoundFX.enabled ? '🔊 Sound ON' : '🔇 Sound OFF';
+                        soundBtn.classList.toggle('active', SoundFX.enabled);
+                        if (SoundFX.enabled) SoundFX.unlock();
+                    });
+                }
+
+                const setLightsBtn = document.getElementById('btn-settings-lights');
+                if (setLightsBtn) setLightsBtn.addEventListener('click', () => this.cycleHeadlights());
 
                 document.getElementById('btn-open-garage').addEventListener('click', () => {
                     document.getElementById('settings-modal').classList.add('hidden');
-                    this.updateCoinsUI();
                     document.getElementById('garage-modal').classList.remove('hidden');
                 });
                 document.getElementById('btn-open-missions').addEventListener('click', () => {
@@ -4026,117 +4072,137 @@
                     this.drawWorldMap();
                 });
 
-                // Modal Close Buttons & Fast Travel Buttons
+                // Modal close buttons & backdrop clicks
                 document.querySelectorAll('[data-close]').forEach(btn => {
                     btn.addEventListener('click', () => this.closeAllModals());
                 });
-                document.querySelectorAll('[data-tp]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.s = parseFloat(btn.getAttribute('data-tp')) || 0;
-                        this.lateral = 3.6;
-                        this.speed = 0;
-                        this.updatePlayerTransform(0.016);
-                        this.closeAllModals();
-                        this.showBanner(`📍 Fast Traveled to ${this.getZoneAt(this.s).name}`);
+                document.querySelectorAll('.modal-backdrop').forEach(bg => {
+                    bg.addEventListener('click', e => {
+                        if (e.target === bg) this.closeAllModals();
                     });
                 });
 
-                // Interactive Steering Wheel (Pointer Events)
-                const wheelWrap = document.getElementById('wheel-wrap');
-                const wheelEl = document.getElementById('steering-wheel');
-                let wheelActive = false;
-                const updateWheel = (clientX, clientY) => {
-                    const rect = wheelWrap.getBoundingClientRect();
-                    const { dx } = toLocalDelta(clientX, clientY, rect);
-                    this.touchSteer = clamp(dx / 50, -1, 1);
-                    wheelEl.style.transform = `rotate(${this.touchSteer * 110}deg)`;
-                };
-                wheelWrap.addEventListener('pointerdown', e => {
-                    SoundFX.unlock();
-                    wheelActive = true;
-                    wheelWrap.setPointerCapture(e.pointerId);
-                    updateWheel(e.clientX, e.clientY);
+                // World Map Fast-Travel Teleport
+                document.querySelectorAll('[data-tp]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const targetS = parseFloat(btn.getAttribute('data-tp')) || 0;
+                        this.s = targetS;
+                        this.lateral = 3.5;
+                        this.speed = 18;
+                        this.closeAllModals();
+                        const z = this.getZoneAt(this.s);
+                        this.showBanner(`📍 Fast Traveled to ${z.name}`);
+                    });
                 });
-                wheelWrap.addEventListener('pointermove', e => { if (wheelActive) updateWheel(e.clientX, e.clientY); });
-                const resetWheel = () => {
-                    wheelActive = false;
-                    this.touchSteer = 0;
-                    wheelEl.style.transform = 'rotate(0deg)';
-                };
-                wheelWrap.addEventListener('pointerup', resetWheel);
-                wheelWrap.addEventListener('pointercancel', resetWheel);
 
-                // Interactive Steering Joystick
-                const joyWrap = document.getElementById('steer-joy-wrap');
-                const joyKnob = document.getElementById('steer-joy-knob');
-                let joyActive = false;
-                const updateJoy = (clientX, clientY) => {
-                    const rect = joyWrap.getBoundingClientRect();
-                    const { dx } = toLocalDelta(clientX, clientY, rect);
-                    this.touchSteer = clamp(dx / 42, -1, 1);
-                    joyKnob.style.transform = `translateX(${this.touchSteer * 32}px)`;
-                };
-                joyWrap.addEventListener('pointerdown', e => {
-                    SoundFX.unlock();
-                    joyActive = true;
-                    joyWrap.setPointerCapture(e.pointerId);
-                    updateJoy(e.clientX, e.clientY);
-                });
-                joyWrap.addEventListener('pointermove', e => { if (joyActive) updateJoy(e.clientX, e.clientY); });
-                const resetJoy = () => {
-                    joyActive = false;
-                    this.touchSteer = 0;
-                    joyKnob.style.transform = 'translateX(0px)';
-                };
-                joyWrap.addEventListener('pointerup', resetJoy);
-                joyWrap.addEventListener('pointercancel', resetJoy);
-
-                // Tilt Steering
-                // Tilt Steering Controls (Recenter & Flip)
+                // Tilt Recenter & Flip
                 document.getElementById('btn-tilt-recenter').addEventListener('click', () => {
                     this.tiltZero = this.rawTilt;
                     this.tiltSteer = 0;
-                    const dot = document.getElementById('tilt-bar-dot');
-                    if (dot) dot.style.left = '50%';
                     this.showBanner('📱 Tilt Steering Recentered');
                 });
                 document.getElementById('btn-tilt-flip').addEventListener('click', () => {
                     this.tiltInvert *= -1;
-                    this.showBanner(this.tiltInvert > 0 ? '⇄ Tilt Axis: Normal' : '⇄ Tilt Axis: Flipped');
+                    this.showBanner(this.tiltInvert > 0 ? '📱 Tilt Direction: Normal' : '📱 Tilt Direction: Flipped');
                 });
 
-                // Interactive Vertical Throttle / Turbo / Brake Joystick
+                // Steering Wheel Touch / Mouse Drag
+                const wheelWrap = document.getElementById('wheel-wrap');
+                const wheelEl = document.getElementById('steering-wheel');
+                let wheelPointerId = null;
+                const updateWheel = (clientX, clientY) => {
+                    const rect = wheelWrap.getBoundingClientRect();
+                    const { dx } = toLocalDelta(clientX, clientY, rect);
+                    this.touchSteer = clamp(dx / 48, -1, 1);
+                    wheelEl.style.transform = `rotate(${this.touchSteer * 115}deg)`;
+                };
+                wheelWrap.addEventListener('pointerdown', e => {
+                    e.preventDefault();
+                    SoundFX.unlock();
+                    wheelPointerId = e.pointerId;
+                    wheelWrap.setPointerCapture(e.pointerId);
+                    updateWheel(e.clientX, e.clientY);
+                });
+                wheelWrap.addEventListener('pointermove', e => {
+                    if (e.pointerId !== wheelPointerId) return;
+                    updateWheel(e.clientX, e.clientY);
+                });
+                const releaseWheel = e => {
+                    if (e.pointerId !== wheelPointerId) return;
+                    wheelPointerId = null;
+                    this.touchSteer = 0;
+                    wheelEl.style.transform = 'rotate(0deg)';
+                };
+                wheelWrap.addEventListener('pointerup', releaseWheel);
+                wheelWrap.addEventListener('pointercancel', releaseWheel);
+
+                // Steering Joystick Touch / Mouse Drag
+                const joyWrap = document.getElementById('steer-joy-wrap');
+                const joyKnob = document.getElementById('steer-joy-knob');
+                let joyPointerId = null;
+                const updateJoy = (clientX, clientY) => {
+                    const rect = joyWrap.getBoundingClientRect();
+                    const { dx } = toLocalDelta(clientX, clientY, rect);
+                    this.touchSteer = clamp(dx / 38, -1, 1);
+                    joyKnob.style.transform = `translateX(${this.touchSteer * 30}px)`;
+                };
+                joyWrap.addEventListener('pointerdown', e => {
+                    e.preventDefault();
+                    SoundFX.unlock();
+                    joyPointerId = e.pointerId;
+                    joyWrap.setPointerCapture(e.pointerId);
+                    updateJoy(e.clientX, e.clientY);
+                });
+                joyWrap.addEventListener('pointermove', e => {
+                    if (e.pointerId !== joyPointerId) return;
+                    updateJoy(e.clientX, e.clientY);
+                });
+                const releaseJoy = e => {
+                    if (e.pointerId !== joyPointerId) return;
+                    joyPointerId = null;
+                    this.touchSteer = 0;
+                    joyKnob.style.transform = 'translateX(0px)';
+                };
+                joyWrap.addEventListener('pointerup', releaseJoy);
+                joyWrap.addEventListener('pointercancel', releaseJoy);
+
+                // Throttle Slider (Up = Gas / Turbo, Down = Brake / Reverse)
                 const thrTrack = document.getElementById('throttle-track');
                 const thrKnob = document.getElementById('throttle-knob');
-                let thrActive = false;
+                let thrPointerId = null;
                 const updateThrottle = (clientX, clientY) => {
                     const rect = thrTrack.getBoundingClientRect();
                     const { dy } = toLocalDelta(clientX, clientY, rect);
-                    const norm = clamp(-dy / 48, -1, 1);
+                    const norm = clamp(-dy / 46, -1, 1);
                     this.touchThrottle = norm;
-                    this.touchTurbo = norm > 0.78;
+                    this.touchTurbo = norm > 0.82;
                     thrKnob.style.top = `${50 - norm * 34}%`;
                     thrKnob.textContent = this.touchTurbo ? '⚡' : (norm > 0.1 ? 'GAS' : (norm < -0.1 ? 'BRK' : 'GAS'));
                 };
                 thrTrack.addEventListener('pointerdown', e => {
+                    e.preventDefault();
                     SoundFX.unlock();
-                    thrActive = true;
+                    thrPointerId = e.pointerId;
                     thrTrack.setPointerCapture(e.pointerId);
                     updateThrottle(e.clientX, e.clientY);
                 });
-                thrTrack.addEventListener('pointermove', e => { if (thrActive) updateThrottle(e.clientX, e.clientY); });
-                const resetThr = () => {
-                    thrActive = false;
+                thrTrack.addEventListener('pointermove', e => {
+                    if (e.pointerId !== thrPointerId) return;
+                    updateThrottle(e.clientX, e.clientY);
+                });
+                const releaseThrottle = e => {
+                    if (e.pointerId !== thrPointerId) return;
+                    thrPointerId = null;
                     this.touchThrottle = 0;
                     this.touchTurbo = false;
                     thrKnob.style.top = '50%';
                     thrKnob.textContent = 'GAS';
                 };
-                thrTrack.addEventListener('pointerup', resetThr);
-                thrTrack.addEventListener('pointercancel', resetThr);
+                thrTrack.addEventListener('pointerup', releaseThrottle);
+                thrTrack.addEventListener('pointercancel', releaseThrottle);
 
                 // Camera Orbit Drag on 3D Canvas
-                this.renderer.domElement.addEventListener('pointerdown', e => {
+                this.container.addEventListener('pointerdown', e => {
                     this.isDraggingCam = true;
                     this.lastCamX = this.isPortraitForced ? e.clientY : e.clientX;
                 });
@@ -4145,398 +4211,411 @@
                     const cur = this.isPortraitForced ? e.clientY : e.clientX;
                     const delta = cur - this.lastCamX;
                     this.lastCamX = cur;
-                    this.camOrbitOffset = clamp(this.camOrbitOffset - delta * 0.008, -1.4, 1.4);
+                    this.camOrbitOffset = clamp(this.camOrbitOffset - delta * 0.0055, -1.35, 1.35);
                 });
                 window.addEventListener('pointerup', () => { this.isDraggingCam = false; });
+                window.addEventListener('pointercancel', () => { this.isDraggingCam = false; });
             }
 
             closeAllModals() {
-                ['settings-modal', 'map-modal', 'garage-modal', 'missions-modal'].forEach(m => {
-                    document.getElementById(m).classList.add('hidden');
+                ['settings-modal', 'garage-modal', 'missions-modal', 'map-modal'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
                 });
                 this.state = 'playing';
             }
 
             showBanner(text) {
                 const el = document.getElementById('event-banner');
+                if (!el) return;
                 el.textContent = text;
                 el.classList.add('show');
                 clearTimeout(this.bannerTimer);
                 this.bannerTimer = setTimeout(() => el.classList.remove('show'), 2600);
             }
 
+            /* ================= HORIZONTAL LANDSCAPE RESIZE HANDLER ================= */
             handleResize() {
                 const vw = window.innerWidth;
                 const vh = window.innerHeight;
                 const root = document.getElementById('game-root');
 
-                // Force horizontal landscape stage whenever viewport is taller than wide
                 this.isPortraitForced = vh > vw;
                 root.classList.toggle('force-landscape', this.isPortraitForced);
 
-                const w = this.isPortraitForced ? vh : vw;
-                const h = this.isPortraitForced ? vw : vh;
-                this.camera.aspect = w / h;
+                const stageW = this.isPortraitForced ? vh : vw;
+                const stageH = this.isPortraitForced ? vw : vh;
+
+                this.camera.aspect = stageW / Math.max(1, stageH);
                 this.camera.updateProjectionMatrix();
-                this.renderer.setSize(w, h);
+                this.renderer.setSize(stageW, stageH, false);
             }
 
-            /* ================= MAIN UPDATE LOOP ================= */
+            /* ================= MAIN PHYSICS & WORLD UPDATE ================= */
             update(dt) {
-                if (this.state === 'menu') {
-                    this.menuOrbitAngle += dt * 0.34;
-                    const ox = this.playerX + Math.sin(this.menuOrbitAngle) * 10.5;
-                    const oz = this.playerZ + Math.cos(this.menuOrbitAngle) * 10.5;
-                    this.camera.position.set(ox, this.playerY + 4.1, oz);
-                    this.camera.lookAt(this.playerX, this.playerY + 1.1, this.playerZ);
-                    SoundFX.updateEngine(0, false);
-                    return;
-                }
-
-                if (this.state !== 'playing') {
-                    SoundFX.updateEngine(0, false);
-                    return;
+                // Automatic Dynamic Day/Sunset/Night & Clear/Rain/Winter/Fog Cycle
+                if (this.autoCycle) {
+                    this.timeCycleTimer += dt;
+                    this.weatherCycleTimer += dt;
+                    if (this.timeCycleTimer > 38) {
+                        this.timeCycleTimer = 0;
+                        const times = ['day', 'sunset', 'night'];
+                        const nextTime = times[(times.indexOf(this.timeOfDay) + 1) % times.length];
+                        this.setTimeOfDay(nextTime, true);
+                    }
+                    if (this.weatherCycleTimer > 52) {
+                        this.weatherCycleTimer = 0;
+                        const weathers = ['clear', 'rain', 'winter', 'fog'];
+                        const nextW = weathers[(weathers.indexOf(this.weather) + 1) % weathers.length];
+                        this.setWeather(nextW, true);
+                    }
                 }
 
                 // Gather Inputs
                 let throttle = this.touchThrottle;
                 if (this.keys['KeyW'] || this.keys['ArrowUp']) throttle = 1;
                 if (this.keys['KeyS'] || this.keys['ArrowDown']) throttle = -1;
-                this.isBraking = throttle < -0.08;
-                const wantsTurbo = this.touchTurbo || !!this.keys['Space'] || !!this.keys['ShiftLeft'];
-                const turbo = wantsTurbo && this.nitro > 2 && throttle >= 0;
 
+                let steerInput = this.controlMode === 'tilt' ? this.tiltSteer : this.touchSteer;
+                if (this.keys['KeyA'] || this.keys['ArrowLeft']) steerInput = -1;
+                if (this.keys['KeyD'] || this.keys['ArrowRight']) steerInput = 1;
+
+                const wantTurbo = this.touchTurbo || this.keys['Space'] || this.keys['ShiftLeft'] || this.keys['ShiftRight'];
+                const turbo = wantTurbo && this.nitro > 4 && throttle >= 0;
+
+                // Car & Upgrade Multipliers
+                const spec = this.getCurrentCarSpec();
+                const engMult = 1 + ((this.upgrades.engine || 1) - 1) * 0.06;
+                const nitroMult = 1 + ((this.upgrades.turbo || 1) - 1) * 0.14;
+                const gripMult = 1 + ((this.upgrades.handling || 1) - 1) * 0.08;
+                const iceGrip = this.weather === 'winter' ? 0.78 : (this.weather === 'rain' ? 0.9 : 1.0);
+
+                const maxSpeedMs = ((spec.maxKmh * engMult) / 3.6) * (turbo ? 1.2 : 1.0);
+                const accelRate = 24 * spec.accel * engMult * (turbo ? 1.48 : 1.0);
+
+                // Nitro Consumption & Recharge
                 if (turbo) {
-                    this.nitro = Math.max(0, this.nitro - 22 * dt);
+                    this.nitro = Math.max(0, this.nitro - 26 * dt);
                 } else {
-                    const recharge = 7 + (this.upgrades.turbo - 1) * 3.5;
-                    this.nitro = Math.min(100, this.nitro + recharge * dt);
+                    this.nitro = Math.min(100, this.nitro + 11 * nitroMult * dt);
                 }
 
-                let steer = this.controlMode === 'tilt' ? this.tiltSteer : this.touchSteer;
-                if (this.keys['KeyA'] || this.keys['ArrowLeft']) steer = -1;
-                if (this.keys['KeyD'] || this.keys['ArrowRight']) steer = 1;
-
-                // Car & Upgrade-Adjusted Physics
-                const carSpec = this.getCurrentCarSpec();
-                const engBonus = 1 + (this.upgrades.engine - 1) * 0.06;
-                const handBonus = 1 + (this.upgrades.handling - 1) * 0.08;
-                const maxNormal = (carSpec.maxKmh * 0.80 * engBonus) / 3.6;
-                const maxTurbo = (carSpec.maxKmh * engBonus) / 3.6;
-                const maxSpeed = turbo ? maxTurbo : maxNormal;
-
+                // Longitudinal Acceleration / Braking / Coasting
+                const prevSpeed = this.speed;
+                this.isBraking = false;
                 if (throttle > 0.05) {
-                    const accel = (turbo ? 27 : 17.5) * carSpec.accel * engBonus * throttle;
-                    this.speed = Math.min(maxSpeed, this.speed + accel * dt);
+                    this.speed += accelRate * throttle * dt;
                 } else if (throttle < -0.05) {
-                    const brake = this.speed > 0 ? 36 : 14;
-                    this.speed = Math.max(-16, this.speed + brake * throttle * dt);
+                    if (this.speed > 1.2) {
+                        this.speed -= 42 * Math.abs(throttle) * iceGrip * dt;
+                        this.isBraking = true;
+                    } else {
+                        this.speed += 14 * throttle * dt;
+                    }
                 } else {
-                    // Natural drag
-                    this.speed *= Math.pow(0.55, dt);
-                    if (Math.abs(this.speed) < 0.15) this.speed = 0;
+                    // Natural aerodynamic drag & rolling resistance
+                    this.speed *= Math.pow(0.62, dt);
+                    if (Math.abs(this.speed) < 0.08) this.speed = 0;
+                }
+                this.speed = clamp(this.speed, -14, maxSpeedMs);
+
+                // Steering & Suspension Body Roll / Pitch
+                this.steerAngle += (steerInput - this.steerAngle) * clamp(10 * gripMult * dt, 0, 1);
+                const latSpeed = this.steerAngle * Math.min(18, 5 + Math.abs(this.speed) * 0.28) * spec.handling * gripMult * iceGrip;
+                const dirSign = this.speed >= -0.1 ? 1 : -1;
+                if (Math.abs(this.speed) > 0.4) {
+                    this.lateral += latSpeed * dirSign * dt;
                 }
 
-                // Steering & Lateral Movement (slightly slicker in Rain & Winter)
-                const weatherGrip = this.weather === 'winter' ? 0.80 : (this.weather === 'rain' ? 0.88 : 1.0);
-                this.steerAngle += (steer - this.steerAngle) * Math.min(1, dt * 10 * weatherGrip);
-                const steerPower = Math.min(1, Math.abs(this.speed) / 8) * (this.speed >= 0 ? 1 : -1);
-                this.lateral += this.steerAngle * 14.5 * carSpec.handling * handBonus * steerPower * dt;
+                // Advance along Highway Spline
+                const ds = this.speed * dt;
+                this.s = (this.s + ds + TRACK_LENGTH) % TRACK_LENGTH;
+                if (ds > 0) {
+                    this.totalDistance += ds;
+                    this.score += Math.floor(ds * (turbo ? 1.6 : 0.9));
+                    this.progressMission('dist', ds);
+                }
 
+                // Clamp Lateral Position to Current Road Zone Width
                 const zone = this.getZoneAt(this.s);
-                const maxLat = zone.halfW - 1.5;
+                const maxLat = zone.halfW - 1.35;
                 if (Math.abs(this.lateral) > maxLat) {
                     this.lateral = Math.sign(this.lateral) * maxLat;
-                    this.speed *= 0.96;
+                    this.speed *= 0.94;
                 }
 
-                // Advance along road spline
-                const stepDist = this.speed * dt;
-                this.s = (this.s + stepDist + TRACK_LENGTH) % TRACK_LENGTH;
-                if (stepDist > 0) {
-                    this.totalDistance += stepDist;
-                    this.progressMission('dist', this.totalDistance, true);
-                }
+                // Realistic Body Roll & Acceleration/Braking Pitch
+                const accelDelta = (this.speed - prevSpeed) / Math.max(0.008, dt);
+                const targetRoll = -this.steerAngle * clamp(Math.abs(this.speed) / 45, 0, 1) * 0.065;
+                const targetPitch = clamp(-accelDelta * 0.0018, -0.045, 0.055);
+                this.bodyRoll += (targetRoll - this.bodyRoll) * Math.min(1, 9 * dt);
+                this.bodyPitch += (targetPitch - this.bodyPitch) * Math.min(1, 9 * dt);
 
-                // Mission speed & zone checks
-                const kmhNow = Math.abs(this.speed) * 3.6;
-                if (kmhNow >= 200) this.progressMission('speed', kmhNow, true);
-                if (zone.start === 900) this.progressMission('tunnel', 1, true);
-                if (zone.start === 3700 && kmhNow >= 230) this.progressMission('super', kmhNow, true);
+                // Missions: Speed, Tunnel, Super Highway
+                const kmh = Math.abs(this.speed) * 3.6;
+                this.progressMission('speed', kmh, true);
+                if (this.s > 1100 && this.s < 1600) this.progressMission('tunnel', 1, true);
+                if (this.s > 3700 && kmh >= 230) this.progressMission('super', kmh, true);
 
                 // Super Highway Boost Pads
-                this.boostPads.forEach(bs => {
-                    if (Math.abs(this.s - bs) < 10 && Math.abs(this.lateral - 5.5) < 3.6 && !this.triggeredPads.has(bs)) {
-                        this.triggeredPads.add(bs);
-                        this.nitro = 100;
-                        this.speed = Math.min(maxTurbo * 1.08, this.speed + 18);
-                        this.addCoins(25);
-                        this.showBanner('⚡ BOOST PAD SURGE! Nitro 100% +25 🪙');
-                    } else if (Math.abs(this.s - bs) > 60) {
-                        this.triggeredPads.delete(bs);
+                this.boostPads.forEach((bs, idx) => {
+                    if (Math.abs(this.s - bs) < 8 && Math.abs(this.lateral - 5.5) < 3.6) {
+                        if (!this.triggeredPads.has(idx)) {
+                            this.triggeredPads.add(idx);
+                            this.speed = Math.min(maxSpeedMs * 1.12, this.speed + 18);
+                            this.nitro = 100;
+                            this.score += 250;
+                            this.showBanner('⚡ SUPER BOOST PAD +250!');
+                        }
+                    } else if (Math.abs(this.s - bs) > 35) {
+                        this.triggeredPads.delete(idx);
                     }
                 });
 
-                // Score accumulation
-                if (this.speed > 10) {
-                    this.score += Math.round(this.speed * dt * (turbo ? 2.4 : 1.2));
-                }
+                // Speed Cameras
+                this.speedCameras.forEach((cs, idx) => {
+                    if (Math.abs(this.s - cs) < 7 && kmh > 110) {
+                        if (!this.triggeredCams.has(idx)) {
+                            this.triggeredCams.add(idx);
+                            const flash = document.getElementById('cam-flash');
+                            if (flash) {
+                                flash.style.opacity = '0.78';
+                                setTimeout(() => { flash.style.opacity = '0'; }, 140);
+                            }
+                            this.score += 350;
+                            this.addCoins(40);
+                            this.progressMission('cam', 1);
+                            this.showBanner(`📸 SPEED CAMERA: ${Math.round(kmh)} KM/H! (+40 🪙)`);
+                        }
+                    } else if (Math.abs(this.s - cs) > 45) {
+                        this.triggeredCams.delete(idx);
+                    }
+                });
 
-                // Update combo decay
+                // Combo Decay
                 if (this.comboTimer > 0) {
                     this.comboTimer -= dt;
                     if (this.comboTimer <= 0) {
                         this.combo = 0;
-                        document.getElementById('combo-badge').classList.remove('show');
+                        const cb = document.getElementById('combo-badge');
+                        if (cb) cb.classList.remove('show');
                     }
                 }
 
-                // Speed Camera Gantry Flash (>110 km/h)
-                this.speedCameras.forEach(cs => {
-                    if (Math.abs(this.s - cs) < 8 && kmhNow > 110 && !this.triggeredCams.has(cs)) {
-                        this.triggeredCams.add(cs);
-                        const flash = document.getElementById('cam-flash');
-                        flash.style.opacity = '0.75';
-                        setTimeout(() => { flash.style.opacity = '0'; }, 140);
-                        this.score += 300;
-                        this.addCoins(40);
-                        this.progressMission('cam', 1, false);
-                        this.showBanner(`📸 SPEED CAMERA FLASH! ${Math.round(kmhNow)} KM/H (+40 🪙)`);
-                    } else if (Math.abs(this.s - cs) > 60) {
-                        this.triggeredCams.delete(cs);
+                // Update AI Traffic + Collisions + Near Misses
+                for (const t of this.traffic) {
+                    t.s = (t.s + t.speed * dt + TRACK_LENGTH) % TRACK_LENGTH;
+                    const tf = this.getRoadFrame(t.s);
+                    t.mesh.position.set(
+                        tf.pos.x + tf.right.x * t.lateral,
+                        tf.pos.y,
+                        tf.pos.z + tf.right.z * t.lateral
+                    );
+                    t.mesh.rotation.y = tf.heading + (t.dir < 0 ? Math.PI : 0);
+
+                    if (t.wheels) {
+                        const spin = t.speed * dt * 2.2;
+                        for (const w of t.wheels) w.rotation.x += spin;
                     }
-                });
 
-                // Dynamic Headlights, Brake Light Glow & Turbo Exhaust Flames
-                const inAnyTunnel = zone.start === 900 || (this.s >= 4520 && this.s <= 4740);
-                const isHighBeam = this.headlightsPref === 'high';
-                const lightsOn = isHighBeam || this.headlightsPref === 'on' || (this.headlightsPref === 'auto' && (this.timeOfDay === 'night' || this.timeOfDay === 'sunset' || this.weather !== 'clear' || inAnyTunnel));
-                const isDarkScene = this.timeOfDay === 'night' || inAnyTunnel || this.weather === 'fog';
+                    // Wrapped longitudinal distance to player
+                    let dS = t.s - this.s;
+                    if (dS > TRACK_LENGTH / 2) dS -= TRACK_LENGTH;
+                    if (dS < -TRACK_LENGTH / 2) dS += TRACK_LENGTH;
+                    const absDS = Math.abs(dS);
+                    const absDL = Math.abs(t.lateral - this.lateral);
 
-                if (this.hlLensMat) {
-                    this.hlLensMat.emissiveIntensity = lightsOn ? (isHighBeam ? 3.4 : 2.2) : 0.45;
-                }
-                if (this.headlightFlares) {
-                    const flareScale = isHighBeam ? 1.55 : 1.15;
-                    this.headlightFlares.forEach(f => {
-                        f.visible = lightsOn;
-                        f.scale.set(flareScale, flareScale * 0.68, 1);
-                    });
-                }
-                if (this.headlightCones) {
-                    const zScale = isHighBeam ? 1.42 : 1.0;
-                    const xyScale = isHighBeam ? 1.18 : 1.0;
-                    this.headlightCones.forEach(c => {
-                        c.visible = lightsOn;
-                        c.scale.set(xyScale, xyScale, zScale);
-                        c.position.z = (this.getCurrentCarSpec().l / 2) + 13.0 * zScale;
-                    });
-                }
-                if (this.beamMat) {
-                    this.beamMat.opacity = isHighBeam ? (isDarkScene ? 0.56 : 0.36) : (isDarkScene ? 0.38 : 0.22);
-                }
-                if (this.groundBeamPool && this.groundBeamMat) {
-                    this.groundBeamPool.visible = lightsOn;
-                    const poolZ = isHighBeam ? 1.38 : 1.0;
-                    this.groundBeamPool.scale.set(isHighBeam ? 1.2 : 1.0, poolZ, 1);
-                    this.groundBeamPool.position.z = (this.getCurrentCarSpec().l / 2) + 16.5 * poolZ;
-                    this.groundBeamMat.opacity = isHighBeam ? (isDarkScene ? 0.78 : 0.45) : (isDarkScene ? 0.55 : 0.30);
-                }
-                if (this.headlightSpots) {
-                    const spotInt = lightsOn ? (isHighBeam ? 4.6 : 2.8) : 0;
-                    const spotDist = isHighBeam ? 110 : 72;
-                    this.headlightSpots.forEach(s => {
-                        s.intensity = spotInt;
-                        s.distance = spotDist;
-                    });
-                }
-                const lightHudBtn = document.getElementById('btn-lights');
-                if (lightHudBtn) {
-                    lightHudBtn.classList.toggle('lights-on', lightsOn && !isHighBeam);
-                    lightHudBtn.classList.toggle('lights-high', lightsOn && isHighBeam);
-                }
-                if (this.tailLightMat) {
-                    this.tailLightMat.emissiveIntensity = this.isBraking ? 3.2 : (lightsOn ? 1.25 : 0.45);
-                }
-                if (this.turboFlames) {
-                    this.turboFlames.forEach(fl => {
-                        fl.visible = turbo && kmhNow > 40;
-                        if (fl.visible) fl.scale.set(1, 1, 0.8 + Math.random() * 0.65);
-                    });
-                }
+                    const hitLen = t.halfLen + 2.15;
+                    const hitW = t.halfW + 0.95;
 
-                // Automatic Dynamic Cycle: Day -> Sunset -> Night & Clear -> Rain -> Winter -> Fog
-                if (this.autoCycle) {
-                    this.timeCycleTimer += dt;
-                    this.weatherCycleTimer += dt;
-                    if (this.timeCycleTimer >= 34) {
-                        this.timeCycleTimer = 0;
-                        const times = ['day', 'sunset', 'night'];
-                        const nextTime = times[(times.indexOf(this.timeOfDay) + 1) % times.length];
-                        this.setTimeOfDay(nextTime, true);
-                    }
-                    if (this.weatherCycleTimer >= 26) {
-                        this.weatherCycleTimer = 0;
-                        const weathers = ['clear', 'rain', 'winter', 'fog'];
-                        const nextWeather = weathers[(weathers.indexOf(this.weather) + 1) % weathers.length];
-                        this.setWeather(nextWeather, true);
+                    if (absDS < hitLen && absDL < hitW) {
+                        // Collision Bounce
+                        SoundFX.playCrash();
+                        this.speed *= -0.25;
+                        this.lateral += (this.lateral >= t.lateral ? 1 : -1) * 1.6;
+                        this.combo = 0;
+                        this.comboTimer = 0;
+                        const cb = document.getElementById('combo-badge');
+                        if (cb) cb.classList.remove('show');
+                        this.showBanner('💥 TRAFFIC IMPACT!');
+                    } else if (absDS < hitLen + 2.2 && absDL < hitW + 2.3 && kmh > 65 && !t.passed) {
+                        // Near Miss Bonus!
+                        t.passed = true;
+                        this.combo++;
+                        this.comboTimer = 4.2;
+                        const pts = 120 * this.combo;
+                        this.score += pts;
+                        this.addCoins(15);
+                        this.progressMission('near', 1);
+                        const cb = document.getElementById('combo-badge');
+                        if (cb) {
+                            cb.textContent = `🔥 NEAR MISS x${this.combo} (+${pts})`;
+                            cb.classList.add('show');
+                        }
+                    } else if (absDS > 22) {
+                        t.passed = false;
                     }
                 }
 
-                // Realistic Suspension Body Roll & Accel/Brake Pitch
-                const targetRoll = -this.steerAngle * Math.min(1, kmhNow / 110) * 0.085;
-                const targetPitch = this.isBraking && this.speed > 2 ? 0.045 : (throttle > 0.2 ? (turbo ? -0.042 : -0.022) : 0);
-                this.bodyRoll += (targetRoll - this.bodyRoll) * Math.min(1, dt * 8);
-                this.bodyPitch += (targetPitch - this.bodyPitch) * Math.min(1, dt * 7);
-
-                // Keep Sky Dome & Clouds centered around the player for infinite horizon
-                if (this.skyDome) {
-                    this.skyDome.position.set(this.playerX, this.playerY, this.playerZ);
-                    this.starField.position.set(this.playerX, this.playerY, this.playerZ);
-                    this.cloudGroup.position.set(this.playerX, 0, this.playerZ);
-                }
-
-                // Update Rain particles around player
-                if (this.rainPoints && this.rainPoints.visible) {
-                    const pos = this.rainPoints.geometry.attributes.position.array;
-                    for (let i = 0; i < pos.length; i += 3) {
-                        pos[i + 1] -= 38 * dt;
-                        if (pos[i + 1] < 0) pos[i + 1] = 42;
-                    }
-                    this.rainPoints.geometry.attributes.position.needsUpdate = true;
-                    this.rainPoints.position.set(this.playerX, this.playerY, this.playerZ);
-                }
-
-                // Update Winter Snowfall particles around player
-                if (this.snowPoints && this.snowPoints.visible) {
-                    const pos = this.snowPoints.geometry.attributes.position.array;
-                    const sway = Math.sin(performance.now() * 0.0018) * 3.5 * dt;
-                    for (let i = 0; i < pos.length; i += 3) {
-                        pos[i] += sway;
-                        pos[i + 1] -= 8.5 * dt;
-                        if (pos[i + 1] < 0) pos[i + 1] = 44;
-                    }
-                    this.snowPoints.geometry.attributes.position.needsUpdate = true;
-                    this.snowPoints.position.set(this.playerX, this.playerY, this.playerZ);
-                }
-
-                this.updatePlayerTransform(dt);
-                this.updateTraffic(dt);
+                // Update Pedestrians, Traffic Lights, Transit (Flyover Cars, Metro, Railway)
                 this.updatePedestrians(dt);
                 this.updateTrafficLights(dt);
                 this.updateTransit(dt);
-                this.updateCamera(dt);
+
+                // Animate 3D Rain & Winter Snow Particles around Player
+                if (this.rainPoints && this.rainPoints.visible) {
+                    this.rainPoints.position.set(this.playerX, this.playerY, this.playerZ);
+                    const arr = this.rainPoints.geometry.attributes.position.array;
+                    for (let i = 1; i < arr.length; i += 3) {
+                        arr[i] -= 42 * dt;
+                        if (arr[i] < 0) arr[i] = 44;
+                    }
+                    this.rainPoints.geometry.attributes.position.needsUpdate = true;
+                }
+                if (this.snowPoints && this.snowPoints.visible) {
+                    this.snowPoints.position.set(this.playerX, this.playerY, this.playerZ);
+                    const arr = this.snowPoints.geometry.attributes.position.array;
+                    for (let i = 0; i < arr.length; i += 3) {
+                        arr[i] += Math.sin(arr[i + 1] * 0.4) * 2.2 * dt;
+                        arr[i + 1] -= 7.5 * dt;
+                        if (arr[i + 1] < 0) arr[i + 1] = 44;
+                    }
+                    this.snowPoints.geometry.attributes.position.needsUpdate = true;
+                }
+
+                // Smoothly relax camera orbit offset when not dragging
+                if (!this.isDraggingCam && Math.abs(this.camOrbitOffset) > 0.002) {
+                    this.camOrbitOffset *= Math.pow(0.25, dt);
+                }
+
+                // Update Car Transform, Lights, Camera, Audio & HUD
+                this.updatePlayerTransform(dt, turbo);
+                SoundFX.updateEngine(Math.abs(this.speed), turbo, this.currentRpmNorm);
                 this.updateHUD(turbo);
                 this.drawMinimap();
-                SoundFX.updateEngine(Math.abs(this.speed), turbo, this.currentRpmNorm);
             }
 
-            updatePlayerTransform(dt) {
-                const f = this.getRoadFrame(this.s);
-                this.playerX = f.pos.x + f.right.x * this.lateral;
-                this.playerY = f.pos.y;
-                this.playerZ = f.pos.z + f.right.z * this.lateral;
-                this.playerHeading = f.heading - this.steerAngle * 0.16;
+            /* ================= PLAYER CAR, HEADLIGHTS & CAMERA TRANSFORM ================= */
+            updatePlayerTransform(dt, turbo = false) {
+                const frame = this.getRoadFrame(this.s);
+                this.playerX = frame.pos.x + frame.right.x * this.lateral;
+                this.playerY = frame.pos.y;
+                this.playerZ = frame.pos.z + frame.right.z * this.lateral;
+                this.playerHeading = frame.heading - this.steerAngle * 0.14;
 
                 this.carGroup.position.set(this.playerX, this.playerY, this.playerZ);
                 this.carGroup.rotation.y = this.playerHeading;
 
                 if (this.carBodyGroup) {
-                    const roadVib = Math.abs(this.speed) > 25 ? (Math.sin(performance.now() * 0.045) * 0.008) : 0;
                     this.carBodyGroup.rotation.z = this.bodyRoll;
                     this.carBodyGroup.rotation.x = this.bodyPitch;
-                    this.carBodyGroup.position.y = roadVib;
                 }
 
-                // Spin wheels
-                const wheelSpin = this.speed * dt * 2.2;
-                this.wheels.forEach((w, i) => {
-                    w.rotation.x += wheelSpin;
-                    if (i < 2) w.rotation.y = -this.steerAngle * 0.35;
-                });
-            }
-
-            updateTraffic(dt) {
-                for (const t of this.traffic) {
-                    t.s = (t.s + t.speed * dt + TRACK_LENGTH) % TRACK_LENGTH;
-                    const f = this.getRoadFrame(t.s);
-                    const tx = f.pos.x + f.right.x * t.lateral;
-                    const ty = f.pos.y;
-                    const tz = f.pos.z + f.right.z * t.lateral;
-                    t.mesh.position.set(tx, ty, tz);
-                    t.mesh.rotation.y = f.heading + (t.dir < 0 ? Math.PI : 0);
-
-                    if (t.wheels) {
-                        const spin = Math.abs(t.speed) * dt * 2.2;
-                        for (const w of t.wheels) w.rotation.x += spin;
-                    }
-
-                    // Collision & Near-Miss detection scaled by vehicle size
-                    const ds = Math.abs(this.s - t.s);
-                    const dl = Math.abs(this.lateral - t.lateral);
-                    const hitLen = (t.halfLen || 2.25) + 2.35;
-                    const hitWid = (t.halfW || 1.05) + 1.05;
-                    if (ds < hitLen && dl < hitWid) {
-                        SoundFX.playCrash();
-                        this.speed = -8;
-                        this.combo = 0;
-                        document.getElementById('combo-badge').classList.remove('show');
-                        this.showBanner('💥 TRAFFIC COLLISION! Watch the lanes!');
-                    } else if (ds < hitLen + 1.6 && dl >= hitWid && dl < hitWid + 2.4 && Math.abs(this.speed) > 22 && !t.passed) {
-                        t.passed = true;
-                        this.combo++;
-                        this.comboTimer = 4.0;
-                        const bonus = 150 * this.combo;
-                        this.score += bonus;
-                        this.nitro = Math.min(100, this.nitro + 12);
-                        this.addCoins(15 * this.combo);
-                        this.progressMission('near', 1, false);
-                        const cb = document.getElementById('combo-badge');
-                        cb.textContent = `🔥 NEAR MISS x${this.combo} (+${bonus})`;
-                        cb.classList.add('show');
-                    } else if (ds > 22) {
-                        t.passed = false;
-                    }
+                // Spin & Steer Wheels
+                if (this.wheels) {
+                    const spin = this.speed * dt * 2.5;
+                    this.wheels.forEach((w, i) => {
+                        w.rotation.x += spin;
+                        if (i < 2) w.rotation.y = -this.steerAngle * 0.36;
+                    });
                 }
-            }
 
-            updateCamera(dt) {
-                const f = this.getRoadFrame(this.s);
-                if (!this.isDraggingCam) {
-                    this.camOrbitOffset *= Math.pow(0.25, dt);
+                // Brake Lights Flare
+                if (this.tailLightMat) {
+                    this.tailLightMat.emissiveIntensity = this.isBraking ? 2.4 : 0.75;
                 }
-                const angle = f.heading + this.camOrbitOffset;
 
-                // Speed-reactive dynamic FOV for authentic sense of speed
+                // Turbo Exhaust Flames
+                if (this.turboFlames) {
+                    const flicker = 0.8 + Math.random() * 0.45;
+                    this.turboFlames.forEach(fl => {
+                        fl.visible = turbo;
+                        if (turbo) fl.scale.set(1, 1, flicker);
+                    });
+                }
+
+                // Photorealistic BMW Headlights (AUTO / LOW BEAM / HIGH BEAM / OFF)
+                const inTunnel = (this.s >= 890 && this.s <= 1660) || (this.s >= 4510 && this.s <= 4750);
+                const darkEnv = this.timeOfDay === 'night' || this.timeOfDay === 'sunset' || this.weather === 'rain' || this.weather === 'fog' || inTunnel;
+                const lightsActive = this.headlightsPref === 'on' || this.headlightsPref === 'high' || (this.headlightsPref === 'auto' && darkEnv);
+                const highBeam = this.headlightsPref === 'high';
+
+                if (this.hlLensMat) {
+                    this.hlLensMat.emissiveIntensity = lightsActive ? (highBeam ? 3.2 : 2.1) : 0.45;
+                }
+                if (this.headlightCones) {
+                    this.headlightCones.forEach(c => {
+                        c.visible = lightsActive;
+                        if (lightsActive) c.scale.set(highBeam ? 1.25 : 1.0, highBeam ? 1.25 : 1.0, highBeam ? 1.38 : 1.0);
+                    });
+                }
+                if (this.headlightFlares) {
+                    this.headlightFlares.forEach(f => {
+                        f.visible = lightsActive;
+                        if (lightsActive) f.scale.set(highBeam ? 1.55 : 1.15, highBeam ? 1.0 : 0.78, 1);
+                    });
+                }
+                if (this.headlightSpots) {
+                    this.headlightSpots.forEach(sp => {
+                        sp.intensity = lightsActive ? (highBeam ? 3.4 : 2.1) : 0;
+                        sp.distance = highBeam ? 115 : 75;
+                    });
+                }
+                if (this.groundBeamPool) {
+                    this.groundBeamPool.visible = lightsActive;
+                    this.groundBeamMat.opacity = highBeam ? 0.82 : 0.56;
+                }
+                const hlBtn = document.getElementById('btn-lights');
+                if (hlBtn) {
+                    hlBtn.classList.toggle('lights-on', lightsActive && !highBeam);
+                    hlBtn.classList.toggle('lights-high', lightsActive && highBeam);
+                }
+
+                // Sky Dome & Cloud Centering around Player
+                if (this.skyDome) this.skyDome.position.set(this.playerX, this.playerY, this.playerZ);
+                if (this.starField) this.starField.position.set(this.playerX, this.playerY, this.playerZ);
+                if (this.cloudGroup) {
+                    this.cloudGroup.position.set(this.playerX, 0, this.playerZ);
+                    this.cloudGroup.rotation.y += dt * 0.004;
+                }
+
+                // Speed-Reactive Camera Follow (Chase / Hood / Wide Cinematic)
                 const kmh = Math.abs(this.speed) * 3.6;
-                const targetFov = 58 + clamp01(kmh / 240) * 18;
-                if (Math.abs(this.camera.fov - targetFov) > 0.05) {
-                    this.camera.fov += (targetFov - this.camera.fov) * Math.min(1, dt * 6);
-                    this.camera.updateProjectionMatrix();
-                }
+                const targetFov = (this.camMode === 1 ? 66 : 58) + clamp(kmh / 260, 0, 1) * 16 + (turbo ? 5 : 0);
+                this.camera.fov += (targetFov - this.camera.fov) * Math.min(1, 6 * dt);
+                this.camera.updateProjectionMatrix();
+
+                const angle = frame.heading + this.camOrbitOffset;
+                const sinA = Math.sin(angle);
+                const cosA = Math.cos(angle);
 
                 if (this.camMode === 1) {
-                    // Hood Cockpit Cam
-                    const cx = this.playerX + Math.sin(angle) * 0.6;
-                    const cz = this.playerZ + Math.cos(angle) * 0.6;
-                    this.camera.position.set(cx, this.playerY + 1.75, cz);
+                    // Hood Cockpit View
+                    this.camera.position.set(
+                        this.playerX + sinA * 0.65,
+                        this.playerY + 1.48,
+                        this.playerZ + cosA * 0.65
+                    );
                     this.camera.lookAt(
-                        this.playerX + Math.sin(f.heading) * 35,
-                        this.playerY + 1.4,
-                        this.playerZ + Math.cos(f.heading) * 35
+                        this.playerX + sinA * 24,
+                        this.playerY + 1.15,
+                        this.playerZ + cosA * 24
                     );
                 } else {
-                    const dist = this.camMode === 2 ? 13.5 : 9.2;
-                    const height = this.camMode === 2 ? 5.8 : 4.0;
-                    const targetX = this.playerX - Math.sin(angle) * dist;
-                    const targetY = this.playerY + height;
-                    const targetZ = this.playerZ - Math.cos(angle) * dist;
+                    const dist = this.camMode === 2 ? 12.2 : 8.4;
+                    const height = this.camMode === 2 ? 4.8 : 3.2;
+                    const desiredX = this.playerX - sinA * dist;
+                    const desiredY = this.playerY + height;
+                    const desiredZ = this.playerZ - cosA * dist;
 
-                    this.camera.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), Math.min(1, dt * 8));
+                    this.camera.position.x += (desiredX - this.camera.position.x) * Math.min(1, 10 * dt);
+                    this.camera.position.y += (desiredY - this.camera.position.y) * Math.min(1, 10 * dt);
+                    this.camera.position.z += (desiredZ - this.camera.position.z) * Math.min(1, 10 * dt);
+
                     this.camera.lookAt(
-                        this.playerX + Math.sin(f.heading) * 14,
-                        this.playerY + 1.4,
-                        this.playerZ + Math.cos(f.heading) * 14
+                        this.playerX + sinA * 14,
+                        this.playerY + 1.35,
+                        this.playerZ + cosA * 14
                     );
                 }
             }
@@ -4544,108 +4623,117 @@
             /* ================= DUAL DIGITAL SPEEDOMETER & HUD UPDATE ================= */
             updateHUD(turbo) {
                 const kmh = Math.round(Math.abs(this.speed) * 3.6);
-                document.getElementById('speed-val').textContent = kmh;
-                document.getElementById('score-val').textContent = this.score.toLocaleString();
+                const speedNorm = clamp01(kmh / 290);
 
-                // Left Digital Speedometer Arc (0 -> 240 km/h)
-                const speedRatio = clamp01(kmh / 240);
-                document.getElementById('speed-arc').style.strokeDashoffset = (188.5 * (1 - speedRatio)).toFixed(1);
-                document.getElementById('dual-cluster').classList.toggle('turbo-glow', turbo && kmh > 90);
-
-                // Gear indicator & Realistic RPM calculation (0.8k -> 8.0k RPM)
-                const gearEl = document.getElementById('gear-badge');
-                let gearLabel = 'N';
-                let gearMin = 0, gearMax = 42;
+                // Gear & Realistic Tachometer RPM Calculation
+                let gear = 'N';
+                let rpm = 0.85;
                 if (this.speed < -0.5) {
-                    gearLabel = 'R'; gearMin = 0; gearMax = 55;
-                } else if (kmh < 2) {
-                    gearLabel = 'N'; gearMin = 0; gearMax = 40;
-                } else if (kmh < 42) {
-                    gearLabel = '1'; gearMin = 0; gearMax = 44;
-                } else if (kmh < 82) {
-                    gearLabel = '2'; gearMin = 35; gearMax = 84;
-                } else if (kmh < 125) {
-                    gearLabel = '3'; gearMin = 72; gearMax = 128;
-                } else if (kmh < 168) {
-                    gearLabel = '4'; gearMin = 112; gearMax = 172;
-                } else if (kmh < 205) {
-                    gearLabel = '5'; gearMin = 152; gearMax = 210;
-                } else {
-                    gearLabel = '6'; gearMin = 188; gearMax = 245;
+                    gear = 'R';
+                    rpm = 1.4 + clamp01(kmh / 55) * 4.5;
+                } else if (kmh > 1) {
+                    const gThresholds = [0, 42, 84, 128, 174, 224, 340];
+                    let gIdx = 1;
+                    for (let i = 1; i < gThresholds.length; i++) {
+                        if (kmh >= gThresholds[i - 1]) gIdx = i;
+                    }
+                    gear = String(gIdx);
+                    const gMin = gThresholds[gIdx - 1];
+                    const gMax = gThresholds[gIdx];
+                    const gRatio = clamp01((kmh - gMin) / Math.max(1, gMax - gMin));
+                    rpm = 2.2 + gRatio * 5.6 + (turbo ? 0.7 : 0);
                 }
-                gearEl.textContent = gearLabel;
+                rpm = clamp(rpm, 0.8, 8.5);
+                this.currentRpmNorm = clamp01((rpm - 0.8) / 7.7);
 
-                const rpmNorm = gearLabel === 'N'
-                    ? (turbo ? 0.45 : 0.1)
-                    : clamp01((kmh - gearMin) / Math.max(10, gearMax - gearMin)) * 0.78 + 0.18 + (turbo ? 0.08 : 0);
-                this.currentRpmNorm = clamp01(rpmNorm);
-                const rpmVal = (0.8 + this.currentRpmNorm * 7.2);
-                document.getElementById('rpm-val').textContent = rpmVal.toFixed(1);
-                document.getElementById('rpm-arc').style.strokeDashoffset = (188.5 * (1 - this.currentRpmNorm)).toFixed(1);
-                // Center Digital Bridge (Drive Mode & Odometer)
+                // Update Dual Digital Dials
+                const speedEl = document.getElementById('speed-val');
+                const rpmEl = document.getElementById('rpm-val');
+                const speedArc = document.getElementById('speed-arc');
+                const rpmArc = document.getElementById('rpm-arc');
+                const gearEl = document.getElementById('gear-badge');
                 const modeEl = document.getElementById('drive-mode-lbl');
-                if (turbo && kmh > 60) {
-                    modeEl.textContent = '⚡ TURBO';
-                    modeEl.style.color = '#c084fc';
-                } else if (kmh > 130) {
-                    modeEl.textContent = 'SPORT';
-                    modeEl.style.color = '#f59e0b';
-                } else {
-                    modeEl.textContent = 'CRUISE';
-                    modeEl.style.color = '';
-                }
-                document.getElementById('odo-val').textContent = `${(this.totalDistance / 1000).toFixed(1)} km`;
-                document.getElementById('nitro-bar-fill').style.width = `${Math.round(this.nitro)}%`;
+                const odoEl = document.getElementById('odo-val');
+                const nitroFill = document.getElementById('nitro-bar-fill');
+                const cluster = document.getElementById('dual-cluster');
 
-                // Centered Zone Pill Update
-                const z = this.getZoneAt(this.s);
-                document.getElementById('zone-title').textContent = z.name;
-                document.getElementById('zone-sub').textContent = z.sub;
-                document.getElementById('zone-dot').style.background = z.color;
-                document.getElementById('zone-pill').classList.toggle('tunnel-active', z.start === 900);
+                if (speedEl) speedEl.textContent = String(kmh);
+                if (rpmEl) rpmEl.textContent = rpm.toFixed(1);
+                if (speedArc) speedArc.setAttribute('stroke-dashoffset', (188.5 * (1 - speedNorm)).toFixed(1));
+                if (rpmArc) rpmArc.setAttribute('stroke-dashoffset', (188.5 * (1 - this.currentRpmNorm)).toFixed(1));
+                if (gearEl) gearEl.textContent = gear;
+                if (modeEl) modeEl.textContent = turbo ? '⚡ TURBO' : (kmh > 150 ? 'SPORT' : 'CRUISE');
+                if (odoEl) odoEl.textContent = `${(this.totalDistance / 1000).toFixed(1)} km`;
+                if (nitroFill) nitroFill.style.width = `${Math.round(this.nitro)}%`;
+                if (cluster) cluster.classList.toggle('turbo-glow', turbo);
+
+                // Score & Top-Center Zone Pill
+                const scoreEl = document.getElementById('score-val');
+                if (scoreEl) scoreEl.textContent = this.score.toLocaleString();
+
+                const zone = this.getZoneAt(this.s);
+                const zTitle = document.getElementById('zone-title');
+                const zSub = document.getElementById('zone-sub');
+                const zDot = document.getElementById('zone-dot');
+                const zPill = document.getElementById('zone-pill');
+                if (zTitle && zTitle.textContent !== zone.name) {
+                    zTitle.textContent = zone.name;
+                    zSub.textContent = zone.sub;
+                    zDot.style.background = zone.color;
+                    zDot.style.color = zone.color;
+                }
+                if (zPill) {
+                    const inTunnel = (this.s >= 900 && this.s <= 1650) || (this.s >= 4520 && this.s <= 4740);
+                    zPill.classList.toggle('tunnel-active', inTunnel);
+                }
             }
 
-            /* ================= MINIMAP & OPEN WORLD MAP ================= */
+            /* ================= LIVE RADAR MINIMAP ================= */
             drawMinimap() {
                 const canvas = document.getElementById('minimap-canvas');
+                if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const w = canvas.width, h = canvas.height;
 
-                ctx.fillStyle = '#020617';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#091124';
+                ctx.fillRect(0, 0, w, h);
 
-                const cx = canvas.width / 2;
-                const cy = canvas.height * 0.72;
                 const scale = 0.42;
+                const cx = w / 2, cy = h * 0.72;
 
-                // Draw road ribbon ahead & behind
+                // Draw road ribbon ahead & behind player
                 ctx.strokeStyle = '#334155';
                 ctx.lineWidth = 14;
                 ctx.lineCap = 'round';
                 ctx.beginPath();
-                for (let ds = -80; ds <= 220; ds += 14) {
+                for (let ds = -80; ds <= 240; ds += 14) {
                     const p = this.getRoadPoint(this.s + ds);
-                    const mx = cx + (p.x - this.playerX) * scale;
-                    const my = cy + (p.z - this.playerZ) * scale;
-                    if (ds === -80) ctx.moveTo(mx, my);
-                    else ctx.lineTo(mx, my);
+                    const rx = cx + (p.x - this.playerX) * scale;
+                    const ry = cy + (p.z - this.playerZ) * scale;
+                    if (ds === -80) ctx.moveTo(rx, ry);
+                    else ctx.lineTo(rx, ry);
                 }
                 ctx.stroke();
 
-                // Traffic dots
-                ctx.fillStyle = '#f59e0b';
+                // Center highway line
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw nearby traffic dots
+                ctx.fillStyle = '#f87171';
                 for (const t of this.traffic) {
-                    const mx = cx + (t.mesh.position.x - this.playerX) * scale;
-                    const my = cy + (t.mesh.position.z - this.playerZ) * scale;
-                    if (mx > 4 && mx < canvas.width - 4 && my > 4 && my < canvas.height - 4) {
+                    const dx = (t.mesh.position.x - this.playerX) * scale;
+                    const dz = (t.mesh.position.z - this.playerZ) * scale;
+                    if (Math.abs(dx) < w && Math.abs(dz) < h) {
                         ctx.beginPath();
-                        ctx.arc(mx, my, 3, 0, Math.PI * 2);
+                        ctx.arc(cx + dx, cy + dz, 3, 0, Math.PI * 2);
                         ctx.fill();
                     }
                 }
 
                 // Player arrow
-                ctx.fillStyle = '#38bdf8';
+                ctx.fillStyle = '#34d399';
                 ctx.beginPath();
                 ctx.moveTo(cx, cy - 7);
                 ctx.lineTo(cx - 5, cy + 5);
@@ -4654,57 +4742,69 @@
                 ctx.fill();
             }
 
+            /* ================= OPEN WORLD MAP OVERVIEW ================= */
             drawWorldMap() {
                 const canvas = document.getElementById('worldmap-canvas');
+                if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const w = canvas.width, h = canvas.height;
 
                 ctx.fillStyle = '#020617';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillRect(0, 0, w, h);
 
-                // Draw entire spline horizontally
-                for (const z of ZONES) {
+                // Draw color-coded zones across the 5000m loop
+                ZONES.forEach(z => {
                     ctx.strokeStyle = z.color;
                     ctx.lineWidth = 7;
+                    ctx.lineCap = 'round';
                     ctx.beginPath();
-                    for (let s = z.start; s <= z.end; s += 40) {
+                    for (let s = z.start; s <= z.end; s += 25) {
                         const p = this.getRoadPoint(s);
-                        const x = 22 + (s / TRACK_LENGTH) * (canvas.width - 44);
-                        const y = canvas.height / 2 + p.x * 0.72;
-                        if (s === z.start) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
+                        const mx = 22 + (s / TRACK_LENGTH) * (w - 44);
+                        const my = h / 2 + p.x * 0.72;
+                        if (s === z.start) ctx.moveTo(mx, my);
+                        else ctx.lineTo(mx, my);
                     }
                     ctx.stroke();
-                }
 
-                // Player live beacon
-                const px = 22 + (this.s / TRACK_LENGTH) * (canvas.width - 44);
-                const py = canvas.height / 2 + this.getRoadPoint(this.s).x * 0.72;
+                    // Zone label
+                    const midS = (z.start + z.end) / 2;
+                    const mp = this.getRoadPoint(midS);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.font = 'bold 9px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(z.name.split(' ')[0], 22 + (midS / TRACK_LENGTH) * (w - 44), h / 2 + mp.x * 0.72 - 14);
+                });
+
+                // Player Marker
+                const p = this.getRoadPoint(this.s);
+                const px = 22 + (this.s / TRACK_LENGTH) * (w - 44);
+                const py = h / 2 + p.x * 0.72;
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(px, py, 6, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.strokeStyle = '#38bdf8';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 2.5;
                 ctx.stroke();
             }
 
+            /* ================= ANIMATION LOOP ================= */
             animate() {
                 requestAnimationFrame(() => this.animate());
                 const now = performance.now();
                 const dt = Math.min(0.05, (now - this.lastTime) / 1000);
                 this.lastTime = now;
-                this.update(dt);
+
+                if (this.state === 'playing') {
+                    this.update(dt);
+                }
                 this.renderer.render(this.scene, this.camera);
             }
         }
 
         window.onload = function () {
-            try {
-                new HighwayGame();
-            } catch (err) {
-                console.error('Failed to initialize HighwayGame:', err);
-            }
+            window.highwayGame = new HighwayGame();
         };
     })();
     </script>
